@@ -1,0 +1,48 @@
+# Docker
+# Build and push an image to Azure Container Registry
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+  - main
+
+resources:
+  - repo: self
+
+variables:
+  # Container registry service connection established during pipeline creation
+  dockerRegistryServiceConnection: 'd4b30192-5380-4982-9245-27ce496d7ce4'
+  imageRepository: 'client'
+  containerRegistry: 'braikup.azurecr.io'
+  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
+  tag: '$(Build.BuildId)'
+
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
+
+stages:
+  - stage: Build
+    displayName: Build stage
+    jobs:
+      - job: Build
+        displayName: Build
+        pool:
+          vmImage: $(vmImageName)
+        steps:
+          - script: az acr login --name braikup --username $(registryUserName) --password $(registryPassword)
+            displayName: 'Login to ACR'
+          - task: Docker@2
+            inputs:
+              command: 'build'
+              repository: 'braikup.azurecr.io/client'
+              dockerfile: '**/Dockerfile'
+              buildContext: '$(Build.Repository.LocalPath)'
+              arguments: ''
+              tags: |
+                $(tag)
+          - task: Docker@2
+            inputs:
+              command: 'push'
+              repository: 'braikup.azurecr.io/client'
+              tags: |
+                $(tag)
+

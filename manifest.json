@@ -1,0 +1,26 @@
+{
+  "short_name": "SynchGroups",
+  "name": "Synch Groups Integration",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "1600x1600",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "x16.png",
+      "type": "image/png",
+      "sizes": "1600x1600"
+    },
+    {
+      "src": "x14.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#350E47",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#350E47"
+}
