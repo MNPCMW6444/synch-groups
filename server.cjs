@@ -1,61 +1,28 @@
-const express = require("express");
-const path = require("path");
-const basicAuth =require ('express-basic-auth');
+const fs = require('fs');
+const path = require('path');
+const basicAuth = require('express-basic-auth');
 require('dotenv').config();
 
 const app = express();
 
 
 app.use(basicAuth({
-    users: { 'yaba': '509' }
+    users: {'yaba': '509'}
 }))
 
-// Production environment: serve the dist
-//if (process.env.NODE_ENV === 'production') {
-app.use(express.static(path.join(__dirname, 'dist')));
 
-/*
+app.get('*', (req, res) => {
+    let indexPath = path.join(__dirname, 'dist', 'index.html');
+    fs.readFile(indexPath, 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error reading index.html', err);
+            return res.status(500).send('An error occurred');
+        }
 
-    app.get('/tos', (_, res) => {
-        res.sendFile(path.join(__dirname, 'dist', 'tos.html'));
+        let updatedHtml = data.replace('"VITE_IAF_TOKEN": ""', `"VITE_IAF_TOKEN": "${process.env.VITE_IAF_TOKEN}"`);
+        res.send(updatedHtml);
     });
-
-    app.get('/sub', (_, res) => {
-        res.sendFile(path.join(__dirname, 'dist', 'sub.html'));
-    });
-
-    app.get('/tok', (_, res) => {
-        res.sendFile(path.join(__dirname, 'dist', 'tok.html'));
-    });
-*/
-
-
-app.get('*', (_, res) => {
-    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
-//}
-// Development environment: forward the requests to localhost:5992
-/*else if (process.env.NODE_ENV === 'development') {
-    const {createProxyMiddleware} = require('http-proxy-middleware');
-
-    app.get('/tos', (_, res) => {
-        res.sendFile(path.join(__dirname, 'public', 'tos.html'));
-    });
-
-    app.get('/sub', (_, res) => {
-        res.sendFile(path.join(__dirname, 'public', 'sub.html'));
-    });
-
-    app.get('/tok', (_, res) => {
-        res.sendFile(path.join(__dirname, 'public', 'tok.html'));
-    });
-
-
-    app.use(createProxyMiddleware({
-        target: 'http://localhost:5992',
-        changeOrigin: true
-    }));
-}*/
 
 const port = 5100;
 app.listen(port, "0.0.0.0");
