@@ -1,5 +1,10 @@
 import {Autocomplete, TextField} from "@mui/material";
-import {User} from "./UserSelector.tsx";
+
+export interface User {
+    label: string,
+    id: string
+}
+
 
 const ManningSelector = ({ path, users, setManning }: { path: string[], users: User[], setManning: (path: string[], id: string) => void }) => {
     const label = path.join(" > "); // For displaying the hierarchy in the label
@@ -9,13 +14,15 @@ const ManningSelector = ({ path, users, setManning }: { path: string[], users: U
             disablePortal
             options={users}
             sx={{ width: 300 }}
-            renderInput={(params) => (
-                <TextField onSelect={(e: any) => {
-                    const str = e.target.value;
-                    const index = str.indexOf("##");
-                    const id = str.substring(index + 2, str.length);
+            onChange={(_:any, value) => {
+                if(value) {
+                    const index = value.id.indexOf("##");
+                    const id = value.id.substring(index + 2);
                     setManning(path, id);
-                }} {...params} label={`Select for ${label}`} />
+                }
+            }}
+            renderInput={(params) => (
+                <TextField {...params} label={`בחר איוש ל${label}`} />
             )}
         />
     );

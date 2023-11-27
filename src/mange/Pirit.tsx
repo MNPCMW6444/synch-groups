@@ -1,9 +1,8 @@
 import {Grid} from "@mui/material";
-import {User} from "./UserSelector.tsx";
 import useAll from "./useAll.ts";
 import {useEffect, useState} from "react";
 import {Yaba} from "./groups.ts";
-import ManningSelector from "./ManningSelector.tsx";
+import ManningSelector, {User} from "./ManningSelector.tsx";
 
 
 const removeDuplicatesById = (users: User[]): User[] => {
@@ -22,60 +21,49 @@ const Pirit = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [piritManning, setPiritManning] = useState<Yaba>(
         {
-            room25: {
-                manager: {back: ""},
-                movDirector: {back: ""},
-                fDirector: {back: ""},
-                roomOperator: {operator: ""},
-                fHigh: {back: "", front: "", operator: ""},
-                fLow: {back: "", front: "", operator: ""},
-                treasure1: {front: ""},
-                treasure2: {front: ""},
-                treasure3: {front: ""},
-                treasure5: {front: ""},
-                hStand1: {back: "", front: "", operator: ""},
-                hStand2: {back: "", front: "", operator: ""},
-                hStand4: {back: "", front: "", operator: ""},
-                stayingStand: {back: "", front: "", operator: ""},
-                doubleStayingStand: {back: "", front: "", operator: ""},
-                rescueTeam: {
-                    hStand: {
-                        back: "",
-                        front: "",
-                        operator: "",
+                "מכלול 25": {
+                    "מנהל": "",
+                    "מע ת": "",
+                    "מע ק": "",
+                    "משק מכלולי": "",
+                    "מהיר גבוה": { "אחורי": "", "קדמי": "", "מפעיל": "" },
+                    "מהיר נמוך": { "אחורי": "", "קדמי": "", "מפעיל": "" },
+                    "אוצר1": "",
+                    "אוצר2": "",
+                    "אוצר3": "",
+                    "אוצר5": "",
+                    "מרחפים1": { "אחורי": "", "קדמי": "", "מפעיל": "" },
+                    "מרחפים2": { "אחורי": "", "קדמי": "", "מפעיל": "" },
+                    "מרחפים4": { "אחורי": "", "קדמי": "", "מפעיל": "" },
+                    "שוהות": { "אחורי": "", "קדמי": "", "מפעיל": "" },
+                    "פיצול שוהות": { "אחורי": "", "קדמי": "", "מפעיל": "" },
+                    "צוות מסער": {
+                        "מסער": { "אחורי": "", "קדמי": "", "מפעיל": "", },
+                        "חצ/סי": { "אחורי": "", "קדמי": "", "מפעיל": "", },
+                        "אוצר4": ""
                     },
-                    fStand: {
-                        back: "",
-                        front: "",
-                        operator: "",
-                    },
-                    tStand: {
-                        front: "",
-                    },
-                    treasure4: {front: ""}
                 },
-            },
-            room12: {
-                manager: {back: ""},
-                seaDirector: {back: ""},
-                groundDirector: {back: ""},
-                bayDirector: {back: ""},
-                // sitting....
-                interA: {front: "", operator: ""},
-                interB: {front: "", operator: ""},
-                interC: {front: "", operator: ""},
-                interD: {front: "", operator: ""},
-                interE: {front: "", operator: ""},
-                interF: {front: "", operator: ""},
-                interG: {front: "", operator: ""},
-            }
-        });
+                "מכלול 12": {
+                    "מנהל": "",
+                    "מע ים": "",
+                    "מי יבשה": "",
+                    "מע מפרץ": "",
+// sitting....
+                    "ירוט א": { "קדמי": "", "מפעיל": "" },
+                    "ירוט ב": { "קדמי": "", "מפעיל": "" },
+                    "ירוט ג": { "קדמי": "", "מפעיל": "" },
+                    "ירוט ד": { "קדמי": "", "מפעיל": "" },
+                    "ירוט ה": { "קדמי": "", "מפעיל": "" },
+                    "ירוט ו": { "קדמי": "", "מפעיל": "" },
+                    "ירוט ז": { "קדמי": "", "מפעיל": "" },
+                }
+            });
 
     useEffect(() => {
         getAllData().then(res => {
             if (res?.users) {
                 const users = res?.users?.map(({first_name, last_name, id}: any) => ({
-                    label: `${first_name} ${last_name} ##${id}`, // assuming 'id' is a string
+                    label: `${first_name} ${last_name} ##${id}`, // assuming 'id' is a ""
                     id
                 }));
                 setUsers(removeDuplicatesById(users))
@@ -91,7 +79,7 @@ const Pirit = () => {
             for (let i = 0; i < path.length - 1; i++) {
                 currentLevel = currentLevel[path[i]];
             }
-            currentLevel[path[path.length - 1]] = {...currentLevel[path[path.length - 1]], id};
+            currentLevel[path[path.length - 1]] = id;
             return newState;
         });
     };
@@ -100,13 +88,15 @@ const Pirit = () => {
         const direction = depth % 2 === 0 ? "row" : "column";
 
         return (
-            <Grid container direction={direction} justifyContent="center" alignItems="center" spacing={2} wrap="nowrap">
+            <Grid container key={path.concat(depth + "").join("_")} direction={direction} justifyContent="flex-start"
+                  alignItems="flex-start" spacing={1}>
                 {Object.keys(mannings).map(key => {
                     if (typeof mannings[key] === 'object' && mannings[key] !== null) {
                         return renderMannings(mannings[key], path.concat(key), depth + 1);
                     } else {
                         return (
-                            <Grid item key={path.concat(key).join("_")}>
+                            <Grid item key={path.concat(key).join("_")}
+                                  sx={{padding: '8px', minWidth: '300px', minHeight: '100px'}}>
                                 <ManningSelector path={path.concat(key)} users={users} setManning={setManning}/>
                             </Grid>
                         );
@@ -116,8 +106,10 @@ const Pirit = () => {
         );
     };
 
+
     return (
-        <Grid container direction="column" height="100vh" width="100vw" justifyContent="center" alignItems="center" spacing={2} wrap="nowrap">
+        <Grid container direction="column" height="100vh" width="100vw" justifyContent="flex-start"
+              alignItems="flex-start" spacing={2}>
             {renderMannings(piritManning)}
         </Grid>
     );

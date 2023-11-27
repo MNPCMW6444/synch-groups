@@ -3,7 +3,7 @@ import Pirit from "./Pirit.tsx";
 
 
 const Manage = () => {
-    return <Box overflow="scroll">
+    return <Box overflow="scroll" padding="5%">
         <Pirit/>
     </Box>
 }
