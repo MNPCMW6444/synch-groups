@@ -6,23 +6,34 @@ export interface User {
 }
 
 
-const ManningSelector = ({ path, users, setManning }: { path: string[], users: User[], setManning: (path: string[], id: string) => void }) => {
+const ManningSelector = ({value, path, users, setManning}: {
+    value: string,
+    path: string[],
+    users: User[],
+    setManning: (path: string[], id: string) => void
+}) => {
     const label = path.join(" > "); // For displaying the hierarchy in the label
 
+    if (value) {
+        console.log("value: ", value)
+        console.log("user: ", (users.find(({id}) => id === value)))
+    }
+
     return (
-        <Autocomplete
+        ((users.find(({id}) => id === value)) || users[0]) &&  <Autocomplete
             disablePortal
             options={users}
-            sx={{ width: 250 }}
-            onChange={(_:any, value) => {
-                if(value) {
+            value={((users.find(({id}) => id === value)) || users[0])}
+            sx={{width: 250}}
+            onChange={(_: any, value) => {
+                if (value) {
                     const index = value.id.indexOf("##");
-                    const id = value.id.substring(index + 2);
+                    const id = value.id.substring(index + 1);
                     setManning(path, id);
                 }
             }}
             renderInput={(params) => (
-                <TextField {...params} label={`בחר איוש ל${label}`} />
+                <TextField {...params} label={`בחר איוש ל${label}`}/>
             )}
         />
     );

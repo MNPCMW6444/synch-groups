@@ -48,8 +48,6 @@ const removeDuplicatesById = (users: User[]): User[] => {
 }
 
 
-
-
 export default () => {
     const [users, setUsers] = useState<User[]>([]);
 
@@ -60,7 +58,7 @@ export default () => {
                     label: `${first_name} ${last_name} ##${id}`, // assuming 'id' is a ""
                     id
                 }));
-                setUsers(removeDuplicatesById(users))
+                setUsers([{label: "חפש או בחר איש צוות", id: "empty",}, ...removeDuplicatesById(users)])
             }
         });
     }, []);

@@ -1,16 +1,62 @@
 import {Button, Grid, Typography} from "@mui/material";
-import ManningSelector, {User} from "./manning/ManningSelector.tsx";
-import {Dispatch, SetStateAction} from "react";
+import {useEffect, useState} from "react";
 import {Yaba} from "../../../index";
 import {ArrowBack, ArrowForward} from "@mui/icons-material";
+import useSync from "../../../hooks/useSync.ts";
+import ManningSelector from "./manning/ManningSelector.tsx";
 
-interface PiritProps {
-    piritManning?: Yaba
-    index: number
-    setIndex: Dispatch<SetStateAction<number>>
-    setPiritManning: Dispatch<SetStateAction<Yaba[]>>
-    users: User[]
+const EMPTY_YABA = {
+    "מכלול 25": {
+        "צוות מסער": {
+            "מסער": {"אחורי": "", "קדמי": "", "מפעיל": "",},
+            "חצ/סי": {"אחורי": "", "קדמי": "", "מפעיל": "",},
+            "אוצר4": ""
+        },
+        "ניהול": {
+            "מנהל": "",
+            "מע ת": "",
+            "מע ק": "",
+            "משק מכלולי": "",
+        },
+        "2 עמדות שוהות": {
+            "שוהות": {"אחורי": "", "קדמי": "", "מפעיל": ""},
+            "פיצול שוהות": {"אחורי": "", "קדמי": "", "מפעיל": ""},
+        },
+        "2 עמדות מהירות": {
+
+            "מהיר גבוה": {"אחורי": "", "קדמי": "", "מפעיל": ""},
+            "מהיר נמוך": {"אחורי": "", "קדמי": "", "מפעיל": ""},
+        },
+        "3 עמדות מרחפים": {
+            "מרחפים1": {"אחורי": "", "קדמי": "", "מפעיל": ""},
+            "מרחפים2": {"אחורי": "", "קדמי": "", "מפעיל": ""},
+            "מרחפים4": {"אחורי": "", "קדמי": "", "מפעיל": ""},
+        },
+        "4 אוצרות": {
+            "אוצר1": "",
+            "אוצר2": "",
+            "אוצר3": "",
+            "אוצר5": "",
+        }
+    },
+    "מכלול 12": {
+        "ניהול": {
+            "מנהל": "",
+            "מע ים": "",
+            "מי יבשה": "",
+            "מע מפרץ": "",
+        },
+// sitting....
+        "ירוט א": {"קדמי": "", "מפעיל": ""},
+        "ירוט ב": {"קדמי": "", "מפעיל": ""},
+        "ירוט ג": {"קדמי": "", "מפעיל": ""},
+        "ירוט ד": {"קדמי": "", "מפעיל": ""},
+        "ירוט ה": {"קדמי": "", "מפעיל": ""},
+        "ירוט ו": {"קדמי": "", "מפעיל": ""},
+        "ירוט ז": {"קדמי": "", "מפעיל": ""},
+    }
 }
+
 
 const getPirit = (shifter: number): string => {
     const now = new Date();
@@ -38,14 +84,24 @@ const getPirit = (shifter: number): string => {
 }
 
 
-const Pirit = ({piritManning, index,setIndex, setPiritManning, users}: PiritProps) => {
+const PiritManager = () => {
+
+    const {users} = useSync()
+    const [piritManning, setPiritManning] = useState<Yaba[]>([]);
+    const [index, setIndex] = useState<number>(0);
+
+    useEffect(() => {
+        if(index>piritManning.length-1){
+            setPiritManning(  [...piritManning, EMPTY_YABA])
+        }
+    },[index]);
+
 
 
     const setManning = (path: string[], id: string) => {
         setPiritManning(prevState => {
-            debugger;
-            const newArray = [...prevState];
-            const newState = {...prevState[index]};
+            const newArray = JSON.parse(JSON.stringify(prevState));
+            const newState = JSON.parse(JSON.stringify(prevState[index]));
             let currentLevel: any = newState;
             for (let i = 0; i < path.length - 1; i++) {
                 currentLevel = currentLevel[path[i]];
@@ -94,7 +150,7 @@ const Pirit = ({piritManning, index,setIndex, setPiritManning, users}: PiritProp
                                 <Typography variant={("h" + (depth + 4)) as any}>
                                     {key}
                                 </Typography>
-                                <ManningSelector path={path.concat(key)} users={users} setManning={setManning}/>
+                                <ManningSelector path={path.concat(key)} value={mannings[key]} users={users} setManning={setManning}/>
                             </Grid>
                         );
                     }
@@ -107,7 +163,7 @@ const Pirit = ({piritManning, index,setIndex, setPiritManning, users}: PiritProp
     return (
         <Grid container direction="column" justifyContent="center"
               alignItems="center" spacing={2} wrap="nowrap">
-            {piritManning && renderMannings(piritManning)}
+            {piritManning[index] && renderMannings(piritManning[index])}
             {index === 0 && <Grid item>
                 <Button sx={{padding: "30px 50px", margin: "20px", fontSize: "200%"}} variant="contained">
                     שא-גר
@@ -118,4 +174,4 @@ const Pirit = ({piritManning, index,setIndex, setPiritManning, users}: PiritProp
 }
 
 
-export default Pirit;
+export default PiritManager;

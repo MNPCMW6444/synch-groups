@@ -1,10 +1,10 @@
-import Manage from "./ui/manage/Manage.tsx";
+import PiritManager from "./ui/manage/Pirit/PiritManager.tsx";
 
 
 function App() {
 
     return (
-        <Manage/>
+        <PiritManager/>
     );
 }
 
