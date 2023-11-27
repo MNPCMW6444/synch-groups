@@ -13,7 +13,7 @@ const ManningSelector = ({ path, users, setManning }: { path: string[], users: U
         <Autocomplete
             disablePortal
             options={users}
-            sx={{ width: 300 }}
+            sx={{ width: 250 }}
             onChange={(_:any, value) => {
                 if(value) {
                     const index = value.id.indexOf("##");
