@@ -24,19 +24,6 @@ const getUsers = async () => {
     }
 }
 
-const getGroups = async () => {
-    try {
-        const {data: groups} = await axiosInstance.get("/groups/clientField", {params: {clientField: YABA_CLIENT_FIELD}})
-        return groups
-    } catch (e) {
-        return e
-    }
-}
-
-const getAllData = async () => {
-    return {users: await getUsers(), groups: await getGroups()}
-}
-
 const removeDuplicatesById = (users: User[]): User[] => {
     const unique = new Map<string, User>();
     users.forEach(user => {
@@ -48,20 +35,53 @@ const removeDuplicatesById = (users: User[]): User[] => {
 }
 
 
+const getGroups = async () => {
+    try {
+        const {data: groups} = await axiosInstance.get("/groups/clientField/" + YABA_CLIENT_FIELD)
+        return groups
+    } catch (e) {
+        return e
+    }
+}
+
+
 export default () => {
     const [users, setUsers] = useState<User[]>([]);
+    const [groups, setGroups] = useState<any[]>([]);
 
     useEffect(() => {
-        getAllData().then(res => {
-            if (res?.users) {
-                const users = res?.users?.map(({first_name, last_name, id}: any) => ({
-                    label: `${first_name} ${last_name} ##${id}`, // assuming 'id' is a ""
-                    id
-                }));
-                setUsers([{label: "חפש או בחר איש צוות", id: "empty",}, ...removeDuplicatesById(users)])
-            }
-        });
+        const queryUsers = () => {
+            getUsers().then(res => {
+                if (res) {
+                    const users = res.map(({first_name, last_name, id}: any) => ({
+                        label: `${first_name} ${last_name} ##${id}`, // assuming 'id' is a ""
+                        id
+                    }));
+                    setUsers([{label: "חפש או בחר איש צוות", id: "empty",}, ...removeDuplicatesById(users)])
+                }
+            })
+        };
+        queryUsers();
+        const usersPolling = setInterval(queryUsers, 1000 * 60 * 10);
+
+        const queryGroups = () => {
+            getGroups().then(res => {
+                if (res) {
+                    const groups = res.map((x: any) => ({
+                        x
+                    }));
+                    setGroups([{label: "חפש או בחר איש צוות", id: "empty",}, ...removeDuplicatesById(groups)])
+                }
+            })
+        };
+        queryGroups();
+        const groupsPolling = setInterval(queryUsers, 1000 * 60 * 10);
+
+        return () => {
+            clearInterval(usersPolling)
+            clearInterval(groupsPolling)
+        }
     }, []);
 
-    return {users}
+    return {users, groups}
 }
