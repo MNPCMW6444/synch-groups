@@ -91,11 +91,10 @@ const PiritManager = () => {
     const [index, setIndex] = useState<number>(0);
 
     useEffect(() => {
-        if(index>piritManning.length-1){
-            setPiritManning(  [...piritManning, EMPTY_YABA])
+        if (index > piritManning.length - 1) {
+            setPiritManning([...piritManning, EMPTY_YABA])
         }
-    },[index]);
-
+    }, [index]);
 
 
     const setManning = (path: string[], id: string) => {
@@ -132,10 +131,11 @@ const PiritManager = () => {
                             {header}
                         </Grid>
                         <Grid item>
-                            <Button disabled={index===0} onClick={()=>setIndex(i=>i-1)} variant="contained"><ArrowForward/></Button>
+                            <Button disabled={index === 0} onClick={() => setIndex(i => i - 1)}
+                                    variant="contained"><ArrowForward/></Button>
                         </Grid>
                         <Grid item>
-                            <Button onClick={()=>setIndex(i=>i+1)} variant="contained"><ArrowBack/></Button>
+                            <Button onClick={() => setIndex(i => i + 1)} variant="contained"><ArrowBack/></Button>
                         </Grid>
                     </Grid>}
                 {Object.keys(mannings).map(key => {
@@ -150,7 +150,8 @@ const PiritManager = () => {
                                 <Typography variant={("h" + (depth + 4)) as any}>
                                     {key}
                                 </Typography>
-                                <ManningSelector path={path.concat(key)} value={mannings[key]} users={users} setManning={setManning}/>
+                                <ManningSelector path={path.concat(key)} value={mannings[key]} users={users}
+                                                 setManning={setManning}/>
                             </Grid>
                         );
                     }
@@ -159,16 +160,20 @@ const PiritManager = () => {
         );
     };
 
+    const send = () => {}
+    const save = () => {}
+
 
     return (
         <Grid container direction="column" justifyContent="center"
               alignItems="center" spacing={2} wrap="nowrap">
             {piritManning[index] && renderMannings(piritManning[index])}
-            {index === 0 && <Grid item>
-                <Button sx={{padding: "30px 50px", margin: "20px", fontSize: "200%"}} variant="contained">
-                    שא-גר
+            <Grid item>
+                <Button sx={{padding: "30px 50px", margin: "20px", fontSize: "200%"}} variant="contained"
+                        onClick={index === 0 ? send : save}>
+                    {index === 0 ? "שא - גר" : "שמור תכנון"}
                 </Button>
-            </Grid>}
+            </Grid>
         </Grid>
     );
 }

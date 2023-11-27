@@ -1,5 +1,6 @@
 const express = require("express");
 const path = require("path");
+import basicAuth from 'express-basic-auth';
 require('dotenv').config();
 
 const app = express();
@@ -28,6 +29,10 @@ app.use(express.static(path.join(__dirname, 'dist')));
         res.sendFile(path.join(__dirname, 'dist', 'tok.html'));
     });
 */
+
+app.use(basicAuth({
+    users: { 'yaba': '509' }
+}))
 
 app.get('*', (_, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'index.html'));
