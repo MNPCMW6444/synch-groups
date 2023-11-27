@@ -11,7 +11,7 @@ resources:
 variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: 'd4b30192-5380-4982-9245-27ce496d7ce4'
-  imageRepository: 'client'
+  imageRepository: 'yaba'
   containerRegistry: 'braikup.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: '$(Build.BuildId)'
@@ -33,7 +33,7 @@ stages:
           - task: Docker@2
             inputs:
               command: 'build'
-              repository: 'braikup.azurecr.io/client'
+              repository: 'braikup.azurecr.io/yaba'
               dockerfile: '**/Dockerfile'
               buildContext: '$(Build.Repository.LocalPath)'
               arguments: ''
@@ -42,7 +42,7 @@ stages:
           - task: Docker@2
             inputs:
               command: 'push'
-              repository: 'braikup.azurecr.io/client'
+              repository: 'braikup.azurecr.io/yaba'
               tags: |
                 $(tag)
 

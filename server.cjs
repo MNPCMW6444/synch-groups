@@ -5,11 +5,10 @@ require('dotenv').config();
 
 const app = express();
 
-app.use('/', express.static(path.join(__dirname, 'website')));
-/*app.get('/manifest.json', (_, res) => {
-    res.json(manifestJSONData);
-});*/
 
+app.use(basicAuth({
+    users: { 'yaba': '509' }
+}))
 
 // Production environment: serve the dist
 //if (process.env.NODE_ENV === 'production') {
@@ -30,9 +29,6 @@ app.use(express.static(path.join(__dirname, 'dist')));
     });
 */
 
-app.use(basicAuth({
-    users: { 'yaba': '509' }
-}))
 
 app.get('*', (_, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'index.html'));
