@@ -1,50 +1,50 @@
-const yaba =
-    {
-        room25: {
-            manager: {back: ""},
-            movDirector: {back: ""},
-            fDirector: {back: ""},
-            roomOperator: {operator: ""},
-            fHigh: {back: "", front: "", operator: ""},
-            fLow: {back: "", front: "", operator: ""},
-            treasure1: {front: ""},
-            treasure2: {front: ""},
-            treasure3: {front: ""},
-            treasure5: {front: ""},
-            hStand1: {back: "", front: "", operator: ""},
-            hStand2: {back: "", front: "", operator: ""},
-            hStand4: {back: "", front: "", operator: ""},
-            stayingStand: {back: "", front: "", operator: ""},
-            doubleStayingStand: {back: "", front: "", operator: ""},
-            rescueTeam: {
-                hStand: {
-                    back: "",
-                    front: "",
-                    operator: "",
-                },
-                fStand: {
-                    back: "",
-                    front: "",
-                    operator: "",
-                },
-                tStand: {
-                    front: "",
-                },
-                treasure4: {front: ""}
+export interface Yaba {
+    room25: {
+        manager: { back: string },
+        movDirector: { back: string },
+        fDirector: { back: string },
+        roomOperator: { operator: string },
+        fHigh: { back: string, front: string, operator: string },
+        fLow: { back: string, front: string, operator: string },
+        treasure1: { front: string },
+        treasure2: { front: string },
+        treasure3: { front: string },
+        treasure5: { front: string },
+        hStand1: { back: string, front: string, operator: string },
+        hStand2: { back: string, front: string, operator: string },
+        hStand4: { back: string, front: string, operator: string },
+        stayingStand: { back: string, front: string, operator: string },
+        doubleStayingStand: { back: string, front: string, operator: string },
+        rescueTeam: {
+            hStand: {
+                back: string,
+                front: string,
+                operator: string,
             },
+            fStand: {
+                back: string,
+                front: string,
+                operator: string,
+            },
+            tStand: {
+                front: string,
+            },
+            treasure4: { front: string }
         },
-        room12: {
-            manager: {back: ""},
-            seaDirector: {back: ""},
-            groundDirector: {back: ""},
-            bayDirector: {back: ""},
-            // sitting....
-            interA: { front: "", operator: ""},
-            interB: { front: "", operator: ""},
-            interC: { front: "", operator: ""},
-            interD: { front: "", operator: ""},
-            interE: { front: "", operator: ""},
-            interF: { front: "", operator: ""},
-            interG: { front: "", operator: ""},
-        }
+    },
+    room12: {
+        manager: { back: string },
+        seaDirector: { back: string },
+        groundDirector: { back: string },
+        bayDirector: { back: string },
+        // sitting....
+        interA: { front: string, operator: string },
+        interB: { front: string, operator: string },
+        interC: { front: string, operator: string },
+        interD: { front: string, operator: string },
+        interE: { front: string, operator: string },
+        interF: { front: string, operator: string },
+        interG: { front: string, operator: string },
     }
+}
+
