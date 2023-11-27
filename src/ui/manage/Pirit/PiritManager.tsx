@@ -84,9 +84,9 @@ const getPirit = (shifter: number): string => {
 }
 
 
-const PiritManager = () => {
+const PiritManager = ({x}: any) => {
 
-    const {users} = useSync()
+    const {users} = useSync(x)
     const [piritManning, setPiritManning] = useState<Yaba[]>([]);
     const [index, setIndex] = useState<number>(0);
 
@@ -160,8 +160,10 @@ const PiritManager = () => {
         );
     };
 
-    const send = () => {}
-    const save = () => {}
+    const send = () => {
+    }
+    const save = () => {
+    }
 
 
     return (

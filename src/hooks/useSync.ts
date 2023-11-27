@@ -5,47 +5,50 @@ import {User} from "../ui/manage/Pirit/manning/ManningSelector.tsx";
 
 const YABA_CLIENT_FIELD = "nelson"
 
-const axiosInstance = axios.create({
-    baseURL: "https://api.synchapp.io",
-    headers: {
-        'Authorization': `Bearer ${import.meta.env.VITE_IAF_TOKEN}`,
-        "Content-Type": "application/json",
-        'X-API-Version': '1.0.0'
-    },
-});
+
+export default (x: string) => {
 
 
-const getUsers = async () => {
-    try {
-        const {data: users} = await axiosInstance.get("/users")
-        return users
-    } catch (e) {
-        return e
-    }
-}
-
-const removeDuplicatesById = (users: User[]): User[] => {
-    const unique = new Map<string, User>();
-    users.forEach(user => {
-        if (!(unique.has(user.id) && unique.has(user.label))) {
-            user.id && user.id !== "null" && user.label && user.label !== "null" && unique.set(user.id, user);
-        }
+    const axiosInstance = axios.create({
+        baseURL: "https://api.synchapp.io",
+        headers: {
+            'Authorization': `Bearer ${x}`,
+            "Content-Type": "application/json",
+            'X-API-Version': '1.0.0'
+        },
     });
-    return Array.from(unique.values());
-}
 
 
-const getGroups = async () => {
-    try {
-        const {data: groups} = await axiosInstance.get("/groups/clientField/" + YABA_CLIENT_FIELD)
-        return groups
-    } catch (e) {
-        return e
+    const getUsers = async () => {
+        try {
+            const {data: users} = await axiosInstance.get("/users")
+            return users
+        } catch (e) {
+            return e
+        }
     }
-}
+
+    const removeDuplicatesById = (users: User[]): User[] => {
+        const unique = new Map<string, User>();
+        users.forEach(user => {
+            if (!(unique.has(user.id) && unique.has(user.label))) {
+                user.id && user.id !== "null" && user.label && user.label !== "null" && unique.set(user.id, user);
+            }
+        });
+        return Array.from(unique.values());
+    }
 
 
-export default () => {
+    const getGroups = async () => {
+        try {
+            const {data: groups} = await axiosInstance.get("/groups/clientField/" + YABA_CLIENT_FIELD)
+            return groups
+        } catch (e) {
+            return e
+        }
+    }
+
+
     const [users, setUsers] = useState<User[]>([]);
     const [groups, setGroups] = useState<any[]>([]);
 

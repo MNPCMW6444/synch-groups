@@ -14,10 +14,21 @@ if ('serviceWorker' in navigator) {
         });
 }
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-    <React.StrictMode>
-        <Box width="100vw" height="100vh">
-            <App/>
-        </Box>
-    </React.StrictMode>,
-)
+// In your Vite app's entry file or an initialization script
+async function fetchConfig() {
+    const response = await fetch('/config');
+    return await response.json();
+}
+
+fetchConfig().then((config) => {
+
+
+    ReactDOM.createRoot(document.getElementById('root')!).render(
+        <React.StrictMode>
+            <Box width="100vw" height="100vh">
+                <App x={config.IAF_TOKEN}/>
+            </Box>
+        </React.StrictMode>,
+    )
+
+})

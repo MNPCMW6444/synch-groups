@@ -27,18 +27,12 @@ app.use((req, res, next) => {
 });
 
 
-app.get('*', (req, res) => {
-    let indexPath = path.join(__dirname, 'dist', 'index.html');
-    fs.readFile(indexPath, 'utf8', (err, data) => {
-        if (err) {
-            console.error('Error reading index.html', err);
-            return res.status(500).send('An error occurred');
-        }
-
-        let updatedHtml = data.replace('"VITE_IAF_TOKEN": ""', `"VITE_IAF_TOKEN": "${process.env.VITE_IAF_TOKEN}"`);
-        res.send(updatedHtml);
+app.get('/config', (req, res) => {
+    res.json({
+        IAF_TOKEN: process.env.VITE_IAF_TOKEN
     });
 });
+
 
 const port = 5100;
 app.listen(port, "0.0.0.0");

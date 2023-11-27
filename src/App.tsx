@@ -1,10 +1,10 @@
 import PiritManager from "./ui/manage/Pirit/PiritManager.tsx";
 
 
-function App() {
+const App = ({x}: any) => {
 
     return (
-        <PiritManager/>
+        <PiritManager x={x}/>
     );
 }
 
