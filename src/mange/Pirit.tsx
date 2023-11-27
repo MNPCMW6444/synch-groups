@@ -1,4 +1,4 @@
-import {Grid} from "@mui/material";
+import {Button, Grid, Typography} from "@mui/material";
 import useAll from "./useAll.ts";
 import {useEffect, useState} from "react";
 import {Yaba} from "./groups.ts";
@@ -21,43 +21,45 @@ const Pirit = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [piritManning, setPiritManning] = useState<Yaba>(
         {
-                "מכלול 25": {
+            "מכלול 25": {
+                "צוות מסער": {
+                    "מסער": {"אחורי": "", "קדמי": "", "מפעיל": "",},
+                    "חצ/סי": {"אחורי": "", "קדמי": "", "מפעיל": "",},
+                    "אוצר4": ""
+                },
+                "השאר": {
                     "מנהל": "",
                     "מע ת": "",
                     "מע ק": "",
                     "משק מכלולי": "",
-                    "מהיר גבוה": { "אחורי": "", "קדמי": "", "מפעיל": "" },
-                    "מהיר נמוך": { "אחורי": "", "קדמי": "", "מפעיל": "" },
+                    "מהיר גבוה": {"אחורי": "", "קדמי": "", "מפעיל": ""},
+                    "מהיר נמוך": {"אחורי": "", "קדמי": "", "מפעיל": ""},
                     "אוצר1": "",
                     "אוצר2": "",
                     "אוצר3": "",
                     "אוצר5": "",
-                    "מרחפים1": { "אחורי": "", "קדמי": "", "מפעיל": "" },
-                    "מרחפים2": { "אחורי": "", "קדמי": "", "מפעיל": "" },
-                    "מרחפים4": { "אחורי": "", "קדמי": "", "מפעיל": "" },
-                    "שוהות": { "אחורי": "", "קדמי": "", "מפעיל": "" },
-                    "פיצול שוהות": { "אחורי": "", "קדמי": "", "מפעיל": "" },
-                    "צוות מסער": {
-                        "מסער": { "אחורי": "", "קדמי": "", "מפעיל": "", },
-                        "חצ/סי": { "אחורי": "", "קדמי": "", "מפעיל": "", },
-                        "אוצר4": ""
-                    },
-                },
-                "מכלול 12": {
-                    "מנהל": "",
-                    "מע ים": "",
-                    "מי יבשה": "",
-                    "מע מפרץ": "",
-// sitting....
-                    "ירוט א": { "קדמי": "", "מפעיל": "" },
-                    "ירוט ב": { "קדמי": "", "מפעיל": "" },
-                    "ירוט ג": { "קדמי": "", "מפעיל": "" },
-                    "ירוט ד": { "קדמי": "", "מפעיל": "" },
-                    "ירוט ה": { "קדמי": "", "מפעיל": "" },
-                    "ירוט ו": { "קדמי": "", "מפעיל": "" },
-                    "ירוט ז": { "קדמי": "", "מפעיל": "" },
+                    "מרחפים1": {"אחורי": "", "קדמי": "", "מפעיל": ""},
+                    "מרחפים2": {"אחורי": "", "קדמי": "", "מפעיל": ""},
+                    "מרחפים4": {"אחורי": "", "קדמי": "", "מפעיל": ""},
+                    "שוהות": {"אחורי": "", "קדמי": "", "מפעיל": ""},
+                    "פיצול שוהות": {"אחורי": "", "קדמי": "", "מפעיל": ""},
                 }
-            });
+            },
+            "מכלול 12": {
+                "מנהל": "",
+                "מע ים": "",
+                "מי יבשה": "",
+                "מע מפרץ": "",
+// sitting....
+                "ירוט א": {"קדמי": "", "מפעיל": ""},
+                "ירוט ב": {"קדמי": "", "מפעיל": ""},
+                "ירוט ג": {"קדמי": "", "מפעיל": ""},
+                "ירוט ד": {"קדמי": "", "מפעיל": ""},
+                "ירוט ה": {"קדמי": "", "מפעיל": ""},
+                "ירוט ו": {"קדמי": "", "מפעיל": ""},
+                "ירוט ז": {"קדמי": "", "מפעיל": ""},
+            }
+        });
 
     useEffect(() => {
         getAllData().then(res => {
@@ -88,8 +90,14 @@ const Pirit = () => {
         const direction = depth % 2 === 0 ? "row" : "column";
 
         return (
-            <Grid container key={path.concat(depth + "").join("_")} direction={direction} justifyContent="flex-start"
+            <Grid item container key={path.concat(depth + "").join("_")} direction={direction}
+                  justifyContent="flex-start"
                   alignItems="flex-start" spacing={1}>
+                <Grid item key={path.concat(depth + "x").join("_")}>
+                    <Typography variant={("h" + (depth + 3)) as any}>
+                        {path[path.length - 1] || "איוש לפיריט" + ": "}
+                    </Typography>
+                </Grid>
                 {Object.keys(mannings).map(key => {
                     if (typeof mannings[key] === 'object' && mannings[key] !== null) {
                         return renderMannings(mannings[key], path.concat(key), depth + 1);
@@ -109,8 +117,13 @@ const Pirit = () => {
 
     return (
         <Grid container direction="column" height="100vh" width="100vw" justifyContent="flex-start"
-              alignItems="flex-start" spacing={2}>
+              alignItems="center" spacing={2} wrap="nowrap">
             {renderMannings(piritManning)}
+            <Grid item>
+                <Button sx={{padding: "30px 50px", margin: "20px", fontSize: "200%"}} variant="contained">
+                    שא-גר
+                </Button>
+            </Grid>
         </Grid>
     );
 }

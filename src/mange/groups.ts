@@ -47,29 +47,30 @@
 }*/
 
 
-
 export interface Yaba {
     "מכלול 25": {
-        "מנהל": string,
-        "מע ת": string,
-        "מע ק": string,
-        "משק מכלולי": string,
-        "מהיר גבוה": { "אחורי": string, "קדמי": string, "מפעיל": string },
-        "מהיר נמוך": { "אחורי": string, "קדמי": string, "מפעיל": string },
-        "אוצר1": string,
-        "אוצר2": string,
-        "אוצר3": string,
-        "אוצר5": string,
-        "מרחפים1": { "אחורי": string, "קדמי": string, "מפעיל": string },
-        "מרחפים2": { "אחורי": string, "קדמי": string, "מפעיל": string },
-        "מרחפים4": { "אחורי": string, "קדמי": string, "מפעיל": string },
-        "שוהות": { "אחורי": string, "קדמי": string, "מפעיל": string },
-        "פיצול שוהות": { "אחורי": string, "קדמי": string, "מפעיל": string },
         "צוות מסער": {
             "מסער": { "אחורי": string, "קדמי": string, "מפעיל": string, },
             "חצ/סי": { "אחורי": string, "קדמי": string, "מפעיל": string, },
             "אוצר4": string
         },
+        "השאר": {
+            "מנהל": string,
+            "מע ת": string,
+            "מע ק": string,
+            "משק מכלולי": string,
+            "מהיר גבוה": { "אחורי": string, "קדמי": string, "מפעיל": string },
+            "מהיר נמוך": { "אחורי": string, "קדמי": string, "מפעיל": string },
+            "אוצר1": string,
+            "אוצר2": string,
+            "אוצר3": string,
+            "אוצר5": string,
+            "מרחפים1": { "אחורי": string, "קדמי": string, "מפעיל": string },
+            "מרחפים2": { "אחורי": string, "קדמי": string, "מפעיל": string },
+            "מרחפים4": { "אחורי": string, "קדמי": string, "מפעיל": string },
+            "שוהות": { "אחורי": string, "קדמי": string, "מפעיל": string },
+            "פיצול שוהות": { "אחורי": string, "קדמי": string, "מפעיל": string },
+        }
     },
     "מכלול 12": {
         "מנהל": string,
