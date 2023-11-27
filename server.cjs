@@ -1,6 +1,6 @@
 const express = require("express");
 const path = require("path");
-import basicAuth from 'express-basic-auth';
+const basicAuth =require ('express-basic-auth');
 require('dotenv').config();
 
 const app = express();
