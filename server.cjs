@@ -1,15 +1,30 @@
 const express= require('express');
 const fs = require('fs');
 const path = require('path');
-const basicAuth = require('express-basic-auth');
+const basicAuth = require('basic-auth');
 require('dotenv').config();
 
 const app = express();
 
 
-app.use(basicAuth({
-    users: {'yaba': '509'}
-}))
+
+const USERNAME = "yab";
+const PASSWORD = "50";
+
+
+app.use((req, res, next) => {
+    if (req.path === '/health-check') {
+        return next();
+    }
+
+    const credentials = basicAuth(req);
+    if (credentials && credentials.name === USERNAME && credentials.pass === PASSWORD) {
+        return next();
+    }
+
+    res.setHeader('WWW-Authenticate', 'Basic realm="example"');
+    res.status(401).send('Authentication required');
+});
 
 
 app.get('*', (req, res) => {
