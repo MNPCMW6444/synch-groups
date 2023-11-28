@@ -1,9 +1,11 @@
 import axios from 'axios';
 import {useEffect, useState} from "react";
 import {User} from "../components/ui/manager/ManningSelector.tsx";
+import {GroupCreationRequest} from "../index";
 //import csv from 'async-csv';
 
 const YABA_CLIENT_FIELD = "nelson"
+const YABA_ORGANIZATION_ID = "orgizx50x"
 export const POLLING_INTERVAL = 1000 * 60;
 
 const removeDuplicatesById = (users: User[]): User[] => {
@@ -42,13 +44,64 @@ export default (x: string) => {
 
     const getGroups = async () => {
         try {
-            const {data: groups} = await axiosInstance.get("/groups/clientField/" + YABA_CLIENT_FIELD)
-            debugger;
-            return groups
+            const response = await axiosInstance.get("/groups/clientField/" + YABA_CLIENT_FIELD);
+            const groups = response.data;
+            const groupsWithProfilesPromises = groups.map(async (group: any) => {
+                const membersResponse = await axiosInstance.get("/groups/" + group.id + "/members");
+                if (membersResponse.data.ids.length === 1) {
+                    return {...group, profiles: membersResponse.data.ids[0]};
+                } else {
+                    return null;
+                }
+            });
+            const resolvedGroupsWithProfiles = await Promise.all(groupsWithProfilesPromises);
+            return resolvedGroupsWithProfiles.filter(group => group !== null);
         } catch (e) {
-            return e
+            console.error("Error fetching groups:", e);
+            return [];
+        }
+    };
+
+
+    const deleteAllGroups = async () => {
+        try {
+            let groups = await getGroups();
+            let length = groups.length;
+            while (length && length > 0) {
+                groups = await getGroups();
+                if (groups && groups.length) {
+                    const deletePromises = groups.map((group: any) => axiosInstance.delete("/groups/" + group.id));
+                    await Promise.all(deletePromises);
+                }
+            }
+            queryUsers();
+            return true;
+        } catch (e) {
+            throw false;
         }
     }
+
+    const createGroup = async (name: string, department: string, userIDs: string[]) => {
+        try {
+            const data: GroupCreationRequest = {
+                organization_id: YABA_ORGANIZATION_ID,
+                display_name: name,
+                client_field: YABA_CLIENT_FIELD,
+                media: "audio",
+                department,
+                priority: 1,
+                ptt_lock: false,
+                members: userIDs.map(id => ({id, manager: false}))
+            };
+            await axiosInstance.post("/groups", data)
+            return true
+        } catch {
+            return false
+        }
+    }
+
+    // test: createGroup("אוצר4", "depte5fwcj_770", ["usryr1kot_770"]).then(r => console.log("Succeeded?: " + r))
+
 
     const queryUsers = () => {
         getUsers().then(res => {
@@ -64,12 +117,9 @@ export default (x: string) => {
     };
 
     const queryGroups = () => {
-        getGroups().then(res => {
-            if (res) {
-                const groups = res.map((x: any) => ({
-                    x
-                }));
-                setGroups([{label: "חפש או בחר איש צוות", id: "empty",}, ...removeDuplicatesById(groups)])
+        getGroups().then(groups => {
+            if (groups) {
+                setGroups(groups)
                 setGroupsTimestamp(Date.now())
             }
         })
@@ -86,9 +136,5 @@ export default (x: string) => {
         }
     }, []);
 
-    const updateGroups = (groups: any) => {
-
-    }
-
-    return {users, usersTimestamp, queryUsers, groups, groupsTimestamp, queryGroups, updateGroups}
+    return {users, usersTimestamp, queryUsers, groups, groupsTimestamp, queryGroups, createGroup, deleteAllGroups}
 }

@@ -82,9 +82,30 @@ const getPirit = (shifter: number): string => {
     return formatTime(startHour) + ' - ' + formatTime(endHour);
 }
 
+const Manager = ({synch}: any) => {
+    const {users, groups, createGroup, deleteAllGroups} = synch;
 
-const Manager = ({users, groups, updateGroups}:any) => {
+    useEffect(() => {
 
+        const yaba = EMPTY_YABA; // Initialize the Yaba structure
+
+        groups.forEach((item:any) => {
+            debugger
+            const keys = item.display_name.split('.');
+            let ref:any = yaba;
+            keys.forEach((key:string, index:number) => {
+                if (index === keys.length - 1) {
+                    ref[key] = item.profiles;
+                } else {
+                    if (!ref[key]) ref[key] = {};
+                    ref = ref[key];
+                }
+            });
+        });
+        setParsedPiritManning(yaba);
+    }, [groups]);
+
+    const [parsedPiritManning, setParsedPiritManning] = useState<Yaba>(EMPTY_YABA);
     const [piritManning, setPiritManning] = useState<Yaba[]>([]);
     const [index, setIndex] = useState<number>(0);
 

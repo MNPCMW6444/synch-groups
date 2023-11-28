@@ -11,7 +11,7 @@ const UI = ({x}: any) => {
             <ConnectivityOC synch={synch}/>
         </Grid>
         <Grid item>
-            <Manager users={synch.users} groups={synch.groups} updateGroups={synch.updateGroups}/>
+            <Manager synch={synch}/>
         </Grid>
     </Grid>
 }
