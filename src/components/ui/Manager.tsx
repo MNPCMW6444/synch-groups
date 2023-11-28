@@ -83,7 +83,7 @@ const getPirit = (shifter: number): string => {
 }
 
 const Manager = ({synch}: any) => {
-    const {users, groups, createGroup, deleteAllGroups} = synch;
+    const {users, groups, /*createGroup, deleteAllGroups*/} = synch;
 
     useEffect(() => {
 
@@ -105,7 +105,7 @@ const Manager = ({synch}: any) => {
         setParsedPiritManning(yaba);
     }, [groups]);
 
-    const [parsedPiritManning, setParsedPiritManning] = useState<Yaba>(EMPTY_YABA);
+    const [/*parsedPiritManning*/, setParsedPiritManning] = useState<Yaba>(EMPTY_YABA);
     const [piritManning, setPiritManning] = useState<Yaba[]>([]);
     const [index, setIndex] = useState<number>(0);
 
