@@ -83,7 +83,7 @@ const getPirit = (shifter: number): string => {
 }
 
 
-const Manager = ({users}:any) => {
+const Manager = ({users, groups, updateGroups}:any) => {
 
     const [piritManning, setPiritManning] = useState<Yaba[]>([]);
     const [index, setIndex] = useState<number>(0);

@@ -6,7 +6,22 @@ import {User} from "../components/ui/manager/ManningSelector.tsx";
 const YABA_CLIENT_FIELD = "nelson"
 export const POLLING_INTERVAL = 1000 * 60;
 
+const removeDuplicatesById = (users: User[]): User[] => {
+    const unique = new Map<string, User>();
+    users.forEach(user => {
+        if (!(unique.has(user.id) && unique.has(user.label))) {
+            user.id && user.id !== "null" && user.label && user.label !== "null" && unique.set(user.id, user);
+        }
+    });
+    return Array.from(unique.values());
+}
+
 export default (x: string) => {
+    const [users, setUsers] = useState<User[]>([]);
+    const [groups, setGroups] = useState<any[]>([]);
+    const [usersTimestamp, setUsersTimestamp] = useState<number>(Date.now());
+    const [groupsTimestamp, setGroupsTimestamp] = useState<number>(Date.now());
+
     const axiosInstance = axios.create({
         baseURL: "https://api.synchapp.io",
         headers: {
@@ -25,16 +40,6 @@ export default (x: string) => {
         }
     }
 
-    const removeDuplicatesById = (users: User[]): User[] => {
-        const unique = new Map<string, User>();
-        users.forEach(user => {
-            if (!(unique.has(user.id) && unique.has(user.label))) {
-                user.id && user.id !== "null" && user.label && user.label !== "null" && unique.set(user.id, user);
-            }
-        });
-        return Array.from(unique.values());
-    }
-
     const getGroups = async () => {
         try {
             const {data: groups} = await axiosInstance.get("/groups/clientField/" + YABA_CLIENT_FIELD)
@@ -43,12 +48,6 @@ export default (x: string) => {
             return e
         }
     }
-
-    const [users, setUsers] = useState<User[]>([]);
-    const [groups, setGroups] = useState<any[]>([]);
-
-    const [usersTimestamp, setUsersTimestamp] = useState<number>(Date.now());
-    const [groupsTimestamp, setGroupsTimestamp] = useState<number>(Date.now());
 
     const queryUsers = () => {
         getUsers().then(res => {
@@ -86,5 +85,9 @@ export default (x: string) => {
         }
     }, []);
 
-    return {users, usersTimestamp, queryUsers, groups, groupsTimestamp, queryGroups}
+    const updateGroups = (groups: any) => {
+
+    }
+
+    return {users, usersTimestamp, queryUsers, groups, groupsTimestamp, queryGroups,updateGroups}
 }
