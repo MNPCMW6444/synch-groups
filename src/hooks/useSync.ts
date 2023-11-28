@@ -4,7 +4,7 @@ import {User} from "../ui/manage/manning/ManningSelector.tsx";
 //import csv from 'async-csv';
 
 const YABA_CLIENT_FIELD = "nelson"
-
+export const POLLING_INTERVAL = 1000 * 60;
 
 export default (x: string) => {
     const axiosInstance = axios.create({
@@ -47,8 +47,8 @@ export default (x: string) => {
     const [users, setUsers] = useState<User[]>([]);
     const [groups, setGroups] = useState<any[]>([]);
 
-    const [usersTimestamp, setUsersTimestamp] = useState<number>(new Date().getTime());
-    const [groupsTimestamp, setGroupsTimestamp] = useState<number>(new Date().getTime());
+    const [usersTimestamp, setUsersTimestamp] = useState<number>(Date.now());
+    const [groupsTimestamp, setGroupsTimestamp] = useState<number>(Date.now());
 
     const queryUsers = () => {
         getUsers().then(res => {
@@ -58,7 +58,7 @@ export default (x: string) => {
                     id
                 }));
                 setUsers([{label: "חפש או בחר איש צוות", id: "empty",}, ...removeDuplicatesById(users)])
-                setUsersTimestamp(new Date().getTime())
+                setUsersTimestamp(Date.now())
             }
         })
     };
@@ -70,16 +70,16 @@ export default (x: string) => {
                     x
                 }));
                 setGroups([{label: "חפש או בחר איש צוות", id: "empty",}, ...removeDuplicatesById(groups)])
-                setGroupsTimestamp(new Date().getTime())
+                setGroupsTimestamp(Date.now())
             }
         })
     };
 
     useEffect(() => {
         queryUsers();
-        const usersPolling = setInterval(queryUsers, 1000 * 60 * 10);
+        const usersPolling = setInterval(queryUsers, POLLING_INTERVAL);
         queryGroups();
-        const groupsPolling = setInterval(queryUsers, 1000 * 60 * 10);
+        const groupsPolling = setInterval(queryGroups, POLLING_INTERVAL);
         return () => {
             clearInterval(usersPolling)
             clearInterval(groupsPolling)
