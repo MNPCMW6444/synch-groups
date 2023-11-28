@@ -43,6 +43,7 @@ export default (x: string) => {
     const getGroups = async () => {
         try {
             const {data: groups} = await axiosInstance.get("/groups/clientField/" + YABA_CLIENT_FIELD)
+            debugger;
             return groups
         } catch (e) {
             return e
@@ -89,5 +90,5 @@ export default (x: string) => {
 
     }
 
-    return {users, usersTimestamp, queryUsers, groups, groupsTimestamp, queryGroups,updateGroups}
+    return {users, usersTimestamp, queryUsers, groups, groupsTimestamp, queryGroups, updateGroups}
 }
