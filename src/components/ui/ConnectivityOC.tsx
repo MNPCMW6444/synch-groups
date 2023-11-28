@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import {Button, Card, CardContent, CardActions, Grid, Typography} from "@mui/material";
 import {Close, Info, OpenInNew, Warning} from "@mui/icons-material";
 import styled from "@emotion/styled";
-import {POLLING_INTERVAL} from "../hooks/useSync.ts";
+import {POLLING_INTERVAL} from "../../hooks/useSync.ts";
 
 const ConnectivityOC = ({synch}: any) => {
     const {usersTimestamp, groupsTimestamp, queryUsers, queryGroups} = synch;

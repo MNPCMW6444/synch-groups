@@ -1,5 +1,5 @@
-import ConnectivityOC from "./ConnectivityOC.tsx";
-import Manager from "./manage/Manager.tsx";
+import ConnectivityOC from "./ui/ConnectivityOC.tsx";
+import Manager from "./ui/Manager.tsx";
 import useSync from "../hooks/useSync.ts";
 import {Grid} from "@mui/material";
 

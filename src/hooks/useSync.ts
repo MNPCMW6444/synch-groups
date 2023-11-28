@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {useEffect, useState} from "react";
-import {User} from "../ui/manage/manning/ManningSelector.tsx";
+import {User} from "../components/ui/manager/ManningSelector.tsx";
 //import csv from 'async-csv';
 
 const YABA_CLIENT_FIELD = "nelson"

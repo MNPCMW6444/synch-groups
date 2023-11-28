@@ -1,4 +1,4 @@
-import UI from "./ui/UI.tsx";
+import UI from "./components/UI.tsx";
 
 const App = ({x}: any) => {
     return (

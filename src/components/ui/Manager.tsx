@@ -2,7 +2,7 @@ import {Button, Grid, Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import {Yaba} from "../../index";
 import {ArrowBack, ArrowForward} from "@mui/icons-material";
-import ManningSelector from "./manning/ManningSelector.tsx";
+import ManningSelector from "./manager/ManningSelector.tsx";
 
 const EMPTY_YABA = {
     "מכלול 25": {
