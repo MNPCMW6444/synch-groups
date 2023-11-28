@@ -20,15 +20,23 @@ async function fetchConfig() {
     return await response.json();
 }
 
-fetchConfig().then((config) => {
-
-
+const render = (config: any) => {
     ReactDOM.createRoot(document.getElementById('root')!).render(
         <React.StrictMode>
             <Box width="100vw" height="100vh">
-                <App x={config.IAF_TOKEN}/>
+                <App x={config?.IAF_TOKEN}/>
             </Box>
         </React.StrictMode>,
     )
+}
 
-})
+fetchConfig().then((config) => {
+
+    render(config)
+
+
+}).catch(() => {
+
+    render(undefined)
+
+});

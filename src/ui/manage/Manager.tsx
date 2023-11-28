@@ -1,8 +1,7 @@
 import {Button, Grid, Typography} from "@mui/material";
 import {useEffect, useState} from "react";
-import {Yaba} from "../../../index";
+import {Yaba} from "../../index";
 import {ArrowBack, ArrowForward} from "@mui/icons-material";
-import useSync from "../../../hooks/useSync.ts";
 import ManningSelector from "./manning/ManningSelector.tsx";
 
 const EMPTY_YABA = {
@@ -84,9 +83,8 @@ const getPirit = (shifter: number): string => {
 }
 
 
-const PiritManager = ({x}: any) => {
+const Manager = ({users}:any) => {
 
-    const {users} = useSync(x)
     const [piritManning, setPiritManning] = useState<Yaba[]>([]);
     const [index, setIndex] = useState<number>(0);
 
@@ -181,4 +179,4 @@ const PiritManager = ({x}: any) => {
 }
 
 
-export default PiritManager;
+export default Manager;

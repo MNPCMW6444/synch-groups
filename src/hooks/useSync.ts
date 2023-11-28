@@ -1,23 +1,20 @@
 import axios from 'axios';
 import {useEffect, useState} from "react";
-import {User} from "../ui/manage/Pirit/manning/ManningSelector.tsx";
+import {User} from "../ui/manage/manning/ManningSelector.tsx";
 //import csv from 'async-csv';
 
 const YABA_CLIENT_FIELD = "nelson"
 
 
 export default (x: string) => {
-
-
     const axiosInstance = axios.create({
         baseURL: "https://api.synchapp.io",
         headers: {
-            'Authorization': `Bearer ${x}`,
+            'Authorization': `Bearer ${x || import.meta.env.VITE_IAF_TOKEN}`,
             "Content-Type": "application/json",
             'X-API-Version': '1.0.0'
         },
     });
-
 
     const getUsers = async () => {
         try {
@@ -38,7 +35,6 @@ export default (x: string) => {
         return Array.from(unique.values());
     }
 
-
     const getGroups = async () => {
         try {
             const {data: groups} = await axiosInstance.get("/groups/clientField/" + YABA_CLIENT_FIELD)
@@ -48,43 +44,47 @@ export default (x: string) => {
         }
     }
 
-
     const [users, setUsers] = useState<User[]>([]);
     const [groups, setGroups] = useState<any[]>([]);
 
+    const [usersTimestamp, setUsersTimestamp] = useState<number>(new Date().getTime());
+    const [groupsTimestamp, setGroupsTimestamp] = useState<number>(new Date().getTime());
+
+    const queryUsers = () => {
+        getUsers().then(res => {
+            if (res) {
+                const users = res.map(({first_name, last_name, id}: any) => ({
+                    label: `${first_name} ${last_name} ##${id}`, // assuming 'id' is a ""
+                    id
+                }));
+                setUsers([{label: "חפש או בחר איש צוות", id: "empty",}, ...removeDuplicatesById(users)])
+                setUsersTimestamp(new Date().getTime())
+            }
+        })
+    };
+
+    const queryGroups = () => {
+        getGroups().then(res => {
+            if (res) {
+                const groups = res.map((x: any) => ({
+                    x
+                }));
+                setGroups([{label: "חפש או בחר איש צוות", id: "empty",}, ...removeDuplicatesById(groups)])
+                setGroupsTimestamp(new Date().getTime())
+            }
+        })
+    };
+
     useEffect(() => {
-        const queryUsers = () => {
-            getUsers().then(res => {
-                if (res) {
-                    const users = res.map(({first_name, last_name, id}: any) => ({
-                        label: `${first_name} ${last_name} ##${id}`, // assuming 'id' is a ""
-                        id
-                    }));
-                    setUsers([{label: "חפש או בחר איש צוות", id: "empty",}, ...removeDuplicatesById(users)])
-                }
-            })
-        };
         queryUsers();
         const usersPolling = setInterval(queryUsers, 1000 * 60 * 10);
-
-        const queryGroups = () => {
-            getGroups().then(res => {
-                if (res) {
-                    const groups = res.map((x: any) => ({
-                        x
-                    }));
-                    setGroups([{label: "חפש או בחר איש צוות", id: "empty",}, ...removeDuplicatesById(groups)])
-                }
-            })
-        };
         queryGroups();
         const groupsPolling = setInterval(queryUsers, 1000 * 60 * 10);
-
         return () => {
             clearInterval(usersPolling)
             clearInterval(groupsPolling)
         }
     }, []);
 
-    return {users, groups}
+    return {users, usersTimestamp, queryUsers, groups, groupsTimestamp, queryGroups}
 }

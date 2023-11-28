@@ -1,10 +1,8 @@
-import PiritManager from "./ui/manage/Pirit/PiritManager.tsx";
-
+import UI from "./ui/UI.tsx";
 
 const App = ({x}: any) => {
-
     return (
-        <PiritManager x={x}/>
+        <UI x={x}/>
     );
 }
 
