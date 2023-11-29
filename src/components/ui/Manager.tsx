@@ -71,7 +71,7 @@ const Manager = ({synch}: any) => {
 
         // Set direction based on whether it's the last level or not
         const direction = isLastLevel ? "row" : "column";
-        const header = <Typography variant={("h" + (depth + 3)) as any}>
+        const header = <Typography fontFamily="Fredoka" variant={("h" + (depth + 3)) as any}>
             {path[path.length - 1] || "איוש לפיריט " + getPirit(index) + ": "}
         </Typography>;
 
@@ -90,7 +90,7 @@ const Manager = ({synch}: any) => {
                                     variant="contained"><ArrowForward/></Button>
                         </Grid>
                         <Grid item>
-                            <Button onClick={() => setIndex(i => i + 1)} variant="contained"><ArrowBack/></Button>
+                            <Button disabled onClick={() => setIndex(i => i + 1)} variant="contained"><ArrowBack/></Button>
                         </Grid>
                     </Grid>}
                 {Object.keys(mannings).map((key) => {
@@ -100,7 +100,7 @@ const Manager = ({synch}: any) => {
                         return (
                             <Grid item key={path.concat(key).join("_")}
                                   sx={{padding: '8px', minWidth: '250px', minHeight: '100px'}}>
-                                <Typography variant={("h" + (depth + 4) as any)}>
+                                <Typography fontFamily="Fredoka" variant={("h" + (depth + 4) as any)}>
                                     {key}
                                 </Typography>
                                 <ManningSelector path={path.concat(key)} value={mannings[key]}
@@ -132,6 +132,13 @@ const Manager = ({synch}: any) => {
     return (
         <Grid container direction="column" justifyContent="center"
               alignItems="center" spacing={2} wrap="nowrap">
+            <Grid item>
+                <Button variant="contained" disabled={index!==0} onClick={() => setPiritManning(prev => {
+                    const newState = JSON.parse(JSON.stringify(prev));
+                    newState[0] = JSON.parse(JSON.stringify(parsedPiritManning));
+                    return newState;
+                })}>טען ודרוס איושים נוכחיים</Button>
+            </Grid>
             {piritManning[index] && renderMannings(piritManning[index], parsedPiritManning)}
             <Grid item>
                 <Button sx={{padding: "30px 50px", margin: "20px", fontSize: "200%"}} variant="contained"

@@ -35,7 +35,7 @@ const ConnectivityOC = ({synch}: any) => {
         setIsExpanded(!isExpanded);
     };
 
-    const ColoredTypography = styled(({sync, ...otherProps}:any) => <Typography {...otherProps} />)<{ sync: boolean }>`
+    const ColoredTypography = styled(({sync, ...otherProps}:any) => <Typography fontFamily="Fredoka" {...otherProps} />)<{ sync: boolean }>`
       color: ${props => props.sync ? "green" : "red"};
     `;
 
