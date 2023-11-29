@@ -1,4 +1,4 @@
-import {Button, Grid, Typography} from "@mui/material";
+import {Button, CircularProgress, Grid, Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import {Yaba} from "../../index";
 import {ArrowBack, ArrowForward} from "@mui/icons-material";
@@ -43,7 +43,7 @@ const Manager = ({synch}: any) => {
     const [index, setIndex] = useState<number>(0);
 
     const [sending, setSending] = useState(false);
-   // const [saving, setSaving] = useState(false);
+    // const [saving, setSaving] = useState(false);
 
 
     useEffect(() => {
@@ -140,7 +140,7 @@ const Manager = ({synch}: any) => {
                 <Button sx={{padding: "30px 50px", margin: "20px", fontSize: "200%"}} variant="contained"
                         disabled={sending}
                         onClick={index === 0 ? send : save}>
-                    {index === 0 ? "שא - גר" : "שמור תכנון"}
+                    {index === 0 ? (sending ? <CircularProgress/> : "שא - גר") : "שמור תכנון"}
                 </Button>
             </Grid>
         </Grid>
