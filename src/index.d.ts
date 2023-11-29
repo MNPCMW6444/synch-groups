@@ -55,6 +55,12 @@ interface Member {
     manager: boolean
 }
 
+interface Group {
+    display_name: string,
+    profiles: string
+}
+
+
 export interface GroupCreationRequest {
     organization_id: string;
     display_name: string

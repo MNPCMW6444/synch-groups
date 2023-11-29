@@ -64,44 +64,52 @@ export default (x: string) => {
 
 
     const deleteAllGroups = async () => {
+        console.log("started deliting")
+
         try {
             let groups = await getGroups();
             let length = groups.length;
             while (length && length > 0) {
+                console.log("length is " + length)
                 groups = await getGroups();
+                length = groups.length
                 if (groups && groups.length) {
+                    console.log("its id is " + groups[0]?.id)
                     const deletePromises = groups.map((group: any) => axiosInstance.delete("/groups/" + group.id));
                     await Promise.all(deletePromises);
                 }
             }
             queryUsers();
+            console.log("finished deliting")
+
             return true;
         } catch (e) {
             throw false;
         }
     }
 
-    const createGroup = async (name: string, department: string, userIDs: string[]) => {
-        try {
-            const data: GroupCreationRequest = {
-                organization_id: YABA_ORGANIZATION_ID,
-                display_name: name,
-                client_field: YABA_CLIENT_FIELD,
-                media: "audio",
-                department,
-                priority: 1,
-                ptt_lock: false,
-                members: userIDs.map(id => ({id, manager: false}))
-            };
-            await axiosInstance.post("/groups", data)
-            return true
-        } catch {
+
+    const createGroup = async (name: string, department = "depte5fwcj_770", userIDs: string) => {
+        if (userIDs) {
+            try {
+                const data: GroupCreationRequest = {
+                    organization_id: YABA_ORGANIZATION_ID,
+                    display_name: name,
+                    client_field: YABA_CLIENT_FIELD,
+                    media: "audio",
+                    department,
+                    priority: 1,
+                    ptt_lock: false,
+                    members: [{id: userIDs, manager: false}]//.map(id => ({id, manager: false}))
+                };
+                await axiosInstance.post("/groups", data)
+                return true
+            } catch {
+                return false
+            }
             return false
         }
     }
-
-    // test: createGroup("אוצר4", "depte5fwcj_770", ["usryr1kot_770"]).then(r => console.log("Succeeded?: " + r))
-
 
     const queryUsers = () => {
         getUsers().then(res => {
