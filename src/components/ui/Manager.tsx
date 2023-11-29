@@ -34,21 +34,20 @@ const getPirit = (shifter: number): string => {
 const Manager = ({synch}: any) => {
     const {users, groups, createGroup, deleteAllGroups, queryGroups, queryUsers} = synch;
 
-    useEffect(() => {
-        setParsedPiritManning(arrayToYaba(groups));
-    }, [groups]);
-
-    const [parsedPiritManning, setParsedPiritManning] = useState<Yaba>(EMPTY_YABA);
-    const [piritManning, setPiritManning] = useState<Yaba[]>([]);
+    const [parsedPiritManning, setParsedPiritManning] = useState<Yaba>(JSON.parse(JSON.stringify(EMPTY_YABA)));
+    const [piritManning, setPiritManning] = useState<Yaba[]>([JSON.parse(JSON.stringify(EMPTY_YABA))]);
     const [index, setIndex] = useState<number>(0);
 
     const [sending, setSending] = useState(false);
     // const [saving, setSaving] = useState(false);
 
+    useEffect(() => {
+        setParsedPiritManning(arrayToYaba(groups));
+    }, [groups]);
 
     useEffect(() => {
         if (index > piritManning.length - 1) {
-            setPiritManning([...piritManning, EMPTY_YABA])
+            setPiritManning([...piritManning, JSON.parse(JSON.stringify(EMPTY_YABA))])
         }
     }, [index]);
 
@@ -94,16 +93,14 @@ const Manager = ({synch}: any) => {
                             <Button onClick={() => setIndex(i => i + 1)} variant="contained"><ArrowBack/></Button>
                         </Grid>
                     </Grid>}
-                {Object.keys(mannings).map(key => {
-                    if (typeof mannings[key] === 'object' && mannings[key] !== null) {
-                        // Recursive call for nested objects
+                {Object.keys(mannings).map((key) => {
+                    if (typeof mannings[key as keyof Yaba] === 'object' && mannings[key as keyof Yaba] !== null) {
                         return renderMannings(mannings[key], otherMannings[key], path.concat(key), depth + 1);
                     } else {
-                        // Handling non-object values (i.e., your leaf nodes)
                         return (
                             <Grid item key={path.concat(key).join("_")}
                                   sx={{padding: '8px', minWidth: '250px', minHeight: '100px'}}>
-                                <Typography variant={("h" + (depth + 4)) as any}>
+                                <Typography variant={("h" + (depth + 4) as any)}>
                                     {key}
                                 </Typography>
                                 <ManningSelector path={path.concat(key)} value={mannings[key]}

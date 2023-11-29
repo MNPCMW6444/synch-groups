@@ -70,7 +70,7 @@ export const yabaToArray = (yaba: Yaba): Group[] => {
 
 
 export const arrayToYaba = (arr: Group[]): Yaba => {
-    const yaba = EMPTY_YABA; // Initialize the Yaba structure
+    const yaba = JSON.parse(JSON.stringify(EMPTY_YABA)); // Initialize the Yaba structure
 
     arr.forEach(item => {
         const keys = item.display_name.split('/');
