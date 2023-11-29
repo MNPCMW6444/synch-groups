@@ -4,8 +4,8 @@ import {Close, Info, OpenInNew, Warning} from "@mui/icons-material";
 import styled from "@emotion/styled";
 import {POLLING_INTERVAL} from "../../hooks/useSync.ts";
 
-const ConnectivityOC = ({synch}: any) => {
-    const {usersTimestamp, groupsTimestamp, queryUsers, queryGroups} = synch;
+const ConnectivityOC = ({name, data}: any) => {
+    const {usersTimestamp, groupsTimestamp, queryUsers, queryGroups} = data;
     const [sync, setSync] = useState(false);
 
     useEffect(() => {
@@ -44,32 +44,36 @@ const ConnectivityOC = ({synch}: any) => {
         <Card>
             <CardContent>
                 <Grid container alignItems="center" columnSpacing={1} onClick={toggleExpansion}>
-                    <Grid item><Info/></Grid>
-                    <Grid item><ColoredTypography sync={sync} variant="h4" gutterBottom>סטטוס קישוריות
-                        synch</ColoredTypography></Grid>
+                    <Grid item><Info sx={{color: sync ? "green" : "red"}}/></Grid>
+                    <Grid item><ColoredTypography sync={sync} variant="h4" gutterBottom>
+                        סטטוס קישוריות {name}
+                    </ColoredTypography></Grid>
                     <Grid item> {isExpanded ? <Close sx={{color: "blue"}}/> : <OpenInNew sx={{color: "blue"}}/>}</Grid>
                 </Grid>
                 {isExpanded && (
                     <Grid container direction="column" spacing={2}>
-                        <Grid item>
-                            <ColoredTypography sync={sync}>סנכרון משתמשים
-                                אחרון: {convertToReadableTime(usersTimestamp)}</ColoredTypography>
-                        </Grid>
-                        <Grid item>
-                            <ColoredTypography sync={sync}>סנכרון משתמשים הבא צפוי
-                                ב: {nextUpdateTime(usersTimestamp)}</ColoredTypography>
-                        </Grid>
-                        <Grid item>
+                        {usersTimestamp && <>
+                            <Grid item>
+                                <ColoredTypography sync={sync}>סנכרון משתמשים
+                                    אחרון: {convertToReadableTime(usersTimestamp)}</ColoredTypography>
+                            </Grid>
+                            <Grid item>
+                                <ColoredTypography sync={sync}>סנכרון משתמשים הבא צפוי
+                                    ב: {nextUpdateTime(usersTimestamp)}</ColoredTypography>
+                            </Grid>
+                        </>}
+                        {groupsTimestamp && <><Grid item>
                             <ColoredTypography sync={sync}>סנכרון קבוצות
                                 אחרון: {convertToReadableTime(groupsTimestamp)}</ColoredTypography>
                         </Grid>
-                        <Grid item>
-                            <ColoredTypography sync={sync}>סנכרון קבוצות הבא צפוי
-                                ב: {nextUpdateTime(groupsTimestamp)}</ColoredTypography>
-                        </Grid>
-                        {!sync && <Grid item>
-                            <ColoredTypography sync={sync}><Warning/> חוסר סנכרון עם synch מעל 2
-                                דקות</ColoredTypography>
+                            <Grid item>
+                                <ColoredTypography sync={sync}>סנכרון קבוצות הבא צפוי
+                                    ב: {nextUpdateTime(groupsTimestamp)}</ColoredTypography>
+                            </Grid></>}
+                        {!sync && <Grid item container alignItems="center" columnSpacing={1}>
+                            <Grid item> <Warning sx={{color: "red"}}/> </Grid><Grid item> <ColoredTypography
+                            sync={sync}> חוסר סנכרון עם {name} מעל 2
+                            דקות</ColoredTypography></Grid>
                         </Grid>}
 
                     </Grid>
@@ -78,10 +82,10 @@ const ConnectivityOC = ({synch}: any) => {
             {isExpanded && (
                 <CardActions>
                     <Grid container columnSpacing={2} justifyContent="center">
-                        <Grid item> <Button variant="contained" onClick={queryUsers}>סנכרן משתמשים כעת</Button>
-                        </Grid>
-                        <Grid item> <Button variant="contained" onClick={queryGroups}>סנכרן קבוצות כעת</Button>
-                        </Grid>
+                        { queryUsers && <Grid item> <Button variant="contained" onClick={queryUsers}>סנכרן משתמשים כעת</Button>
+                        </Grid>}
+                        { queryGroups && <Grid item> <Button variant="contained" onClick={queryGroups}>סנכרן קבוצות כעת</Button>
+                                                 </Grid>   }
                         <Grid item> <Button variant="contained" onClick={() => {
                             queryGroups();
                             queryUsers();

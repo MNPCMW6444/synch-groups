@@ -1,4 +1,4 @@
-import {Button, CircularProgress, Grid, Typography} from "@mui/material";
+import {Button, Card, CardContent, CircularProgress, Grid, Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import {Yaba} from "../../index";
 import {ArrowBack, ArrowForward} from "@mui/icons-material";
@@ -66,53 +66,74 @@ const Manager = ({synch}: any) => {
         });
     };
 
-    const renderMannings = (mannings: any, otherMannings: any, path: string[] = [], depth: number = 0) => {
+    const renderMannings = (mannings: any, otherMannings: any, path = [], depth = 0) => {
         const isLastLevel = Object.values(mannings).every(value => typeof value !== 'object' || value === null);
-
-        // Set direction based on whether it's the last level or not
         const direction = isLastLevel ? "row" : "column";
-        const header = <Typography fontFamily="Fredoka" variant={("h" + (depth + 3)) as any}>
-            {path[path.length - 1] || "איוש לפיריט " + getPirit(index) + ": "}
-        </Typography>;
+        const header = (
+            <Typography variant={("h" + (depth + 3)) as any} sx={{fontWeight: 'bold', mb: 1}}>
+                {path[path.length - 1] || "איוש לפיריט " + getPirit(index) + ": "}
+            </Typography>
+        );
 
         return (
-            <Grid item container key={path.concat(depth + "").join("_")} direction={direction}
-                  justifyContent="center"
-                  alignItems="center" spacing={1}>
-                {path.length > 0 ? header :
-                    <Grid item container justifyContent="center" alignItems="center" columnSpacing={2}
-                          key={path.concat(depth + "x").join("_")}>
-                        <Grid item>
-                            {header}
-                        </Grid>
-                        <Grid item>
-                            <Button disabled={index === 0} onClick={() => setIndex(i => i - 1)}
-                                    variant="contained"><ArrowForward/></Button>
-                        </Grid>
-                        <Grid item>
-                            <Button disabled onClick={() => setIndex(i => i + 1)} variant="contained"><ArrowBack/></Button>
-                        </Grid>
-                    </Grid>}
-                {Object.keys(mannings).map((key) => {
-                    if (typeof mannings[key as keyof Yaba] === 'object' && mannings[key as keyof Yaba] !== null) {
-                        return renderMannings(mannings[key], otherMannings[key], path.concat(key), depth + 1);
-                    } else {
-                        return (
-                            <Grid item key={path.concat(key).join("_")}
-                                  sx={{padding: '8px', minWidth: '250px', minHeight: '100px'}}>
-                                <Typography fontFamily="Fredoka" variant={("h" + (depth + 4) as any)}>
-                                    {key}
-                                </Typography>
-                                <ManningSelector path={path.concat(key)} value={mannings[key]}
-                                                 color={{f: mannings[key], s: otherMannings[key]}} users={users}
-                                                 setManning={setManning}/>
+            <Card variant="outlined" sx={{my: 2, p: 2, backgroundColor: `hsl(${depth * 65}, 35%, 97%)`}}>
+                <CardContent>
+                    {path.length > 0 ?
+                        <Grid item container justifyContent="center" alignItems="center" spacing={2}>
+                            <Grid item>
+                                {header}
                             </Grid>
-                        );
+                        </Grid>
+                        :
+                        <Grid item container justifyContent="center" alignItems="center" spacing={2}>
+                            <Grid item>
+                                {header}
+                            </Grid>
+                            <Grid item>
+                                <Button disabled={index === 0} onClick={() => setIndex(i => i - 1)} variant="contained">
+                                    <ArrowForward/>
+                                </Button>
+                            </Grid>
+                            <Grid item>
+                                <Button onClick={() => setIndex(i => i + 1)} variant="contained">
+                                    <ArrowBack/>
+                                </Button>
+                            </Grid>
+                        </Grid>
                     }
-                })}
-            </Grid>
+                    <Grid container direction={direction} justifyContent="center" alignItems="center" spacing={2}
+                          wrap="nowrap">
+                        {Object.keys(mannings).map((key: any) => {
+                            if (typeof mannings[key] === 'object' && mannings[key] !== null) {
+                                return renderMannings(mannings[key], otherMannings[key], path.concat(key), depth + 1);
+                            } else {
+                                return (
+                                    <Grid item container direction="column" rowSpacing={2} justifyItems="center"
+                                          alignItems="center" key={path.concat(key).join("_")} sx={{minWidth: 250}}>
+                                        <Grid item>
+                                            <Typography variant={("h" + (depth + 4)) as any} sx={{mb: 1}}>
+                                                {key}:
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item>
+                                            <ManningSelector
+                                                path={path.concat(key)}
+                                                value={mannings[key]}
+                                                color={{f: mannings[key], s: otherMannings[key]}}
+                                                users={users}
+                                                setManning={setManning}
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                );
+                            }
+                        })}
+                    </Grid>
+                </CardContent>
+            </Card>
         );
     };
+
 
     const send = async () => {
         setSending(true);
@@ -132,12 +153,25 @@ const Manager = ({synch}: any) => {
     return (
         <Grid container direction="column" justifyContent="center"
               alignItems="center" spacing={2} wrap="nowrap">
-            <Grid item>
-                <Button variant="contained" disabled={index!==0} onClick={() => setPiritManning(prev => {
-                    const newState = JSON.parse(JSON.stringify(prev));
-                    newState[0] = JSON.parse(JSON.stringify(parsedPiritManning));
-                    return newState;
-                })}>טען ודרוס איושים נוכחיים</Button>
+            <Grid item container justifyContent="center" columnSpacing={4}>
+                <Grid item>
+                    <Button variant="contained" disabled={index !== 0} onClick={() => setPiritManning(prev => {
+                        const newState = JSON.parse(JSON.stringify(prev));
+                        newState[0] = JSON.parse(JSON.stringify(parsedPiritManning));
+                        return newState;
+                    })}>
+                        טען ודרוס איושים נוכחיים מ- synch
+                    </Button>
+                </Grid>
+                <Grid item>
+                    <Button variant="contained" disabled={index !== 0} onClick={() => setPiritManning(prev => {
+                        const newState = JSON.parse(JSON.stringify(prev));
+                        newState[0] = JSON.parse(JSON.stringify(parsedPiritManning));
+                        return newState;
+                    })}>
+                        טען ודרוס איושים נוכחיים משרת תכנון
+                    </Button>
+                </Grid>
             </Grid>
             {piritManning[index] && renderMannings(piritManning[index], parsedPiritManning)}
             <Grid item>
