@@ -35,7 +35,8 @@ const ConnectivityOC = ({synch}: any) => {
         setIsExpanded(!isExpanded);
     };
 
-    const ColoredTypography = styled(({sync, ...otherProps}:any) => <Typography fontFamily="Fredoka" {...otherProps} />)<{ sync: boolean }>`
+    const ColoredTypography = styled(({sync, ...otherProps}: any) => <Typography
+        fontFamily="Fredoka" {...otherProps} />)<{ sync: boolean }>`
       color: ${props => props.sync ? "green" : "red"};
     `;
 
@@ -44,30 +45,30 @@ const ConnectivityOC = ({synch}: any) => {
             <CardContent>
                 <Grid container alignItems="center" columnSpacing={1} onClick={toggleExpansion}>
                     <Grid item><Info/></Grid>
-                    <Grid item><ColoredTypography sync variant="h4" gutterBottom>סטטוס קישוריות
+                    <Grid item><ColoredTypography sync={sync} variant="h4" gutterBottom>סטטוס קישוריות
                         synch</ColoredTypography></Grid>
                     <Grid item> {isExpanded ? <Close sx={{color: "blue"}}/> : <OpenInNew sx={{color: "blue"}}/>}</Grid>
                 </Grid>
                 {isExpanded && (
                     <Grid container direction="column" spacing={2}>
                         <Grid item>
-                            <ColoredTypography sync>סנכרון משתמשים
+                            <ColoredTypography sync={sync}>סנכרון משתמשים
                                 אחרון: {convertToReadableTime(usersTimestamp)}</ColoredTypography>
                         </Grid>
                         <Grid item>
-                            <ColoredTypography sync>סנכרון משתמשים הבא צפוי
+                            <ColoredTypography sync={sync}>סנכרון משתמשים הבא צפוי
                                 ב: {nextUpdateTime(usersTimestamp)}</ColoredTypography>
                         </Grid>
                         <Grid item>
-                            <ColoredTypography sync>סנכרון קבוצות
+                            <ColoredTypography sync={sync}>סנכרון קבוצות
                                 אחרון: {convertToReadableTime(groupsTimestamp)}</ColoredTypography>
                         </Grid>
                         <Grid item>
-                            <ColoredTypography sync>סנכרון קבוצות הבא צפוי
+                            <ColoredTypography sync={sync}>סנכרון קבוצות הבא צפוי
                                 ב: {nextUpdateTime(groupsTimestamp)}</ColoredTypography>
                         </Grid>
                         {!sync && <Grid item>
-                            <ColoredTypography sync><Warning/> חוסר סנכרון עם synch מעל 2
+                            <ColoredTypography sync={sync}><Warning/> חוסר סנכרון עם synch מעל 2
                                 דקות</ColoredTypography>
                         </Grid>}
 
@@ -76,9 +77,17 @@ const ConnectivityOC = ({synch}: any) => {
             </CardContent>
             {isExpanded && (
                 <CardActions>
-                    <Button variant="contained" onClick={queryUsers}>סנכרן משתמשים כעת</Button>
-                    <Button variant="contained" onClick={queryGroups}>סנכרן קבוצות כעת</Button>
-                    <Button variant="contained" onClick={()=>{queryGroups(); queryUsers();}}>סנכרן הכל כעת</Button>
+                    <Grid container columnSpacing={2} justifyContent="center">
+                        <Grid item> <Button variant="contained" onClick={queryUsers}>סנכרן משתמשים כעת</Button>
+                        </Grid>
+                        <Grid item> <Button variant="contained" onClick={queryGroups}>סנכרן קבוצות כעת</Button>
+                        </Grid>
+                        <Grid item> <Button variant="contained" onClick={() => {
+                            queryGroups();
+                            queryUsers();
+                        }}>סנכרן הכל כעת</Button>
+                        </Grid>
+                    </Grid>
                 </CardActions>
             )}
         </Card>
