@@ -78,6 +78,7 @@ const ConnectivityOC = ({synch}: any) => {
                 <CardActions>
                     <Button variant="contained" onClick={queryUsers}>סנכרן משתמשים כעת</Button>
                     <Button variant="contained" onClick={queryGroups}>סנכרן קבוצות כעת</Button>
+                    <Button variant="contained" onClick={()=>{queryGroups(); queryUsers();}}>סנכרן הכל כעת</Button>
                 </CardActions>
             )}
         </Card>
