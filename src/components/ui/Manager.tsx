@@ -10,8 +10,6 @@ const getPirit = (shifter: number): string => {
     const now = new Date();
     const hours = [1, 4, 7, 10, 13, 16, 19, 22];
     let lastHour = hours[hours.length - 1];
-
-    // Find the last rounded hour that matches one of the specified hours
     for (let i = 0; i < hours.length; i++) {
         if (now.getHours() >= hours[i]) {
             lastHour = hours[i];
@@ -19,8 +17,6 @@ const getPirit = (shifter: number): string => {
             break;
         }
     }
-
-    // Apply the shifter
     const startHourIndex = (hours.indexOf(lastHour) + shifter) % hours.length;
     const endHourIndex = (startHourIndex + 1) % hours.length;
     const startHour = hours[startHourIndex];

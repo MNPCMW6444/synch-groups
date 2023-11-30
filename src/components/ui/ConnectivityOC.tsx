@@ -14,7 +14,7 @@ const ConnectivityOC = ({name, data}: any) => {
             const allowed = 1000 * 120;
             const usersDelay = now - usersTimestamp;
             const groupsDelay = now - groupsTimestamp;
-            setSync(usersDelay < allowed && groupsDelay < allowed);
+            setSync((usersDelay < allowed || (!queryUsers)) && (groupsDelay < allowed || (!queryGroups)));
         }
         check();
         const checkI = setInterval(() => check(), 10000)
@@ -82,10 +82,12 @@ const ConnectivityOC = ({name, data}: any) => {
             {isExpanded && (
                 <CardActions>
                     <Grid container columnSpacing={2} justifyContent="center">
-                        { queryUsers && <Grid item> <Button variant="contained" onClick={queryUsers}>סנכרן משתמשים כעת</Button>
-                        </Grid>}
-                        { queryGroups && <Grid item> <Button variant="contained" onClick={queryGroups}>סנכרן קבוצות כעת</Button>
-                                                 </Grid>   }
+                        {queryUsers &&
+                            <Grid item> <Button variant="contained" onClick={queryUsers}>סנכרן משתמשים כעת</Button>
+                            </Grid>}
+                        {queryGroups &&
+                            <Grid item> <Button variant="contained" onClick={queryGroups}>סנכרן קבוצות כעת</Button>
+                            </Grid>}
                         <Grid item> <Button variant="contained" onClick={() => {
                             queryGroups();
                             queryUsers();

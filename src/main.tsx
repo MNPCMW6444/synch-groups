@@ -24,7 +24,7 @@ const render = (config: any) => {
     ReactDOM.createRoot(document.getElementById('root')!).render(
         <React.StrictMode>
             <Box width="100vw" height="100vh">
-                <App x={config?.IAF_TOKEN}/>
+                <App x={{x: config?.IAF_TOKEN, u: config?.USR, p: config?.PASSWD}}/>
             </Box>
         </React.StrictMode>,
     )

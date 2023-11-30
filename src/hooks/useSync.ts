@@ -18,7 +18,7 @@ const removeDuplicatesById = (users: User[]): User[] => {
     return Array.from(unique.values());
 }
 
-export default (x: string) => {
+export default ({x}: { x: string }) => {
     const [users, setUsers] = useState<User[]>([]);
     const [groups, setGroups] = useState<any[]>([]);
     const [usersTimestamp, setUsersTimestamp] = useState<number>(Date.now());
@@ -107,8 +107,8 @@ export default (x: string) => {
             } catch {
                 return false
             }
-            return false
         }
+        return false
     }
 
     const queryUsers = () => {
