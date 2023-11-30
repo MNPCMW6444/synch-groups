@@ -64,23 +64,23 @@ export default ({x}: { x: string }) => {
 
 
     const deleteAllGroups = async () => {
-        console.log("started deliting")
+
 
         try {
             let groups = await getGroups();
             let length = groups.length;
             while (length && length > 0) {
-                console.log("length is " + length)
+
                 groups = await getGroups();
                 length = groups.length
                 if (groups && groups.length) {
-                    console.log("its id is " + groups[0]?.id)
+
                     const deletePromises = groups.map((group: any) => axiosInstance.delete("/groups/" + group.id));
                     await Promise.all(deletePromises);
                 }
             }
             queryUsers();
-            console.log("finished deliting")
+
 
             return true;
         } catch (e) {

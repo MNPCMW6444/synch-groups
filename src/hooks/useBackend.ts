@@ -49,11 +49,11 @@ export default ({u, p}: { u: string, p: string }) => {
     const queryGroups = () => {
         getGroups().then(res => {
             if (res) {
-                console.log("Got data from backend: ", res);
+
                 setData(res)
                 setGroupsTimestamp(Date.now())
             }
-            console.log("didnt got data from backend: ", res);
+
         })
     };
 
