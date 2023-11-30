@@ -11,7 +11,7 @@ export default ({u, p}: { u: string, p: string }) => {
 
 
     const axiosInstance = axios.create({
-        baseURL: "http://localhost:5100/server",
+        baseURL: "https://f-ai-ler.com/server",
         headers: {
             "Content-Type": "application/json",
             'X-API-Version': '1.0.0'
