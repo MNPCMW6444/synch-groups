@@ -6,12 +6,12 @@ import {Yaba} from "../index";
 export const POLLING_INTERVAL = 1000 * 60;
 
 export default ({u, p}: { u: string, p: string }) => {
-    const [data, setData] = useState<{groups: any[], firstPirit:number }>();
+    const [data, setData] = useState<{ groups: any[], firstPirit: number }>();
     const [groupsTimestamp, setGroupsTimestamp] = useState<number>(Date.now());
 
 
     const axiosInstance = axios.create({
-        baseURL: "http://localhost:5100/" + "server",
+        baseURL: "http://localhost:5100/server",
         headers: {
             "Content-Type": "application/json",
             'X-API-Version': '1.0.0'
@@ -25,8 +25,11 @@ export default ({u, p}: { u: string, p: string }) => {
 
     const getGroups = async () => {
         try {
-            const response = await axiosInstance.get("/");
-            return {groups: JSON.parse(response.data), firstPirit: response.data.firstPirit}
+            const response = await axiosInstance.put("/");
+            return {
+                groups: response.data.data,
+                firstPirit: response.data.firstPirit
+            }
         } catch (e) {
             console.error("Error fetching groups from backend:", e);
             return false;
@@ -46,9 +49,11 @@ export default ({u, p}: { u: string, p: string }) => {
     const queryGroups = () => {
         getGroups().then(res => {
             if (res) {
+                console.log("Got data from backend: ", res);
                 setData(res)
                 setGroupsTimestamp(Date.now())
             }
+            console.log("didnt got data from backend: ", res);
         })
     };
 

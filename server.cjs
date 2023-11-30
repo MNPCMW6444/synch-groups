@@ -50,10 +50,6 @@ connection.once("open", function () {
 
     const dataModel = new mongoose.Schema(
         {
-            user: {
-                type: mongoose.Schema.Types.ObjectId,
-                required: true,
-            },
             data: {
                 type: String,
                 required: true,
@@ -71,34 +67,37 @@ connection.once("open", function () {
 
     const Data = connection.model("data", dataModel);
 
+    app.use(express.json());
 
-    app.get('/server', async (req, res) =>
+    app.put('/server', async (req, res) => {
+        console.log("GET /server");
         res.json({
-            data: (await Data.find())[0]
-        })
+                data: (await Data.find())[0]
+            })
+        }
     );
 
     app.post('/server', async (req, res) => {
-        await connection.db.dropCollection('data');
-        const data = new Data({...req.body.data});
-        await data.save()
-        return res.json({suc: true})
-    });
+        try {
+            await connection.db.collection('data').deleteMany({});
+            const data = new Data({...req.body});
+            await data.save()
+            return res.json({suc: true})
+        } catch {
+            return res.json({suc: false})
+        }
+    })
+});
 
-    app.use(express.static(path.join(__dirname, 'dist')));
+app.use(express.static(path.join(__dirname, 'dist')));
 
-    app.get('*', (_, res) => {
-        res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-    });
-
-
-    const port = 5100;
-    app.listen(port, "0.0.0.0");
-
-    console.log('App is listening on port ' + port);
-
-
+app.get('*', (_, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 
+const port = 5100;
+app.listen(port, "0.0.0.0");
+
+console.log('App is listening on port ' + port);
 

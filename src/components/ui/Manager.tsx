@@ -33,7 +33,6 @@ const getPirit = (shifter: number): { r: string, startHour: number } => {
 const Manager = ({synch, back}: any) => {
     const {users, groups, createGroup, deleteAllGroups, queryUsers, queryGroups} = synch;
     const {data, saveData, queryGroups: backqueryGroups} = back;
-    const backGroups = data?.groups || [];
 
     const [parsedPiritManning, setParsedPiritManning] = useState<Yaba>(JSON.parse(JSON.stringify(EMPTY_YABA)));
     const [savedPiritManning, setSavedPiritManning] = useState<Yaba[]>([JSON.parse(JSON.stringify(EMPTY_YABA))]);
@@ -41,15 +40,16 @@ const Manager = ({synch, back}: any) => {
     const [index, setIndex] = useState<number>(0);
 
     const [sending, setSending] = useState(false);
-    // const [saving, setSaving] = useState(false);
+    const [saving, setSaving] = useState(false);
 
     useEffect(() => {
         setParsedPiritManning(arrayToYaba(groups));
     }, [groups]);
 
     useEffect(() => {
-        setSavedPiritManning(backGroups.map((prirt:any) => arrayToYaba(prirt)));
-    }, [groups]);
+        console.log("backGroups  " + JSON.stringify(data?.groups?.data))
+        data?.groups?.data && setSavedPiritManning(JSON.parse(data?.groups?.data).map((prirt: any) => arrayToYaba(prirt)));
+    }, [data?.groups]);
 
     useEffect(() => {
         if (index > piritManning.length - 1) {
@@ -154,7 +154,12 @@ const Manager = ({synch, back}: any) => {
 
 
     const save = async () => {
-        saveData(piritManning, daysSince() * 8 + getPirit(0).startHour);
+        setSaving(true);
+        await saveData(piritManning, daysSince() * 8 + getPirit(0).startHour);
+        await queryGroups()
+        await queryUsers();
+        await backqueryGroups();
+        setSaving(false);
     }
 
 
@@ -174,7 +179,7 @@ const Manager = ({synch, back}: any) => {
                 <Grid item>
                     <Button variant="contained" disabled={index !== 0} onClick={() => setPiritManning(prev => {
                         const newState = JSON.parse(JSON.stringify(prev));
-                        newState[0] = JSON.parse(JSON.stringify(savedPiritManning[index]));
+                        if (savedPiritManning[index]) newState[0] = JSON.parse(JSON.stringify(savedPiritManning[index]));
                         return newState;
                     })}>
                         טען ודרוס איושים נוכחיים משרת תכנון
@@ -186,7 +191,8 @@ const Manager = ({synch, back}: any) => {
                 <Button sx={{padding: "30px 50px", margin: "20px", fontSize: "200%"}} variant="contained"
                         disabled={sending}
                         onClick={index === 0 ? send : save}>
-                    {index === 0 ? (sending ? <CircularProgress/> : "שא - גר") : "שמור תכנון"}
+                    {index === 0 ? (sending ? <CircularProgress/> : "שא - גר") : (saving ?
+                        <CircularProgress/> : "שמור תכנון")}
                 </Button>
             </Grid>
         </Grid>
