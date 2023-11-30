@@ -24,7 +24,7 @@ const ManningSelector = ({value, path, users, setManning, color}: {
                           backgroundColor: "yellow"
                       } : color?.state !== color?.plan ? {
                           width: 250,
-                          backgroundColor: "green"
+                          backgroundColor: "#6bf36b"
                       } : color?.state !== color?.synch ? {width: 250, backgroundColor: "cyan"} : {width: 250}}
                       onChange={(_: any, value) => {
                           if (value) {

@@ -175,10 +175,11 @@ const Manager = ({synch, back}: any) => {
 
     return (
         <Grid container direction="column" justifyContent="center"
-              alignItems="center" spacing={2} wrap="nowrap">
+              alignItems="center" rowSpacing={6} wrap="nowrap">
             <Grid item container justifyContent="center" columnSpacing={4}>
+
                 <Grid item>
-                    <Button variant="contained" onClick={() => setPiritManning(prev => {
+                    <Button variant="contained" sx={{fontSize:"120%"}} onClick={() => setPiritManning(prev => {
                         const newState = JSON.parse(JSON.stringify(prev));
                         newState[0] = JSON.parse(JSON.stringify(parsedPiritManning));
                         return newState;
@@ -187,7 +188,7 @@ const Manager = ({synch, back}: any) => {
                     </Button>
                 </Grid>
                 <Grid item>
-                    <Button variant="contained" onClick={() => setPiritManning(prev => {
+                    <Button variant="contained" sx={{fontSize:"120%"}} onClick={() => setPiritManning(prev => {
                         const newState = JSON.parse(JSON.stringify(prev));
                         if (savedPiritManning[index]) newState[0] = JSON.parse(JSON.stringify(savedPiritManning[index]));
                         return newState;
@@ -196,7 +197,7 @@ const Manager = ({synch, back}: any) => {
                     </Button>
                 </Grid>
                 <Grid item>
-                    <Button variant="contained" color="secondary"
+                    <Button variant="contained" sx={{fontSize:"120%"}} color="secondary"
                             disabled={saving}
                             onClick={save}>
                         {(saving ?
@@ -204,7 +205,31 @@ const Manager = ({synch, back}: any) => {
                     </Button>
                 </Grid>
             </Grid>
-            {piritManning[index] && renderMannings(piritManning[index], parsedPiritManning, savedPiritManning[index])}
+            <Grid item container justifyContent="center" columnSpacing={2} alignItems="center">
+                <Grid item>
+                    <Typography variant="h5" sx={{fontWeight: 'bold', mb: 1}}>
+                        מקרא צבעים:
+                    </Typography>
+                </Grid>
+                <Grid item>
+                    <ManningSelector value={"איוש לא שמור"} path={[""]}
+                                     users={[{label: "איוש לא שמור", id: "איוש לא שמור"}]} setManning={() => {
+                    }} color={{plan: "a", synch: "b", state: "c"}}/>
+                </Grid>
+                <Grid item>
+                    <ManningSelector value={"איוש שמור לתכנון בלבד"} path={[""]}
+                                     users={[{label: "איוש שמור לתכנון בלבד", id: "איוש שמור לתכנון בלבד"}]} setManning={() => {
+                    }} color={{plan: "c", synch: "b", state: "c"}}/>
+                </Grid>
+                <Grid item>
+                    <ManningSelector value={"איוש שמור לsynch בלבד"} path={[""]}
+                                     users={[{label: "איוש שמור לsynch בלבד", id: "איוש שמור לsynch בלבד"}]} setManning={() => {
+                    }} color={{plan: "a", synch: "c", state: "c"}}/>
+                </Grid>
+            </Grid>
+            <Grid item>
+                {piritManning[index] && renderMannings(piritManning[index], parsedPiritManning, savedPiritManning[index])}
+            </Grid>
             {index === 0 && <Grid item>
                 <Button color="secondary" sx={{padding: "30px 50px", margin: "20px", fontSize: "200%"}}
                         variant="contained"
