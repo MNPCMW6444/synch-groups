@@ -30,6 +30,13 @@ const getPirit = (shifter: number): { r: string, startHour: number } => {
     };
 }
 
+
+const removeFirstNElements = <T, >(array: T[], n: number): T[] => n >= array.length ? [] : array.slice(n);
+
+
+// Usage example
+
+
 const Manager = ({synch, back}: any) => {
     const {users, groups, createGroup, deleteAllGroups, queryUsers, queryGroups} = synch;
     const {data, saveData, queryGroups: backqueryGroups} = back;
@@ -47,8 +54,7 @@ const Manager = ({synch, back}: any) => {
     }, [groups]);
 
     useEffect(() => {
-        console.log("backGroups  " + JSON.stringify(data?.groups?.data))
-        data?.groups?.data && setSavedPiritManning(JSON.parse(data?.groups?.data).map((prirt: any) => arrayToYaba(prirt)));
+        data?.groups?.data && setSavedPiritManning(removeFirstNElements(JSON.parse(data?.groups?.data), (daysSince() * 8 + getPirit(0).startHour) - data.groups.firstPirit));
     }, [data?.groups]);
 
     useEffect(() => {
@@ -168,7 +174,7 @@ const Manager = ({synch, back}: any) => {
               alignItems="center" spacing={2} wrap="nowrap">
             <Grid item container justifyContent="center" columnSpacing={4}>
                 <Grid item>
-                    <Button variant="contained" disabled={index !== 0} onClick={() => setPiritManning(prev => {
+                    <Button variant="contained" onClick={() => setPiritManning(prev => {
                         const newState = JSON.parse(JSON.stringify(prev));
                         newState[0] = JSON.parse(JSON.stringify(parsedPiritManning));
                         return newState;
@@ -177,7 +183,7 @@ const Manager = ({synch, back}: any) => {
                     </Button>
                 </Grid>
                 <Grid item>
-                    <Button variant="contained" disabled={index !== 0} onClick={() => setPiritManning(prev => {
+                    <Button variant="contained" onClick={() => setPiritManning(prev => {
                         const newState = JSON.parse(JSON.stringify(prev));
                         if (savedPiritManning[index]) newState[0] = JSON.parse(JSON.stringify(savedPiritManning[index]));
                         return newState;
@@ -185,16 +191,24 @@ const Manager = ({synch, back}: any) => {
                         טען ודרוס איושים נוכחיים משרת תכנון
                     </Button>
                 </Grid>
+                <Grid item>
+                    <Button variant="contained" color="secondary"
+                            disabled={saving}
+                            onClick={save}>
+                        {(saving ?
+                            <CircularProgress/> : "שמור ודרוס איושים נוכחיים לשרת התכנון")}
+                    </Button>
+                </Grid>
             </Grid>
             {piritManning[index] && renderMannings(piritManning[index], parsedPiritManning)}
-            <Grid item>
-                <Button sx={{padding: "30px 50px", margin: "20px", fontSize: "200%"}} variant="contained"
-                        disabled={sending}
-                        onClick={index === 0 ? send : save}>
-                    {index === 0 ? (sending ? <CircularProgress/> : "שא - גר") : (saving ?
-                        <CircularProgress/> : "שמור תכנון")}
+            {index === 0 && <Grid item>
+                <Button color="secondary" sx={{padding: "30px 50px", margin: "20px", fontSize: "200%"}}
+                        variant="contained"
+                        disabled={sending || index !== 0}
+                        onClick={send}>
+                    {(sending ? <CircularProgress/> : "שא - גר")}
                 </Button>
-            </Grid>
+            </Grid>}
         </Grid>
     );
 }

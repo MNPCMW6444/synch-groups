@@ -70,8 +70,8 @@ connection.once("open", function () {
     app.use(express.json());
 
     app.put('/server', async (req, res) => {
-        console.log("GET /server");
-        res.json({
+            console.log("GET /server");
+            res.json({
                 data: (await Data.find())[0]
             })
         }
@@ -79,7 +79,7 @@ connection.once("open", function () {
 
     app.post('/server', async (req, res) => {
         try {
-            await connection.db.collection('data').deleteMany({});
+            console.log(await connection.db.collection('datas').deleteMany({}));
             const data = new Data({...req.body});
             await data.save()
             return res.json({suc: true})
