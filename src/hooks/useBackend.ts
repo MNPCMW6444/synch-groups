@@ -1,11 +1,12 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
+import {Yaba} from "../index";
 
 
 export const POLLING_INTERVAL = 1000 * 60;
 
 export default ({u, p}: { u: string, p: string }) => {
-    const [groups, setGroups] = useState<any[]>([]);
+    const [data, setData] = useState<{groups: any[], firstPirit:number }>();
     const [groupsTimestamp, setGroupsTimestamp] = useState<number>(Date.now());
 
 
@@ -25,16 +26,16 @@ export default ({u, p}: { u: string, p: string }) => {
     const getGroups = async () => {
         try {
             const response = await axiosInstance.get("/");
-            return JSON.parse(response.data)
+            return {groups: JSON.parse(response.data), firstPirit: response.data.firstPirit}
         } catch (e) {
             console.error("Error fetching groups from backend:", e);
-            return [];
+            return false;
         }
     };
 
-    const saveData = async (groups: any[]) => {
+    const saveData = async (groups: Yaba[], firstPirit: number) => {
         try {
-            await axiosInstance.post("/", {data: JSON.stringify(groups)});
+            await axiosInstance.post("/", {data: JSON.stringify(groups), firstPirit});
             return true
         } catch (e) {
             console.error("Error saving groups to backend:", e);
@@ -43,9 +44,9 @@ export default ({u, p}: { u: string, p: string }) => {
     }
 
     const queryGroups = () => {
-        getGroups().then(groups => {
-            if (groups) {
-                setGroups(groups)
+        getGroups().then(res => {
+            if (res) {
+                setData(res)
                 setGroupsTimestamp(Date.now())
             }
         })
@@ -59,5 +60,5 @@ export default ({u, p}: { u: string, p: string }) => {
         }
     }, []);
 
-    return {groups, groupsTimestamp, queryGroups, saveData}
+    return {data, groupsTimestamp, queryGroups, saveData}
 }

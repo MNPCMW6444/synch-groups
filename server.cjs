@@ -57,6 +57,10 @@ connection.once("open", function () {
             data: {
                 type: String,
                 required: true,
+            },
+            firstPirit: {
+                type: Number,
+                required: true,
             }
         },
         {
@@ -70,13 +74,13 @@ connection.once("open", function () {
 
     app.get('/server', async (req, res) =>
         res.json({
-            data: (await Data.find())[0] || "[]"
+            data: (await Data.find())[0]
         })
     );
 
     app.post('/server', async (req, res) => {
         await connection.db.dropCollection('data');
-        const data = new Data({data: req.body.data});
+        const data = new Data({...req.body.data});
         await data.save()
         return res.json({suc: true})
     });

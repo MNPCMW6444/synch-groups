@@ -5,8 +5,9 @@ import {ArrowBack, ArrowForward} from "@mui/icons-material";
 import ManningSelector from "./manager/ManningSelector.tsx";
 import {arrayToYaba, EMPTY_YABA, yabaToArray} from "../../util/yabaAndGroups.ts";
 
+const daysSince = (date = Date.now()) => Math.ceil((date - new Date('2023-10-07').getTime()) / (1000 * 60 * 60 * 24));
 
-const getPirit = (shifter: number): string => {
+const getPirit = (shifter: number): { r: string, startHour: number } => {
     const now = new Date();
     const hours = [1, 4, 7, 10, 13, 16, 19, 22];
     let lastHour = hours[hours.length - 1];
@@ -24,13 +25,18 @@ const getPirit = (shifter: number): string => {
 
     // Format time
     const formatTime = (hour: number) => hour.toString().padStart(2, '0') + ':00';
-    return formatTime(startHour) + ' - ' + formatTime(endHour);
+    return {
+        r: formatTime(startHour) + ' - ' + formatTime(endHour), startHour
+    };
 }
 
-const Manager = ({synch}: any) => {
-    const {users, groups, createGroup, deleteAllGroups, queryGroups, queryUsers} = synch;
+const Manager = ({synch, back}: any) => {
+    const {users, groups, createGroup, deleteAllGroups, queryUsers, queryGroups} = synch;
+    const {data, saveData, queryGroups: backqueryGroups} = back;
+    const backGroups = data?.groups || [];
 
     const [parsedPiritManning, setParsedPiritManning] = useState<Yaba>(JSON.parse(JSON.stringify(EMPTY_YABA)));
+    const [savedPiritManning, setSavedPiritManning] = useState<Yaba[]>([JSON.parse(JSON.stringify(EMPTY_YABA))]);
     const [piritManning, setPiritManning] = useState<Yaba[]>([JSON.parse(JSON.stringify(EMPTY_YABA))]);
     const [index, setIndex] = useState<number>(0);
 
@@ -39,6 +45,10 @@ const Manager = ({synch}: any) => {
 
     useEffect(() => {
         setParsedPiritManning(arrayToYaba(groups));
+    }, [groups]);
+
+    useEffect(() => {
+        setSavedPiritManning(backGroups.map((prirt:any) => arrayToYaba(prirt)));
     }, [groups]);
 
     useEffect(() => {
@@ -67,7 +77,7 @@ const Manager = ({synch}: any) => {
         const direction = isLastLevel ? "row" : "column";
         const header = (
             <Typography variant={("h" + (depth + 3)) as any} sx={{fontWeight: 'bold', mb: 1}}>
-                {path[path.length - 1] || "איוש לפיריט " + getPirit(index) + ": "}
+                {path[path.length - 1] || "איוש לפיריט " + getPirit(index).r + ": "}
             </Typography>
         );
 
@@ -138,11 +148,13 @@ const Manager = ({synch}: any) => {
         await Promise.all(work);
         await queryGroups()
         await queryUsers();
+        await backqueryGroups();
         setSending(false);
     }
 
 
     const save = async () => {
+        saveData(piritManning, daysSince() * 8 + getPirit(0).startHour);
     }
 
 
@@ -162,7 +174,7 @@ const Manager = ({synch}: any) => {
                 <Grid item>
                     <Button variant="contained" disabled={index !== 0} onClick={() => setPiritManning(prev => {
                         const newState = JSON.parse(JSON.stringify(prev));
-                        newState[0] = JSON.parse(JSON.stringify(parsedPiritManning));
+                        newState[0] = JSON.parse(JSON.stringify(savedPiritManning[index]));
                         return newState;
                     })}>
                         טען ודרוס איושים נוכחיים משרת תכנון

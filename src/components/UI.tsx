@@ -18,7 +18,7 @@ const UI = ({x}: any) => {
             </Grid>
         </Grid>
         <Grid item>
-            <Manager synch={synch}/>
+            <Manager synch={synch} back={back}/>
         </Grid>
     </Grid>
 }
