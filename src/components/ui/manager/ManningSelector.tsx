@@ -11,7 +11,7 @@ const ManningSelector = ({value, path, users, setManning, color}: {
     path: string[],
     users: User[],
     setManning: (path: string[], id: string) => void,
-    color: { state: string, plan: string,synch: string }
+    color: { state: string, plan: string, synch: string }
 }) => {
     const label = path.join(" > "); // For displaying the hierarchy in the label
 
