@@ -78,7 +78,7 @@ const Manager = ({synch, back}: any) => {
         });
     };
 
-    const renderMannings = (mannings: any, otherMannings: any, path = [], depth = 0) => {
+    const renderMannings = (mannings: any, synchMannings: any, planManninngs: any, path = [], depth = 0) => {
         const isLastLevel = Object.values(mannings).every(value => typeof value !== 'object' || value === null);
         const direction = isLastLevel ? "row" : "column";
         const header = (
@@ -117,7 +117,7 @@ const Manager = ({synch, back}: any) => {
                           wrap="nowrap">
                         {Object.keys(mannings).map((key: any) => {
                             if (typeof mannings[key] === 'object' && mannings[key] !== null) {
-                                return renderMannings(mannings[key], otherMannings[key], path.concat(key), depth + 1);
+                                return renderMannings(mannings[key], synchMannings[key], planManninngs[key], path.concat(key), depth + 1);
                             } else {
                                 return (
                                     <Grid item container direction="column" rowSpacing={2} justifyItems="center"
@@ -131,7 +131,11 @@ const Manager = ({synch, back}: any) => {
                                             <ManningSelector
                                                 path={path.concat(key)}
                                                 value={mannings[key]}
-                                                color={{f: mannings[key], s: otherMannings[key]}}
+                                                color={{
+                                                    state: mannings[key],
+                                                    synch: synchMannings[key],
+                                                    plan: planManninngs[key]
+                                                }}
                                                 users={users}
                                                 setManning={setManning}
                                             />
@@ -200,7 +204,7 @@ const Manager = ({synch, back}: any) => {
                     </Button>
                 </Grid>
             </Grid>
-            {piritManning[index] && renderMannings(piritManning[index], parsedPiritManning)}
+            {piritManning[index] && renderMannings(piritManning[index], parsedPiritManning, savedPiritManning[index])}
             {index === 0 && <Grid item>
                 <Button color="secondary" sx={{padding: "30px 50px", margin: "20px", fontSize: "200%"}}
                         variant="contained"
