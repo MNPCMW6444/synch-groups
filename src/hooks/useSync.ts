@@ -111,7 +111,7 @@ export default ({x}: { x: string }) => {
         return false
     }
 
-    const create = async () => {
+    /*const create = async () => {
             try {
                 const data = {
                     display_name: "צוות מסער",
@@ -123,7 +123,7 @@ export default ({x}: { x: string }) => {
                 return false
             }
 
-    }
+    }*/
 
   //  create()
 

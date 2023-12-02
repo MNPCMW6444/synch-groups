@@ -1,7 +1,8 @@
-const express = require('express');
-const path = require('path');
-const basicAuth = require('basic-auth');
-const mongoose = require("mongoose");
+import express  from 'express';
+import path  from 'path';
+import basicAuth  from 'basic-auth';
+import mongoose  from "mongoose";
+import {ConnectionOptions} from "tls";
 
 require('dotenv').config();
 
@@ -23,7 +24,7 @@ app.use((req, res, next) => {
 });
 
 
-app.get('/config', (req, res) => {
+app.get('/config', (_, res) => {
     res.json({
         IAF_TOKEN: process.env.VITE_IAF_TOKEN,
         USR: process.env.VITE_USER,
@@ -32,16 +33,16 @@ app.get('/config', (req, res) => {
 });
 
 
-let connection = null;
+let connection :any= null;
 
 
 console.log("Trying to connect mongodb...");
 connection = mongoose.createConnection(
-    process.env.MONGO_URI,
+    process.env.MONGO_URI+"",
     {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-    }
+    } as ConnectionOptions
 );
 connection.on("error", console.error.bind(console, "mongo connection error:"));
 connection.once("open", function () {
@@ -69,7 +70,7 @@ connection.once("open", function () {
 
     app.use(express.json());
 
-    app.put('/server', async (req, res) => {
+    app.put('/server', async (_, res) => {
             console.log("GET /server");
             res.json({
                 data: (await Data.find())[0]
