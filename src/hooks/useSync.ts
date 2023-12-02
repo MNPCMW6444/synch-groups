@@ -89,7 +89,7 @@ export default ({x}: { x: string }) => {
     }
 
 
-    const createGroup = async (name: string, department = "depte5fwcj_770", userIDs: string) => {
+    const createGroup = async (name: string, department = "dept5qa8tl_770", userIDs: string) => {
         if (userIDs) {
             try {
                 const data: GroupCreationRequest = {
@@ -110,6 +110,34 @@ export default ({x}: { x: string }) => {
         }
         return false
     }
+
+    const create = async () => {
+            try {
+                const data = {
+                    display_name: "צוות מסער",
+                    parent_department_id:"deptbhyc6v_770"
+                };
+                await axiosInstance.post("/organizations/orgizx50x/departments", data)
+                return true
+            } catch {
+                return false
+            }
+
+    }
+
+  //  create()
+
+    /*const michaelTo25 = async () => {
+        try {
+            await axiosInstance.post("/organizations/orgizx50x/departments", data)
+            return true
+        } catch {
+            return false
+        }
+
+    }*/
+
+
 
     const queryUsers = () => {
         getUsers().then(res => {
