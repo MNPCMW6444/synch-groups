@@ -5,13 +5,13 @@ import {Yaba} from "../index";
 
 export const POLLING_INTERVAL = 1000 * 60;
 
-export default ({u, p}: { u: string, p: string }) => {
+export default ({u, p, env}: { u: string, p: string, env: string }) => {
     const [data, setData] = useState<{ groups: any[], firstPirit: number }>();
     const [groupsTimestamp, setGroupsTimestamp] = useState<number>(Date.now());
 
 
     const axiosInstance = axios.create({
-        baseURL: "https://f-ai-ler.com/server",
+        baseURL: env === "production" ? "https://f-ai-ler.com" : "http://localhost:5100" + "/server",
         headers: {
             "Content-Type": "application/json",
             'X-API-Version': '1.0.0'

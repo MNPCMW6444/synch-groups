@@ -90,7 +90,7 @@ const ConnectivityOC = ({name, data}: any) => {
                             </Grid>}
                         <Grid item> <Button variant="contained" onClick={() => {
                             queryGroups();
-                            queryUsers();
+                            queryUsers && queryUsers();
                         }}>סנכרן הכל כעת</Button>
                         </Grid>
                     </Grid>

@@ -1,13 +1,18 @@
-import express  from 'express';
-import path  from 'path';
-import basicAuth  from 'basic-auth';
-import mongoose  from "mongoose";
-import {ConnectionOptions} from "tls";
+import express from 'express';
+import path from 'path';
+import basicAuth from 'basic-auth';
+import mongoose from "mongoose";
+import {ConnectOptions} from "mongoose";
+import cors from "cors";
 
 require('dotenv').config();
 
 const app = express();
 
+app.use(cors({
+    credentials: true,
+    origin: process.env.VITE_NODE_ENV === "production" ? ["https://f-ai-ler.com"] : ["http://localhost:5173"]
+}))
 
 app.use((req, res, next) => {
     if (req.path === '/health-check') {
@@ -28,21 +33,22 @@ app.get('/config', (_, res) => {
     res.json({
         IAF_TOKEN: process.env.VITE_IAF_TOKEN,
         USR: process.env.VITE_USER,
-        PASSWD: process.env.VITE_PASSWORD
+        PASSWD: process.env.VITE_PASSWORD,
+        ENV: process.env.VITE_NODE_ENV,
     });
 });
 
 
-let connection :any= null;
+let connection: any = null;
 
 
 console.log("Trying to connect mongodb...");
 connection = mongoose.createConnection(
-    process.env.MONGO_URI+"",
+    process.env.MONGO_URI + "",
     {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-    } as ConnectionOptions
+    } as ConnectOptions
 );
 connection.on("error", console.error.bind(console, "mongo connection error:"));
 connection.once("open", function () {

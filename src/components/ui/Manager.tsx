@@ -116,12 +116,16 @@ const Manager = ({synch, back}: any) => {
                     <Grid container direction={direction} justifyContent="center" alignItems="center" spacing={2}
                           wrap="nowrap">
                         {Object.keys(mannings).map((key: any) => {
+
+                            const uniqueKey = `${path.join('_')}_${key}`;
+
+
                             if (typeof mannings[key] === 'object' && mannings[key] !== null) {
-                                return renderMannings(mannings[key], synchMannings[key], planManninngs[key], path.concat(key), depth + 1);
+                                return renderMannings(mannings[key], synchMannings?synchMannings[key]:false, planManninngs?planManninngs[key]:false, path.concat(key), depth + 1);
                             } else {
                                 return (
                                     <Grid item container direction="column" rowSpacing={2} justifyItems="center"
-                                          alignItems="center" key={path.concat(key).join("_")} sx={{minWidth: 250}}>
+                                          alignItems="center" key={uniqueKey} sx={{minWidth: 250}}>
                                         <Grid item>
                                             <Typography variant={("h" + (depth + 4)) as any} sx={{mb: 1}}>
                                                 {key}:
