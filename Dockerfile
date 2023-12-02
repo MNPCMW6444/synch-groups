@@ -8,7 +8,7 @@ COPY public /app/public
 COPY index.html /app/index.html
 COPY manifest.json /app/public/manifest.json
 COPY src /app/src
-COPY server.cjs /app/server.cjs
+COPY server.ts /app/server.ts
 RUN npm run prod
 RUN rm -rf node_modules package-lock.json
 RUN npm i --omit=dev
