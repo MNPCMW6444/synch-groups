@@ -6,19 +6,20 @@ export interface User {
 }
 
 
-const ManningSelector = ({value, path, users, setManning, color}: {
+const ManningSelector = ({value, path, users, setManning, color,disabled}: {
     value: string,
     path: string[],
     users: User[],
     setManning: (path: string[], id: string) => void,
     color: { state: string, plan: string, synch: string }
+    disabled?: boolean
 }) => {
     const label = path.join(" > "); // For displaying the hierarchy in the label
 
 
     return (
         ((users.find(({id}) => id === value)) || users[0]) &&
-        <Autocomplete disablePortal options={users} value={((users.find(({id}) => id === value)) || users[0])}
+        <Autocomplete disabled={disabled} disablePortal options={users} value={((users.find(({id}) => id === value)) || users[0])}
                       sx={color?.state !== color?.plan && color?.state !== color?.synch ? {
                           width: 250,
                           backgroundColor: "yellow"

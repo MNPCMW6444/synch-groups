@@ -1,4 +1,4 @@
-import {Button, Card, CardContent, CircularProgress, Grid, Typography} from "@mui/material";
+import {Button, Card, CardContent, CircularProgress, Grid, Switch, Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import {Yaba} from "../../index";
 import {ArrowBack, ArrowForward} from "@mui/icons-material";
@@ -36,6 +36,7 @@ const removeFirstNElements = <T, >(array: T[], n: number): T[] => n >= array.len
 
 // Usage example
 
+const emptyYabas = (n: number) => Array(n).fill(JSON.parse(JSON.stringify(EMPTY_YABA)));
 
 const Manager = ({synch, back}: any) => {
     const {users, groups, createGroup, deleteAllGroups, queryUsers, queryGroups} = synch;
@@ -43,8 +44,10 @@ const Manager = ({synch, back}: any) => {
 
     const [parsedPiritManning, setParsedPiritManning] = useState<Yaba>(JSON.parse(JSON.stringify(EMPTY_YABA)));
     const [savedPiritManning, setSavedPiritManning] = useState<Yaba[]>([JSON.parse(JSON.stringify(EMPTY_YABA))]);
-    const [piritManning, setPiritManning] = useState<Yaba[]>([JSON.parse(JSON.stringify(EMPTY_YABA))]);
+    const [piritManning, setPiritManning] = useState<Yaba[]>(emptyYabas(16));
     const [index, setIndex] = useState<number>(0);
+
+    const [melech, setMelech] = useState<boolean>(true);
 
     const [sending, setSending] = useState(false);
     const [saving, setSaving] = useState(false);
@@ -121,7 +124,7 @@ const Manager = ({synch, back}: any) => {
 
 
                             if (typeof mannings[key] === 'object' && mannings[key] !== null) {
-                                return renderMannings(mannings[key], synchMannings?synchMannings[key]:false, planManninngs?planManninngs[key]:false, path.concat(key), depth + 1);
+                                return renderMannings(mannings[key], synchMannings ? synchMannings[key] : false, planManninngs ? planManninngs[key] : false, path.concat(key), depth + 1);
                             } else {
                                 return (
                                     <Grid item container direction="column" rowSpacing={2} justifyItems="center"
@@ -177,13 +180,133 @@ const Manager = ({synch, back}: any) => {
     }
 
 
+    const melechRec = (k: string, mannings: any, path: any = [], users: any, setManning: any, synchMannings: any, planMannings: any) => {
+
+        // Ensure path is an array
+        const currentPath = Array.isArray(path) ? path : [path];
+
+        if (typeof mannings !== 'object' || mannings === null) {
+            // Base case: Render the ManningSelector for a leaf node
+            return (
+                <Grid item wrap="nowrap" width={300} height={100}>
+                    {k === "name" ? <Typography>{path.join(" - ")}</Typography> :
+                        <ManningSelector
+                            path={currentPath}
+                            value={mannings}
+                            color={{
+                                state: mannings,
+                                synch: synchMannings ? synchMannings[currentPath[currentPath.length - 1]] : undefined,
+                                plan: planMannings ? planMannings[currentPath[currentPath.length - 1]] : undefined
+                            }}
+                            users={users}
+                            setManning={setManning}
+                        />}
+                </Grid>
+            );
+        } else {
+            // Recursive case: Iterate over keys and call renderMannings recursively
+            return (
+                <Grid item wrap="nowrap" container direction="column" rowSpacing={2} key={k + path.concat("x")}>
+                    {Object.keys(mannings).map((key) => (
+                        melechRec(k, mannings[key], currentPath.concat(key), users, setManning, synchMannings ? synchMannings[key] : undefined, planMannings ? planMannings[key] : undefined)
+                    ))}
+                </Grid>
+            );
+        }
+    };
+
+
+    const melechView = () =>
+        <Grid container direction="row" width="90vw" height="80vh" wrap="nowrap" overflow="scroll">
+            <Grid item container direction="column" alignItems="center" wrap="nowrap">
+                <Grid item>
+                    <Typography sx={{fontWeight: 'bold', mb: 1}}>
+                        {"איוש לפיריט:"}
+                    </Typography>
+                </Grid>
+                <Grid
+                    item>{melechRec("name", piritManning[0], [], users, setManning, parsedPiritManning, savedPiritManning[0])}
+                </Grid>
+            </Grid>
+            {piritManning.map((_, i) =>
+                <Grid item container direction="column" alignItems="center" wrap="nowrap" key={"pririt" + i}>
+                    <Grid item>
+                        <Typography sx={{fontWeight: 'bold', mb: 1}}>
+                            {getPirit(i).r + ": "}
+                        </Typography>
+                    </Grid>
+                    <Grid
+                        item>{melechRec("pririt" + i, piritManning[i], [], users, setManning, parsedPiritManning, savedPiritManning[i])}
+                    </Grid>
+                </Grid>
+            )}
+        </Grid>
+    ;
+
+
+    /*const melechView = (mannings:any, path = [], depth = 0) => {
+        // Flatten the structure to create rows
+        let rows:any = [];
+        const processMannings = (currentMannings:any, currentPath:any) => {
+            Object.keys(currentMannings).forEach(key => {
+                if (typeof currentMannings[key] === 'object' && currentMannings[key] !== null) {
+                    // Recursively process nested objects
+                    processMannings(currentMannings[key], currentPath.concat(key));
+                } else {
+                    // Add row for each mann
+                    rows.push({ path: currentPath.concat(key), value: currentMannings[key] });
+                }
+            });
+        };
+        processMannings(mannings, path);
+
+        return (
+            <Box sx={{ width: '90vw', overflowY: 'auto' }}>
+                {rows.map((row:any, index:number) => (
+                    <Grid container key={index} spacing={2}>
+                        {/!* Render path as headers *!/}
+                        {row.path.map((header:any, idx:number) => (
+                            <Grid item key={idx}>
+                                <Typography variant="body1">{header}</Typography>
+                            </Grid>
+                        ))}
+                        {/!* ManningSelector for the mann *!/}
+                        <Grid item>
+                            <ManningSelector
+                                path={path.concat(key)}
+                                value={mannings[key]}
+                                color={{
+                                    state: mannings[key],
+                                    synch: synchMannings[key],
+                                    plan: planManninngs[key]
+                                }}
+                                users={users}
+                                setManning={setManning}
+                            />                        </Grid>
+                    </Grid>
+                ))}
+            </Box>
+        );
+    };*/
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setMelech(event.target.checked);
+    };
+
+
     return (
         <Grid container direction="column" justifyContent="center"
               alignItems="center" rowSpacing={6} wrap="nowrap">
+            <Grid item container justifyContent="center" alignItems="center" columnSpacing={4}>
+                <Grid item> <Typography>תצוגת מל״כ: </Typography></Grid><Grid item> <Switch
+                checked={melech}
+                onChange={handleChange}
+                inputProps={{'aria-label': 'controlled'}}
+            /></Grid></Grid>
             <Grid item container justifyContent="center" columnSpacing={4}>
 
                 <Grid item>
-                    <Button variant="contained" sx={{fontSize:"120%"}} onClick={() => setPiritManning(prev => {
+                    <Button variant="contained" sx={{fontSize: "120%"}} onClick={() => setPiritManning(prev => {
                         const newState = JSON.parse(JSON.stringify(prev));
                         newState[0] = JSON.parse(JSON.stringify(parsedPiritManning));
                         return newState;
@@ -192,7 +315,7 @@ const Manager = ({synch, back}: any) => {
                     </Button>
                 </Grid>
                 <Grid item>
-                    <Button variant="contained" sx={{fontSize:"120%"}} onClick={() => setPiritManning(prev => {
+                    <Button variant="contained" sx={{fontSize: "120%"}} onClick={() => setPiritManning(prev => {
                         const newState = JSON.parse(JSON.stringify(prev));
                         if (savedPiritManning[index]) newState[0] = JSON.parse(JSON.stringify(savedPiritManning[index]));
                         return newState;
@@ -201,7 +324,7 @@ const Manager = ({synch, back}: any) => {
                     </Button>
                 </Grid>
                 <Grid item>
-                    <Button variant="contained" sx={{fontSize:"120%"}} color="secondary"
+                    <Button variant="contained" sx={{fontSize: "120%"}} color="secondary"
                             disabled={saving}
                             onClick={save}>
                         {(saving ?
@@ -216,23 +339,25 @@ const Manager = ({synch, back}: any) => {
                     </Typography>
                 </Grid>
                 <Grid item>
-                    <ManningSelector value={"איוש לא שמור"} path={[""]}
+                    <ManningSelector disabled value={"איוש לא שמור"} path={[""]}
                                      users={[{label: "איוש לא שמור", id: "איוש לא שמור"}]} setManning={() => {
                     }} color={{plan: "a", synch: "b", state: "c"}}/>
                 </Grid>
                 <Grid item>
-                    <ManningSelector value={"איוש שמור לתכנון בלבד"} path={[""]}
-                                     users={[{label: "איוש שמור לתכנון בלבד", id: "איוש שמור לתכנון בלבד"}]} setManning={() => {
-                    }} color={{plan: "c", synch: "b", state: "c"}}/>
+                    <ManningSelector disabled value={"איוש שמור לתכנון בלבד"} path={[""]}
+                                     users={[{label: "איוש שמור לתכנון בלבד", id: "איוש שמור לתכנון בלבד"}]}
+                                     setManning={() => {
+                                     }} color={{plan: "c", synch: "b", state: "c"}}/>
                 </Grid>
                 <Grid item>
-                    <ManningSelector value={"איוש שמור לsynch בלבד"} path={[""]}
-                                     users={[{label: "איוש שמור לsynch בלבד", id: "איוש שמור לsynch בלבד"}]} setManning={() => {
-                    }} color={{plan: "a", synch: "c", state: "c"}}/>
+                    <ManningSelector disabled value={"איוש שמור לsynch בלבד"} path={[""]}
+                                     users={[{label: "איוש שמור לsynch בלבד", id: "איוש שמור לsynch בלבד"}]}
+                                     setManning={() => {
+                                     }} color={{plan: "a", synch: "c", state: "c"}}/>
                 </Grid>
             </Grid>
             <Grid item>
-                {piritManning[index] && renderMannings(piritManning[index], parsedPiritManning, savedPiritManning[index])}
+                {melech ? melechView() : (piritManning[index] && renderMannings(piritManning[index], parsedPiritManning, savedPiritManning[index]))}
             </Grid>
             {index === 0 && <Grid item>
                 <Button color="secondary" sx={{padding: "30px 50px", margin: "20px", fontSize: "200%"}}
@@ -243,7 +368,8 @@ const Manager = ({synch, back}: any) => {
                 </Button>
             </Grid>}
         </Grid>
-    );
+    )
+        ;
 }
 
 
