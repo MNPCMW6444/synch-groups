@@ -217,7 +217,7 @@ const Manager = ({synch, back}: any) => {
 
 
     const melechView = () =>
-        <Grid container direction="row" width="90vw" height="80vh" wrap="nowrap" overflow="scroll">
+        <Grid container direction="row" width="90vw" height="80vh" wrap="nowrap" overflow="scroll" bgcolor="#eeeeee">
             <Grid item container direction="column" alignItems="center" wrap="nowrap">
                 <Grid item>
                     <Typography sx={{fontWeight: 'bold', mb: 1}}>
