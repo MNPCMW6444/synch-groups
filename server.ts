@@ -11,7 +11,7 @@ const app = express();
 
 app.use(cors({
     credentials: true,
-    origin: process.env.VITE_NODE_ENV === "production" ? ["https://f-ai-ler.com"] : ["http://localhost:5173"]
+    origin: "*"
 }))
 
 app.use((req, res, next) => {
