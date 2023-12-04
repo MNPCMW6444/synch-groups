@@ -161,7 +161,8 @@ const Manager = ({synch, back}: any) => {
     const send = async () => {
         setSending(true);
         await verifyGroupsAndDepartments();
-        const work = yabaToArray(piritManning[0]).map(group => updateGroup(group.display_name, group.profiles));
+        const array = yabaToArray(piritManning[0])
+        const work = array.map(group => updateGroup(group.display_name, group.profiles));
         await Promise.all(work);
         await queryGroups()
         await queryUsers();

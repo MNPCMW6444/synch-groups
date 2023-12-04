@@ -83,9 +83,7 @@ export const yabaToArray = (yaba: Yaba): Group[] => {
             }
         });
     }
-
     traverse(yaba);
-    debugger;
     return arr;
 }
 

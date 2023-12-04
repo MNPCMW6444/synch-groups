@@ -20,7 +20,7 @@ app.use((req, res, next) => {
     }
 
     const credentials = basicAuth(req);
-    if (credentials && credentials.name === process.env.VITE_USER && credentials.pass === process.env.VITE_PASSWORD) {
+    if (credentials && (credentials.name === process.env.VITE_USER || credentials.name === process.env.VITE_USER2) && credentials.pass === process.env.VITE_PASSWORD) {
         return next();
     }
 
@@ -29,12 +29,14 @@ app.use((req, res, next) => {
 });
 
 
-app.get('/config', (_, res) => {
+app.get('/config', (req, res) => {
+    const credentials = basicAuth(req);
     res.json({
         IAF_TOKEN: process.env.VITE_IAF_TOKEN,
         USR: process.env.VITE_USER,
         PASSWD: process.env.VITE_PASSWORD,
         ENV: process.env.VITE_NODE_ENV,
+        IS_USER: credentials?.name === process.env.VITE_USER2,
     });
 });
 
