@@ -39,7 +39,7 @@ const removeFirstNElements = <T, >(array: T[], n: number): T[] => n >= array.len
 const emptyYabas = (n: number) => Array(n).fill(JSON.parse(JSON.stringify(EMPTY_YABA)));
 
 const Manager = ({synch, back}: any) => {
-    const {users, groups, createGroup, deleteAllGroups, queryUsers, queryGroups} = synch;
+    const {users, groups, updateGroup, verifyGroupsAndDepartments, queryUsers, queryGroups} = synch;
     const {data, saveData, queryGroups: backqueryGroups} = back;
 
     const [parsedPiritManning, setParsedPiritManning] = useState<Yaba>(JSON.parse(JSON.stringify(EMPTY_YABA)));
@@ -160,8 +160,8 @@ const Manager = ({synch, back}: any) => {
 
     const send = async () => {
         setSending(true);
-        await deleteAllGroups();
-        const work = yabaToArray(piritManning[0]).map(group => createGroup(group.display_name, undefined, group.profiles));
+        await verifyGroupsAndDepartments();
+        const work = yabaToArray(piritManning[0]).map(group => updateGroup(group.display_name, group.profiles));
         await Promise.all(work);
         await queryGroups()
         await queryUsers();

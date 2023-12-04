@@ -54,17 +54,38 @@ export const EMPTY_YABA = {
 
 export const yabaToArray = (yaba: Yaba): Group[] => {
     const arr: Group[] = [];
+
+    // Helper function to collect all profiles in a branch
+    const collectProfiles = (obj: any): string[] => {
+        let profiles:string[] = [];
+        if (typeof obj === 'object' && obj !== null) {
+            Object.keys(obj).forEach(key => {
+                if (typeof obj[key] === 'object' && obj[key] !== null) {
+                    profiles = profiles.concat(collectProfiles(obj[key]));
+                } else {
+                    profiles.push(obj[key]);
+                }
+            });
+        } else {
+            profiles.push(obj);
+        }
+        return profiles;
+    };
+
     const traverse = (obj: any, prefix: string = '') => {
         Object.keys(obj).forEach(key => {
             const newPrefix = prefix ? `${prefix}/${key}` : key;
             if (typeof obj[key] === 'object' && obj[key] !== null) {
+                // Add the current node to the array with all its profiles
+                arr.push({ display_name: newPrefix, profiles: collectProfiles(obj[key]) });
+                // Continue traversing deeper
                 traverse(obj[key], newPrefix);
-            } else {
-                arr.push({display_name: newPrefix, profiles: obj[key]});
             }
         });
     }
+
     traverse(yaba);
+    debugger;
     return arr;
 }
 

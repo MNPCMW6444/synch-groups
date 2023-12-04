@@ -57,7 +57,7 @@ interface Member {
 
 interface Group {
     display_name: string,
-    profiles: string
+    profiles: string[]
 }
 
 
