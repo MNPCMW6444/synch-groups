@@ -1,4 +1,4 @@
-import {Button, Card, CardContent, CircularProgress, Grid, Switch, Typography} from "@mui/material";
+import {Box, Button, Card, CardContent, CircularProgress, Grid, Switch, Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import {Yaba} from "../../index";
 import {ArrowBack, ArrowForward} from "@mui/icons-material";
@@ -67,16 +67,16 @@ const Manager = ({synch, back}: any) => {
     }, [index]);
 
 
-    const setManning = (path: string[], id: string) => {
+    const setManning =(k=-1)=> (path: string[], id: string) => {
         setPiritManning(prevState => {
             const newArray = JSON.parse(JSON.stringify(prevState));
-            const newState = JSON.parse(JSON.stringify(prevState[index]));
+            const newState = JSON.parse(JSON.stringify(prevState[k===-1?index:k]));
             let currentLevel: any = newState;
             for (let i = 0; i < path.length - 1; i++) {
                 currentLevel = currentLevel[path[i]];
             }
             currentLevel[path[path.length - 1]] = id;
-            newArray[index] = newState;
+            newArray[k===-1?index:k] = newState;
             return newArray
         });
     };
@@ -144,7 +144,7 @@ const Manager = ({synch, back}: any) => {
                                                     plan: planManninngs[key]
                                                 }}
                                                 users={users}
-                                                setManning={setManning}
+                                                setManning={setManning()}
                                             />
                                         </Grid>
                                     </Grid>
@@ -189,8 +189,16 @@ const Manager = ({synch, back}: any) => {
         if (typeof mannings !== 'object' || mannings === null) {
             // Base case: Render the ManningSelector for a leaf node
             return (
-                <Grid item wrap="nowrap" width={300} height={100}>
-                    {k === "name" ? <Typography>{path.join(" - ")}</Typography> :
+                <Grid item width={300} height={100} key={k + path.join(" - ")}>
+                    {k === "name" ? <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                height: "100%",
+                                width: "100%",
+                            }}
+                        > <Typography sx={{paddingRight: "5%"}}>{path.join(" - ")}</Typography></Box> :
                         <ManningSelector
                             path={currentPath}
                             value={mannings}
@@ -221,23 +229,23 @@ const Manager = ({synch, back}: any) => {
         <Grid container direction="row" width="90vw" height="80vh" wrap="nowrap" overflow="scroll" bgcolor="#eeeeee">
             <Grid item container direction="column" alignItems="center" wrap="nowrap">
                 <Grid item>
-                    <Typography sx={{fontWeight: 'bold', mb: 1}}>
+                    <Typography sx={{fontWeight: 'bold', mb: 1, padding: "15% 0 15%"}}>
                         {"איוש לפיריט:"}
                     </Typography>
                 </Grid>
                 <Grid
-                    item>{melechRec("name", piritManning[0], [], users, setManning, parsedPiritManning, savedPiritManning[0])}
+                    item>{melechRec("name", piritManning[0], [], users, setManning(), parsedPiritManning, savedPiritManning[0])}
                 </Grid>
             </Grid>
             {piritManning.map((_, i) =>
                 <Grid item container direction="column" alignItems="center" wrap="nowrap" key={"pririt" + i}>
                     <Grid item>
-                        <Typography sx={{fontWeight: 'bold', mb: 1}}>
+                        <Typography sx={{fontWeight: 'bold', mb: 1, padding: "15% 0 15%"}}>
                             {getPirit(i).r + ": "}
                         </Typography>
                     </Grid>
                     <Grid
-                        item>{melechRec("pririt" + i, piritManning[i], [], users, setManning, parsedPiritManning, savedPiritManning[i])}
+                        item>{melechRec("pririt" + i, piritManning[i], [], users, setManning(i), parsedPiritManning, savedPiritManning[i])}
                     </Grid>
                 </Grid>
             )}
