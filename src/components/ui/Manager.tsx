@@ -5,9 +5,9 @@ import {ArrowBack, ArrowForward} from "@mui/icons-material";
 import ManningSelector from "./manager/ManningSelector.tsx";
 import {arrayToYaba, EMPTY_YABA, yabaToArray} from "../../util/yabaAndGroups.ts";
 
-const daysSince = (date = Date.now()) => Math.ceil((date - new Date('2023-10-07').getTime()) / (1000 * 60 * 60 * 24));
+export const daysSince = (date = Date.now()) => Math.ceil((date - new Date('2023-10-07').getTime()) / (1000 * 60 * 60 * 24));
 
-const getPirit = (shifter: number): { r: string, startHour: number } => {
+export const getPirit = (shifter: number): { r: string, startHour: number } => {
     const now = new Date();
     const hours = [1, 4, 7, 10, 13, 16, 19, 22];
     let lastHour = hours[hours.length - 1];
@@ -31,7 +31,7 @@ const getPirit = (shifter: number): { r: string, startHour: number } => {
 }
 
 
-const removeFirstNElements = <T, >(array: T[], n: number): T[] => n >= array.length ? [] : array.slice(n);
+export const removeFirstNElements = <T, >(array: T[], n: number): T[] => n >= array.length ? [] : array.slice(n);
 
 
 // Usage example

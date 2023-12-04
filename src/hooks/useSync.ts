@@ -50,7 +50,7 @@ export default ({x}: { x: string }) => {
             const groupsWithProfilesPromises = groups.map(async (group: any) => {
                 const membersResponse = await axiosInstance.get("/groups/" + group.id + "/members");
                 if (membersResponse.data.ids.length === 1) {
-                    return {...group, profiles: membersResponse.data.ids[0]};
+                    return {...group, profiles: membersResponse.data.ids};
                 } else {
                     return null;
                 }
