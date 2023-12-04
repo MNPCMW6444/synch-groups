@@ -87,21 +87,24 @@ export const yabaToArray = (yaba: Yaba): Group[] => {
     return arr;
 }
 
-
 export const arrayToYaba = (arr: Group[]): Yaba => {
     const yaba = JSON.parse(JSON.stringify(EMPTY_YABA)); // Initialize the Yaba structure
 
+    // Helper function to set profiles at the correct node
+    const setProfiles = (ref: any, keys: string[], profiles: string[], currentIndex: number = 0) => {
+        if (currentIndex === keys.length - 1) {
+            ref[keys[currentIndex]] = profiles;
+        } else {
+            if (!ref[keys[currentIndex]]) ref[keys[currentIndex]] = {};
+            setProfiles(ref[keys[currentIndex]], keys, profiles, currentIndex + 1);
+        }
+    };
+
     arr.forEach(item => {
         const keys = item.display_name.split('/');
-        let ref: any = yaba;
-        keys.forEach((key, index) => {
-            if (index === keys.length - 1) {
-                ref[key] = item.profiles;
-            } else {
-                if (!ref[key]) ref[key] = {};
-                ref = ref[key];
-            }
-        });
+        setProfiles(yaba, keys, item.profiles);
     });
+
     return yaba;
-}
+};
+

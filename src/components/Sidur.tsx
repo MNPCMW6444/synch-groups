@@ -20,7 +20,9 @@ const Sidur = ({x}: any) => {
         (data?.groups as any)?.data && setSavedPiritManning(removeFirstNElements(JSON.parse((data?.groups as any)?.data), (daysSince() * 8 + getPirit(0).startHour) - (data?.groups as any).firstPirit));
     }, [data?.groups]);
 
-    const longest =(arr:string[]) => arr.reduce((a, b) => a.length > b.length ? a : b, "");
+    const longest =(arr:string[]) => {
+        debugger; return arr.reduce((a, b) => a.length > b.length ? a : b, "")
+    };
 
     return (
         <Grid paddingTop="5vh" container width="100vw" height="100vh" direction="column" rowSpacing={4}
