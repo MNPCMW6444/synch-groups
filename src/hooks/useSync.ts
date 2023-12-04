@@ -91,27 +91,31 @@ export default ({x}: { x: string }) => {
     const createDepartment = async (name: string) => {
         try {
             const {data} = await axiosInstance.get("/organizations/orgizx50x/departments")
-            const exists: { display_name: string, id: string } = data.departments.find(({display_name}: {
+            const exists: { display_name: string, id: string } = data.find(({display_name}: {
                 display_name: string
             }) => display_name === name)
             return exists ? exists.id : (await axiosInstance.post("/organizations/orgizx50x/departments", {
                 display_name: name,
                 parent_department_id: "deptbhyc6v_770"
             })).data.id as string
-        } catch {
+        } catch (e) {
+            console.log(e);
             return false
         }
     }
 
     const updateGroup = async (name: string, people: string[]) => {
         const id = await createDepartment(name)
+        const fPeople = people.filter(person => person !== "")
         if (id) {
             try {
-                await axiosInstance.patch("/groups/" + id + "/members" + {
-                    members: people.map((person) => ({id: person, manager: false}))
-                });
+                fPeople.length > 0 ? await axiosInstance.put("/groups/" + id + "/members", fPeople.map((person) => ({
+                    id: person,
+                    manager: false
+                }))) : await axiosInstance.put("/groups/" + id + "/members", (await axiosInstance.get("/groups/" + id + "/members")).data.ids)
                 return true;
-            } catch {
+            } catch (e) {
+                console.log(e);
                 return false
             }
         }
@@ -147,7 +151,8 @@ export default ({x}: { x: string }) => {
             };
             await axiosInstance.post("/groups", data)
             return true
-        } catch {
+        } catch (e) {
+            console.log(e);
             return false
         }
         // }
@@ -159,7 +164,7 @@ export default ({x}: { x: string }) => {
         try {
             await axiosInstance.post("/organizations/orgizx50x/departments", data)
             return true
-        } catch {
+        } catch (e) {console.log(e);
             return false
         }
 
