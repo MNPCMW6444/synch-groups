@@ -88,22 +88,39 @@ export const yabaToArray = (yaba: Yaba): Group[] => {
 }
 
 export const arrayToYaba = (arr: Group[]): Yaba => {
-    const yaba:any = EMPTY_YABA; // Assuming EMPTY_YABA is an empty object
+    const yaba = JSON.parse(JSON.stringify(EMPTY_YABA)); // Clone the EMPTY_YABA object
 
     arr.forEach(group => {
         const paths = group.display_name.split('/');
-        let current = yaba;
+        let current:any = yaba;
 
-        for (let i = 0; i < paths.length; i++) {
-            const path = paths[i];
-            if (!current[path]) {
-                current[path] = (i === paths.length - 1) ? group.profiles : {};
+        paths.forEach((path, index) => {
+            // Check if we are at the last element of the path
+            if (index === paths.length - 1) {
+                // If the group has profiles, assign them to the leaf node
+                if (Array.isArray(group.profiles) && group.profiles.length > 0) {
+                    current[path] = group.profiles;
+                } else {
+                    // If no profiles, ensure the path leads to an object (non-leaf node)
+                    if (!current[path] || typeof current[path] !== 'object') {
+                        current[path] = {};
+                    }
+                }
+            } else {
+                // For non-leaf nodes, ensure the node exists and is an object
+                if (!current[path]) {
+                    current[path] = {};
+                }
+                // Move to the next level in the hierarchy
+                current = current[path];
             }
-            current = current[path];
-        }
+        });
     });
-
+debugger
     return yaba;
 };
+
+
+
 
 
