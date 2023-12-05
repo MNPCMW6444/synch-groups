@@ -67,16 +67,16 @@ const Manager = ({synch, back}: any) => {
     }, [index]);
 
 
-    const setManning =(k=-1)=> (path: string[], id: string) => {
+    const setManning = (k = -1) => (path: string[], id: string) => {
         setPiritManning(prevState => {
             const newArray = JSON.parse(JSON.stringify(prevState));
-            const newState = JSON.parse(JSON.stringify(prevState[k===-1?index:k]));
+            const newState = JSON.parse(JSON.stringify(prevState[k === -1 ? index : k]));
             let currentLevel: any = newState;
             for (let i = 0; i < path.length - 1; i++) {
                 currentLevel = currentLevel[path[i]];
             }
             currentLevel[path[path.length - 1]] = id;
-            newArray[k===-1?index:k] = newState;
+            newArray[k === -1 ? index : k] = newState;
             return newArray
         });
     };
@@ -326,7 +326,7 @@ const Manager = ({synch, back}: any) => {
                 <Grid item>
                     <Button variant="contained" sx={{fontSize: "120%"}} onClick={() => setPiritManning(prev => {
                         const newState = JSON.parse(JSON.stringify(prev));
-                        if (savedPiritManning[index]) newState[0] = JSON.parse(JSON.stringify(savedPiritManning[index]));
+                        for (let i = 0; i < savedPiritManning.length; i++) if (savedPiritManning[index]) newState[0] = JSON.parse(JSON.stringify(savedPiritManning[index]));
                         return newState;
                     })}>
                         טען ודרוס איושים נוכחיים משרת תכנון
