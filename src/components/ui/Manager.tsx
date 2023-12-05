@@ -307,13 +307,18 @@ const Manager = ({synch, back}: any) => {
         <Grid container direction="column" justifyContent="center"
               alignItems="center" rowSpacing={6} wrap="nowrap">
             <Grid item container justifyContent="center" alignItems="center" columnSpacing={4}>
-                <Grid item> <Typography>תצוגת מל״כ: </Typography></Grid><Grid item> <Switch
-                checked={melech}
-                onChange={handleChange}
-                inputProps={{'aria-label': 'controlled'}}
-            /></Grid></Grid>
+                <Grid item>
+                    <Typography>תצוגת מל״כ: </Typography>
+                </Grid>
+                <Grid item>
+                    <Switch
+                        checked={melech}
+                        onChange={handleChange}
+                        inputProps={{'aria-label': 'controlled'}}
+                    />
+                </Grid>
+            </Grid>
             <Grid item container justifyContent="center" columnSpacing={4}>
-
                 <Grid item>
                     <Button variant="contained" sx={{fontSize: "120%"}} onClick={() => setPiritManning(prev => {
                         const newState = JSON.parse(JSON.stringify(prev));
@@ -326,7 +331,7 @@ const Manager = ({synch, back}: any) => {
                 <Grid item>
                     <Button variant="contained" sx={{fontSize: "120%"}} onClick={() => setPiritManning(prev => {
                         const newState = JSON.parse(JSON.stringify(prev));
-                        for (let i = 0; i < savedPiritManning.length; i++) if (savedPiritManning[index]) newState[0] = JSON.parse(JSON.stringify(savedPiritManning[index]));
+                        for (let i = 0; i < savedPiritManning.length; i++) if (savedPiritManning[i]) newState[0] = JSON.parse(JSON.stringify(savedPiritManning[i]));
                         return newState;
                     })}>
                         טען ודרוס איושים נוכחיים משרת תכנון
