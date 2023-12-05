@@ -331,7 +331,7 @@ const Manager = ({synch, back}: any) => {
                 <Grid item>
                     <Button variant="contained" sx={{fontSize: "120%"}} onClick={() => setPiritManning(prev => {
                         const newState = JSON.parse(JSON.stringify(prev));
-                        for (let i = 0; i < savedPiritManning.length; i++) if (savedPiritManning[i]) newState[0] = JSON.parse(JSON.stringify(savedPiritManning[i]));
+                        for (let i = 0; i < savedPiritManning.length; i++) if (savedPiritManning[i]) newState[i] = JSON.parse(JSON.stringify(savedPiritManning[i]));
                         return newState;
                     })}>
                         טען ודרוס איושים נוכחיים משרת תכנון
