@@ -57,7 +57,7 @@ export const yabaToArray = (yaba: Yaba): Group[] => {
 
     // Helper function to collect all profiles in a branch
     const collectProfiles = (obj: any): string[] => {
-        let profiles:string[] = [];
+        let profiles: string[] = [];
         if (typeof obj === 'object' && obj !== null) {
             Object.keys(obj).forEach(key => {
                 if (typeof obj[key] === 'object' && obj[key] !== null) {
@@ -77,7 +77,7 @@ export const yabaToArray = (yaba: Yaba): Group[] => {
             const newPrefix = prefix ? `${prefix}/${key}` : key;
             if (typeof obj[key] === 'object' && obj[key] !== null) {
                 // Add the current node to the array with all its profiles
-                arr.push({ display_name: newPrefix, profiles: collectProfiles(obj[key]) });
+                arr.push({display_name: newPrefix, profiles: collectProfiles(obj[key])});
                 // Continue traversing deeper
                 traverse(obj[key], newPrefix);
             }
@@ -92,7 +92,7 @@ export const arrayToYaba = (arr: Group[]): Yaba => {
 
     arr.forEach(group => {
         const paths = group.display_name.split('/');
-        let current:any = yaba;
+        let current: any = yaba;
 
         paths.forEach((path, index) => {
             // Check if we are at the last element of the path
@@ -116,7 +116,9 @@ export const arrayToYaba = (arr: Group[]): Yaba => {
             }
         });
     });
-debugger
+    Object.keys(yaba).forEach(resKey => {
+        if (!Object.keys(EMPTY_YABA).some(key => key === resKey)) delete yaba[resKey]
+    })
     return yaba;
 };
 
