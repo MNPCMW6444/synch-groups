@@ -20,6 +20,7 @@ const ManningSelector = ({value, path, users, setManning, color, disabled, sidur
     const label = path.join(" > "); // For displaying the hierarchy in the label
 
 
+
     return (
         ((users.find(({id}) => id === value)) || users[0]) &&
         <Autocomplete disabled={disabled} disablePortal options={users}

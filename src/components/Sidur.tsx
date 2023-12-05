@@ -20,9 +20,7 @@ const Sidur = ({x}: any) => {
         (data?.groups as any)?.data && setSavedPiritManning(removeFirstNElements(JSON.parse((data?.groups as any)?.data), (daysSince() * 8 + getPirit(0).startHour) - (data?.groups as any).firstPirit));
     }, [data?.groups]);
 
-    const longest =(arr:string[]) => {
-        debugger; return arr.reduce((a, b) => a.length > b.length ? a : b, "")
-    };
+    const longest = (arr: string[]) => arr.reduce((a, b) => a.length > b.length ? a : b, "")
 
     return (
         <Grid paddingTop="5vh" container width="100vw" height="100vh" direction="column" rowSpacing={4}
@@ -38,14 +36,14 @@ const Sidur = ({x}: any) => {
                 <Grid item>
                     <Typography> ע״פ
                         Synch ברגע
-                        זה: {((longest(nowPirit.filter(({profiles}) => profiles.some((id: string) => id === selectedUser))?.map(({display_name})=>display_name))) || "ללא עמדה")}</Typography>
+                        זה: {((longest(nowPirit.filter(({profiles}) => profiles.some((id: string) => id === selectedUser))?.map(({display_name}) => display_name))) || "ללא עמדה")}</Typography>
                 </Grid>
                 <Grid item>
                     <Typography> ע״פ תכנון בעמדות הבאות
                         הן: </Typography>
                 </Grid>
                 {savedPiritManning.map((pirit, i) => <Grid item>
-                        <Typography>{getPirit((data?.groups as any).firstPirit + i).r}: {((longest(yabaToArray(pirit).filter(({profiles}) => profiles.some((id: string) => id === selectedUser))?.map(({display_name})=>display_name))) || "ללא עמדה")}</Typography>
+                        <Typography>{getPirit((data?.groups as any).firstPirit + i).r}: {((longest(yabaToArray(pirit).filter(({profiles}) => profiles.some((id: string) => id === selectedUser))?.map(({display_name}) => display_name))) || "ללא עמדה")}</Typography>
                     </Grid>
                 )}
 

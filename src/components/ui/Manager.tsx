@@ -182,12 +182,8 @@ const Manager = ({synch, back}: any) => {
 
 
     const melechRec = (k: string, mannings: any, path: any = [], users: any, setManning: any, synchMannings: any, planMannings: any) => {
-
-        // Ensure path is an array
         const currentPath = Array.isArray(path) ? path : [path];
-
         if (typeof mannings !== 'object' || mannings === null) {
-            // Base case: Render the ManningSelector for a leaf node
             return (
                 <Grid item width={300} height={100} key={k + path.join(" - ")}>
                     {k === "name" ? <Box
@@ -204,8 +200,8 @@ const Manager = ({synch, back}: any) => {
                             value={mannings}
                             color={{
                                 state: mannings,
-                                synch: synchMannings ? synchMannings[currentPath[currentPath.length - 1]] : undefined,
-                                plan: planMannings ? planMannings[currentPath[currentPath.length - 1]] : undefined
+                                synch: synchMannings ,
+                                plan: planMannings ,
                             }}
                             users={users}
                             setManning={setManning}
