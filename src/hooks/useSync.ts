@@ -96,7 +96,7 @@ export default ({x}: { x: string }) => {
             }) => department_name === name)
             return exists ? exists.id : (await axiosInstance.post("/organizations/orgizx50x/departments", {
                 display_name: name,
-                parent_department_id: "deptbhyc6v_770"
+                parent_department_id: "depte5fwcj_770"
             })).data.id as string
         } catch (e) {
             console.log(e);
