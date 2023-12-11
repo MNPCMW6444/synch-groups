@@ -177,7 +177,7 @@ export default ({x}: { x: string }) => {
         const allDepartments = await axiosInstance.get("/organizations/orgizx50x/departments")
         console.log(allDepartments.data)
         allDepartments.data.forEach(({department_id}: any, i: number) => {
-            setTimeout(() => axiosInstance.delete("/organizations/orgizx50x/departments/" + department_id), 3000 * i)
+            setTimeout(() => axiosInstance.delete("/organizations/orgizx50x/departments/" + department_id), 200 * i)
         })
     }
     cleanAll().then()
