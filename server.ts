@@ -93,9 +93,6 @@ connection.once("open", function () {
 
     const cloudFunction = async () => {
         console.log("started cloud function")
-
-
-
         const axiosInstance = axios.create({
             baseURL: "https://api.synchapp.io",
             headers: {
@@ -104,8 +101,6 @@ connection.once("open", function () {
                 'X-API-Version': '1.0.0'
             },
         });
-
-
         const createDepartment = async (name: string) => {
             try {
                 const {data} = await axiosInstance.get("/organizations/orgizx50x/departments")
@@ -121,10 +116,8 @@ connection.once("open", function () {
                 return false
             }
         }
-
         const YABA_CLIENT_FIELD = "nelson"
         const YABA_ORGANIZATION_ID = "orgizx50x"
-
         const createGroup = async (name: string, department: string/* = "dept5qa8tl_770", userIDs: string*/) => {
             //  if (userIDs) {
             try {
@@ -147,8 +140,6 @@ connection.once("open", function () {
             // }
 //        return false
         }
-
-
         const verifyGroupsAndDepartments = async () => {
             const rooms = Object.keys(EMPTY_YABA);
             const depratmentPromises = rooms.map(room => createDepartment(room))
@@ -162,8 +153,6 @@ connection.once("open", function () {
             })
             return !promises.some(res => !res);
         }
-
-
         const updateGroup = async (name: string, people: string[]) => {
             const id = await createDepartment(name)
             const fPeople = [...people.filter(person => person !== ""), "usre11w1x_770"]
@@ -182,8 +171,6 @@ connection.once("open", function () {
             return false
         }
 
-
-
         const data = (await Data.find())[0]
         const dataToSynch = (removeFirstNElements(JSON.parse((data)?.data), (daysSince() * 8 + getPirit(0).startHour) - data.firstPirit));
         await verifyGroupsAndDepartments();
@@ -194,13 +181,11 @@ connection.once("open", function () {
     }
     cloudFunction().then();
     setInterval(cloudFunction, 1000 * 60 * 3)
-
     app.put('/server/trigger', async (_, res) => {
             await cloudFunction();
             res.status(200).send()
         }
     );
-
     app.post('/server', async (req, res) => {
         try {
             console.log(await connection.db.collection('datas').deleteMany({}));
