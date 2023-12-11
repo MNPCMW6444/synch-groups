@@ -12,7 +12,6 @@ import {GroupCreationRequest} from "./src";
 require('dotenv').config();
 
 
-
 const app = express();
 
 app.use(cors({
@@ -93,91 +92,95 @@ connection.once("open", function () {
 
     const cloudFunction = async () => {
         console.log("started cloud function")
-        const axiosInstance = axios.create({
-            baseURL: "https://api.synchapp.io",
-            headers: {
-                'Authorization': `Bearer ${process.env.VITE_IAF_TOKEN}`,
-                "Content-Type": "application/json",
-                'X-API-Version': '1.0.0'
-            },
-        });
-        const createDepartment = async (name: string) => {
-            try {
-                const {data} = await axiosInstance.get("/organizations/orgizx50x/departments")
-                const exists: { department_name: string, id: string } = data.find(({department_name}: {
-                    department_name: string
-                }) => department_name === name)
-                return exists ? exists.id : (await axiosInstance.post("/organizations/orgizx50x/departments", {
-                    display_name: name,
-                    parent_department_id: "depte5fwcj_770"
-                })).data.id as string
-            } catch (e) {
-                console.log(e);
-                return false
-            }
-        }
-        const YABA_CLIENT_FIELD = "nelson"
-        const YABA_ORGANIZATION_ID = "orgizx50x"
-        const createGroup = async (name: string, department: string/* = "dept5qa8tl_770", userIDs: string*/) => {
-            //  if (userIDs) {
-            try {
-                const data: GroupCreationRequest = {
-                    organization_id: YABA_ORGANIZATION_ID,
-                    display_name: name,
-                    client_field: YABA_CLIENT_FIELD,
-                    media: "audio",
-                    department,
-                    priority: 1,
-                    ptt_lock: false,
-                    members: [/*{id: userIDs, manager: false}*/]//.map(id => ({id, manager: false}))
-                };
-                await axiosInstance.post("/groups", data)
-                return true
-            } catch (e) {
-                console.log(e);
-                return false
-            }
-            // }
-//        return false
-        }
-        const verifyGroupsAndDepartments = async () => {
-            const rooms = Object.keys(EMPTY_YABA);
-            const depratmentPromises = rooms.map(room => createDepartment(room))
-            const depReses = await Promise.all(depratmentPromises)
-            if (depReses.some(res => !res)) return false;
-            const promises = rooms.map(async (room, i) => {
-                const groups = yabaToArray((EMPTY_YABA as any)[room])
-                const groupsPromises = groups.map(({display_name}) => createGroup(display_name, (depReses as string[])[i]))
-                const grpReses = await Promise.all(groupsPromises)
-                return !grpReses.some(res => !res);
-            })
-            return !promises.some(res => !res);
-        }
-        const updateGroup = async (name: string, people: string[]) => {
-            const id = await createDepartment(name)
-            const fPeople = [...people.filter(person => person !== ""), "usre11w1x_770"]
-            if (id) {
+        try {
+            const axiosInstance = axios.create({
+                baseURL: "https://api.synchapp.io",
+                headers: {
+                    'Authorization': `Bearer ${process.env.VITE_IAF_TOKEN}`,
+                    "Content-Type": "application/json",
+                    'X-API-Version': '1.0.0'
+                },
+            });
+            const createDepartment = async (name: string) => {
                 try {
-                    fPeople.length > 0 ? await axiosInstance.put("/groups/" + id + "/members", fPeople.map((person) => ({
-                        id: person,
-                        manager: false
-                    }))) : await axiosInstance.put("/groups/" + id + "/members", (await axiosInstance.get("/groups/" + id + "/members")).data.ids)
-                    return true;
+                    const {data} = await axiosInstance.get("/organizations/orgizx50x/departments")
+                    const exists: { department_name: string, id: string } = data.find(({department_name}: {
+                        department_name: string
+                    }) => department_name === name)
+                    return exists ? exists.id : (await axiosInstance.post("/organizations/orgizx50x/departments", {
+                        display_name: name,
+                        parent_department_id: "depte5fwcj_770"
+                    })).data.id as string
                 } catch (e) {
                     console.log(e);
                     return false
                 }
             }
-            return false
-        }
+            const YABA_CLIENT_FIELD = "nelson"
+            const YABA_ORGANIZATION_ID = "orgizx50x"
+            const createGroup = async (name: string, department: string/* = "dept5qa8tl_770", userIDs: string*/) => {
+                //  if (userIDs) {
+                try {
+                    const data: GroupCreationRequest = {
+                        organization_id: YABA_ORGANIZATION_ID,
+                        display_name: name,
+                        client_field: YABA_CLIENT_FIELD,
+                        media: "audio",
+                        department,
+                        priority: 1,
+                        ptt_lock: false,
+                        members: [/*{id: userIDs, manager: false}*/]//.map(id => ({id, manager: false}))
+                    };
+                    await axiosInstance.post("/groups", data)
+                    return true
+                } catch (e) {
+                    console.log(e);
+                    return false
+                }
+                // }
+//        return false
+            }
+            const verifyGroupsAndDepartments = async () => {
+                const rooms = Object.keys(EMPTY_YABA);
+                const depratmentPromises = rooms.map(room => createDepartment(room))
+                const depReses = await Promise.all(depratmentPromises)
+                if (depReses.some(res => !res)) return false;
+                const promises = rooms.map(async (room, i) => {
+                    const groups = yabaToArray((EMPTY_YABA as any)[room])
+                    const groupsPromises = groups.map(({display_name}) => createGroup(display_name, (depReses as string[])[i]))
+                    const grpReses = await Promise.all(groupsPromises)
+                    return !grpReses.some(res => !res);
+                })
+                return !promises.some(res => !res);
+            }
+            const updateGroup = async (name: string, people: string[]) => {
+                const id = await createDepartment(name)
+                const fPeople = [...people.filter(person => person !== ""), "usre11w1x_770"]
+                if (id) {
+                    try {
+                        fPeople.length > 0 ? await axiosInstance.put("/groups/" + id + "/members", fPeople.map((person) => ({
+                            id: person,
+                            manager: false
+                        }))) : await axiosInstance.put("/groups/" + id + "/members", (await axiosInstance.get("/groups/" + id + "/members")).data.ids)
+                        return true;
+                    } catch (e) {
+                        console.log(e);
+                        return false
+                    }
+                }
+                return false
+            }
 
-        const data = (await Data.find())[0]
-        const dataToSynch = (removeFirstNElements(JSON.parse((data)?.data), (daysSince() * 8 + getPirit(0).startHour) - data.firstPirit));
-        await verifyGroupsAndDepartments();
-        const array = yabaToArray(dataToSynch as any)
-        const work = array.map(group => updateGroup(group.display_name, group.profiles));
-        await Promise.all(work);
-        console.log("finished cloud function")
+            const data = (await Data.find())[0]
+            const dataToSynch = (removeFirstNElements(JSON.parse((data)?.data), (daysSince() * 8 + getPirit(0).startHour) - data.firstPirit));
+            await verifyGroupsAndDepartments();
+            const array = yabaToArray(dataToSynch as any)
+            const work = array.map(group => updateGroup(group.display_name, group.profiles));
+            await Promise.all(work);
+            console.log("finished cloud function")
+        } catch (e) {
+            console.log("cloud function failed: ", e)
+        }
     }
     cloudFunction().then();
     setInterval(cloudFunction, 1000 * 60 * 3)
