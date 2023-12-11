@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import {Yaba} from "../../index";
 import {ArrowBack, ArrowForward} from "@mui/icons-material";
 import ManningSelector from "./manager/ManningSelector.tsx";
-import {arrayToYaba, EMPTY_YABA, yabaToArray} from "../../util/yabaAndGroups.ts";
+import {arrayToYaba, EMPTY_YABA, /*yabaToArray*/} from "../../util/yabaAndGroups.ts";
 
 export const daysSince = (date = Date.now()) => Math.ceil((date - new Date('2023-10-07').getTime()) / (1000 * 60 * 60 * 24));
 
@@ -39,8 +39,8 @@ export const removeFirstNElements = <T, >(array: T[], n: number): T[] => n >= ar
 const emptyYabas = (n: number) => Array(n).fill(JSON.parse(JSON.stringify(EMPTY_YABA)));
 
 const Manager = ({synch, back}: any) => {
-    const {users, groups, updateGroup, verifyGroupsAndDepartments, queryUsers, queryGroups} = synch;
-    const {data, saveData, queryGroups: backqueryGroups} = back;
+    const {users, groups,/* updateGroup, verifyGroupsAndDepartments,*/ queryUsers, queryGroups} = synch;
+    const {data, saveData, queryGroups: backqueryGroups, triggerCloudFunction} = back;
 
     const [parsedPiritManning, setParsedPiritManning] = useState<Yaba>(JSON.parse(JSON.stringify(EMPTY_YABA)));
     const [savedPiritManning, setSavedPiritManning] = useState<Yaba[]>([JSON.parse(JSON.stringify(EMPTY_YABA))]);
@@ -49,7 +49,9 @@ const Manager = ({synch, back}: any) => {
 
     const [melech, setMelech] = useState<boolean>(true);
 
+/*
     const [sending, setSending] = useState(false);
+*/
     const [saving, setSaving] = useState(false);
 
     useEffect(() => {
@@ -158,18 +160,18 @@ const Manager = ({synch, back}: any) => {
     };
 
 
-    const send = async () => {
+    /*const send = async () => {
         setSending(true);
-        await verifyGroupsAndDepartments();
-        const array = yabaToArray(piritManning[0])
-        const work = array.map(group => updateGroup(group.display_name, group.profiles));
-        await Promise.all(work);
-        await queryGroups()
-        await queryUsers();
-        await backqueryGroups();
+         await verifyGroupsAndDepartments();
+         const array = yabaToArray(piritManning[0])
+         const work = array.map(group => updateGroup(group.display_name, group.profiles));
+         await Promise.all(work);
+         await queryGroups()
+         await queryUsers();
+         await backqueryGroups();
         setSending(false);
     }
-
+*/
 
     const save = async () => {
         setSaving(true);
@@ -177,6 +179,7 @@ const Manager = ({synch, back}: any) => {
         await queryGroups()
         await queryUsers();
         await backqueryGroups();
+        await triggerCloudFunction()
         setSaving(false);
     }
 
@@ -200,8 +203,8 @@ const Manager = ({synch, back}: any) => {
                             value={mannings}
                             color={{
                                 state: mannings,
-                                synch: synchMannings ,
-                                plan: planMannings ,
+                                synch: synchMannings,
+                                plan: planMannings,
                             }}
                             users={users}
                             setManning={setManning}
@@ -338,7 +341,7 @@ const Manager = ({synch, back}: any) => {
                             disabled={saving}
                             onClick={save}>
                         {(saving ?
-                            <CircularProgress/> : "שמור ודרוס איושים נוכחיים לשרת התכנון")}
+                            <CircularProgress/> : "שמור איושים נוכחיים לsynch ולתכנון")}
                     </Button>
                 </Grid>
             </Grid>
@@ -369,14 +372,14 @@ const Manager = ({synch, back}: any) => {
             <Grid item>
                 {melech ? melechView() : (piritManning[index] && renderMannings(piritManning[index], parsedPiritManning, savedPiritManning[index]))}
             </Grid>
-            {index === 0 && <Grid item>
+            {/* {index === 0 && <Grid item>
                 <Button color="secondary" sx={{padding: "30px 50px", margin: "20px", fontSize: "200%"}}
                         variant="contained"
                         disabled={sending || index !== 0}
                         onClick={send}>
                     {(sending ? <CircularProgress/> : "שא - גר")}
                 </Button>
-            </Grid>}
+            </Grid>}*/}
         </Grid>
     )
         ;

@@ -57,6 +57,10 @@ export default ({u, p, env}: { u: string, p: string, env: string }) => {
         })
     };
 
+    const triggerCloudFunction = async () => {
+        await axiosInstance.put("/trigger")
+    }
+
     useEffect(() => {
         queryGroups();
         const groupsPolling = setInterval(queryGroups, POLLING_INTERVAL);
@@ -65,5 +69,5 @@ export default ({u, p, env}: { u: string, p: string, env: string }) => {
         }
     }, []);
 
-    return {data, groupsTimestamp, queryGroups, saveData}
+    return {data, groupsTimestamp, queryGroups, saveData, triggerCloudFunction}
 }
