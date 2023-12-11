@@ -170,6 +170,7 @@ export default ({x}: { x: string }) => {
 
     }*/
 
+/*
     const cleanAll = async () => {
         const allGroups = await axiosInstance.get("/groups")
         console.log(allGroups.data)
@@ -181,6 +182,7 @@ export default ({x}: { x: string }) => {
         })
     }
     cleanAll().then()
+*/
 
     const queryUsers = () => {
         getUsers().then(res => {
