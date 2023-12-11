@@ -159,8 +159,6 @@ const Manager = ({synch, back}: any) => {
 
 
     const send = async () => {
-        debugger
-
         setSending(true);
         await verifyGroupsAndDepartments();
         const array = yabaToArray(piritManning[0])
