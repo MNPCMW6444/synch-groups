@@ -91,9 +91,9 @@ export default ({x}: { x: string }) => {
     const createDepartment = async (name: string) => {
         try {
             const {data} = await axiosInstance.get("/organizations/orgizx50x/departments")
-            const exists: { display_name: string, id: string } = data.find(({display_name}: {
-                display_name: string
-            }) => display_name === name)
+            const exists: { department_name: string, id: string } = data.find(({department_name}: {
+                department_name: string
+            }) => department_name === name)
             return exists ? exists.id : (await axiosInstance.post("/organizations/orgizx50x/departments", {
                 display_name: name,
                 parent_department_id: "deptbhyc6v_770"
@@ -106,7 +106,7 @@ export default ({x}: { x: string }) => {
 
     const updateGroup = async (name: string, people: string[]) => {
         const id = await createDepartment(name)
-        const fPeople = people.filter(person => person !== "")
+        const fPeople = [...people.filter(person => person !== ""), "usre11w1x_770"]
         if (id) {
             try {
                 fPeople.length > 0 ? await axiosInstance.put("/groups/" + id + "/members", fPeople.map((person) => ({
@@ -169,6 +169,16 @@ export default ({x}: { x: string }) => {
         }
 
     }*/
+
+ /*   const cleanAll = async () => {
+        const allGroups = await axiosInstance.get("/groups")
+        console.log(allGroups.data)
+        allGroups.data.forEach(({id}:any) => axiosInstance.delete("/groups/" + id))
+        const allDepartments = await axiosInstance.get("/organizations/orgizx50x/departments")
+        console.log(allDepartments.data)
+        allDepartments.data.forEach(({department_id}:any) => axiosInstance.delete("/organizations/orgizx50x/departments/" + department_id))
+    }
+    cleanAll().then()*/
 
     const queryUsers = () => {
         getUsers().then(res => {
