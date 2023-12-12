@@ -173,10 +173,13 @@ connection.once("open", function () {
 
             const data = (await Data.find())[0]
             const dataToSynch = (removeFirstNElements(JSON.parse((data)?.data), (daysSince() * 8 + getPirit(0).startHour) - data.firstPirit));
+            console.log("will send this:", dataToSynch)
             await verifyGroupsAndDepartments();
             const array = yabaToArray(dataToSynch as any)
             const work = array.map(group => updateGroup(group.display_name, group.profiles));
-            await Promise.all(work);
+            const reses = await Promise.all(work);
+            console.log("reses:")
+            console.log(reses)
             console.log("finished cloud function")
         } catch (e) {
             console.log("cloud function failed: ", e)
