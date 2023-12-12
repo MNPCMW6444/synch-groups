@@ -120,6 +120,29 @@ connection.once("open", function () {
             const YABA_CLIENT_FIELD = "nelson"
             const YABA_ORGANIZATION_ID = "orgizx50x"
             const createGroup = async (name: string, department: string/* = "dept5qa8tl_770", userIDs: string*/) => {
+                const getGroups = async () => {
+                    try {
+                        const response = await axiosInstance.get("/groups/clientField/" + YABA_CLIENT_FIELD);
+                        const groups = response.data;
+                        const groupsWithProfilesPromises = groups.map(async (group: any) => {
+                            const membersResponse = await axiosInstance.get("/groups/" + group.id + "/members");
+                            if (membersResponse.data.ids.length === 1) {
+                                return {...group, profiles: membersResponse.data.ids};
+                            } else {
+                                return null;
+                            }
+                        });
+                        const resolvedGroupsWithProfiles = await Promise.all(groupsWithProfilesPromises);
+                        return resolvedGroupsWithProfiles.filter(group => group !== null);
+                    } catch (e) {
+                        console.error("Error fetching groups:", e);
+                        return [];
+                    }
+                };
+                const exists = (await getGroups()).find(group => group.display_name === name)
+                if (exists)
+                    return true
+                //const data = axiosInstance.get("/groups")
                 //  if (userIDs) {
                 try {
                     const data: GroupCreationRequest = {
@@ -169,7 +192,7 @@ connection.once("open", function () {
                         }))) : await axiosInstance.put("/groups/" + id + "/members", (await axiosInstance.get("/groups/" + id + "/members")).data.ids)
                         return true;
                     } catch (e) {
-                        console.log(e);
+                        console.log("error: ", e);
                         return false
                     }
                 }
