@@ -158,11 +158,11 @@ connection.once("open", function () {
                         ptt_lock: false,
                         members: [/*{id: userIDs, manager: false}*/]//.map(id => ({id, manager: false}))
                     };
-                    await axiosInstance.post("/groups", data)
-                    return true
+                   const r= await axiosInstance.post("/groups", data)
+                    return r.data.id
                 } catch (e) {
                     // console.log((e as any)?.response?.status || console.log((e as any)?.status));;
-                    console.log("maybe exists: ", (e as any)?.response?.status || console.log((e as any)?.status));
+                    console.log("PROBLEM BECAUSE WE NEED THE ID!!!!!: ", (e as any)?.response?.status || console.log((e as any)?.status));
                     return true
                     // return false
                 }
