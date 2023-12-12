@@ -104,10 +104,11 @@ connection.once("open", function () {
             const createDepartment = async (name: string) => {
                 try {
                     const {data} = await axiosInstance.get("/organizations/orgizx50x/departments")
-                    const exists: { department_name: string, id: string } = data.find(({department_name}: {
+                    const exists: { department_name: string, department_id: string } = data.find(({department_name}: {
                         department_name: string
                     }) => department_name === name)
-                    return exists ? exists.id : (await axiosInstance.post("/organizations/orgizx50x/departments", {
+                    console.log("exists: ", JSON.stringify(exists))
+                    return exists ? exists.department_id : (await axiosInstance.post("/organizations/orgizx50x/departments", {
                         display_name: name,
                         parent_department_id: "depte5fwcj_770"
                     })).data.id as string
@@ -168,22 +169,23 @@ connection.once("open", function () {
                         return false
                     }
                 }
+                console.log("id is false: ", id)
                 return false
             }
 
             const data = (await Data.find())[0]
-            //console.log("data before remove " + ((daysSince() * 8 + getPirit(0).startHour) - data.firstPirit) + " pirits: " + JSON.stringify(JSON.parse((data)?.data)))
-            //console.log("n = " + (daysSince() * 8 + getPirit(0).startHour) + " - " + data.firstPirit)
+            console.log("data before remove " + ((daysSince() * 8 + getPirit(0).startHour) - data.firstPirit) + " pirits: " + JSON.stringify(JSON.parse((data)?.data)))
+            console.log("n = " + (daysSince() * 8 + getPirit(0).startHour) + " - " + data.firstPirit)
             const dataToSynch = (removeFirstNElements(JSON.parse((data)?.data), (daysSince() * 8 + getPirit(0).startHour) - data.firstPirit));
-            //console.log("will send this:", JSON.stringify(dataToSynch))
+            console.log("will send this:", JSON.stringify(dataToSynch))
             await verifyGroupsAndDepartments();
             const array = yabaToArray(dataToSynch[0] as any)
             const work = array.map(group => updateGroup(group.display_name, group.profiles));
-            /* const reses =*/
-            await Promise.all(work);
-            //console.log("reqes: " + JSON.stringify(array))
-            //console.log("reses:")
-            //console.log(JSON.stringify(reses))
+            const reses =
+                await Promise.all(work);
+            console.log("reqes: " + JSON.stringify(array))
+            console.log("reses:")
+            console.log(JSON.stringify(reses))
             console.log("finished cloud function")
         } catch (e) {
             console.log("cloud function failed: ", e)

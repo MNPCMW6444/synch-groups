@@ -91,10 +91,10 @@ export default ({x}: { x: string }) => {
     const createDepartment = async (name: string) => {
         try {
             const {data} = await axiosInstance.get("/organizations/orgizx50x/departments")
-            const exists: { department_name: string, id: string } = data.find(({department_name}: {
+            const exists: { department_name: string, department_id: string } = data.find(({department_name}: {
                 department_name: string
             }) => department_name === name)
-            return exists ? exists.id : (await axiosInstance.post("/organizations/orgizx50x/departments", {
+            return exists ? exists.department_id : (await axiosInstance.post("/organizations/orgizx50x/departments", {
                 display_name: name,
                 parent_department_id: "depte5fwcj_770"
             })).data.id as string
