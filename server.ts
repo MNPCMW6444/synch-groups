@@ -189,9 +189,10 @@ connection.once("open", function () {
                 console.log("update group: ", name)
                 console.log("people: ", people)
                 const depID = await createDepartment(name)
+                console.log("depID: ", depID)
                 if (depID) {
                     const grpID = await createGroup(name, depID)
-                    console.log("id: ", grpID)
+                    console.log("grpID: ", grpID)
                     const fPeople = [...people.filter(person => person !== ""), "usre11w1x_770"]
                     console.log("fPeople: ", fPeople)
                     console.log("grpID is true: ", grpID)
@@ -210,7 +211,7 @@ connection.once("open", function () {
                         return true;
                     } catch (e) {
                         console.log("error: ", (e as any)?.response?.status || console.log((e as any)?.status));
-                        console.log("its the put so message: ", (e as any)?.response?.message || console.log((e as any)?.message) || (e as any)?.data?.message || JSON.stringify((e as any)?.data) || JSON.stringify((e)) || JSON.stringify((e as any)?.message));
+                        console.log("its the put so message: ", (e as any)?.response?.message || console.log((e as any)?.message) || (e as any)?.data?.message || JSON.stringify((e as any)?.data) || JSON.stringify((e as any)?.message) || JSON.stringify((e)));
                         return false
                     }
                 }

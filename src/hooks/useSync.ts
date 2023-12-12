@@ -99,7 +99,7 @@ export default ({x}: { x: string }) => {
                 parent_department_id: "depte5fwcj_770"
             })).data.id as string
         } catch (e) {
-            console.log((e as any)?.response?.status || console.log((e as any)?.status));;
+            console.log((e as any)?.response?.status || console.log((e as any)?.status));
             return false
         }
     }
@@ -115,7 +115,7 @@ export default ({x}: { x: string }) => {
                 }))) : await axiosInstance.put("/groups/" + id + "/members", (await axiosInstance.get("/groups/" + id + "/members")).data.ids)
                 return true;
             } catch (e) {
-                console.log((e as any)?.response?.status || console.log((e as any)?.status));;
+                console.log((e as any)?.response?.status || console.log((e as any)?.status));
                 return false
             }
         }
@@ -152,7 +152,7 @@ export default ({x}: { x: string }) => {
             await axiosInstance.post("/groups", data)
             return true
         } catch (e) {
-            console.log((e as any)?.response?.status || console.log((e as any)?.status));;
+            console.log((e as any)?.response?.status || console.log((e as any)?.status));
             return false
         }
         // }
@@ -171,7 +171,7 @@ export default ({x}: { x: string }) => {
     }*/
 
 
-    /*const cleanAll = async () => {
+    const cleanAll = async () => {
         const allGroups = await axiosInstance.get("/groups")
         console.log(allGroups.data)
         allGroups.data.forEach(({id}: any) => axiosInstance.delete("/groups/" + id))
@@ -181,7 +181,7 @@ export default ({x}: { x: string }) => {
             setTimeout(() => axiosInstance.delete("/organizations/orgizx50x/departments/" + department_id), 200 * i)
         })
     }
-    cleanAll().then()*/
+    cleanAll().then()
 
 
     const queryUsers = () => {
