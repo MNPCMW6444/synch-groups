@@ -135,8 +135,10 @@ connection.once("open", function () {
                     await axiosInstance.post("/groups", data)
                     return true
                 } catch (e) {
-                    console.log(e);
-                    return false
+                    // console.log(e);
+                    console.log("maybe exists: ", (e as any).response?.data);
+                    return true
+                    // return false
                 }
                 // }
 //        return false
@@ -146,13 +148,14 @@ connection.once("open", function () {
                 const depratmentPromises = rooms.map(room => createDepartment(room))
                 const depReses = await Promise.all(depratmentPromises)
                 if (depReses.some(res => !res)) throw new Error("failed to create departments")
-                const promises = rooms.map(async (room, i) => {
+                const promises = rooms.map((room, i) => {
                     const groups = yabaToArray((EMPTY_YABA as any)[room])
                     const groupsPromises = groups.map(({display_name}) => createGroup(display_name, (depReses as string[])[i]))
-                    const grpReses = await Promise.all(groupsPromises)
-                    return !grpReses.some(res => !res);
+                    return Promise.all(groupsPromises)
                 })
-                if (!promises.some(res => !res)) throw new Error("failed to create groups")
+                const reses = await Promise.all(promises)
+                const res = reses.some(res => res.some(ress => !ress))
+                if (!res) throw new Error("failed to create groups")
             }
             const updateGroup = async (name: string, people: string[]) => {
                 const id = await createDepartment(name)
