@@ -212,19 +212,19 @@ connection.once("open", function () {
             }
 
             const data = (await Data.find())[0]
-            console.log("data before remove " + ((daysSince() * 8 + getPirit(0).startHour) - data.firstPirit) + " pirits: " + JSON.stringify(JSON.parse((data)?.data)))
-            console.log("n = " + (daysSince() * 8 + getPirit(0).startHour) + " - " + data.firstPirit)
+            // console.log("data before remove " + ((daysSince() * 8 + getPirit(0).startHour) - data.firstPirit) + " pirits: " + JSON.stringify(JSON.parse((data)?.data)))
+            // console.log("n = " + (daysSince() * 8 + getPirit(0).startHour) + " - " + data.firstPirit)
             const dataToSynch = (removeFirstNElements(JSON.parse((data)?.data), (daysSince() * 8 + (getPirit(0).startHour) - data.firstPirit) / 3));
-            console.log("will send this:", JSON.stringify(dataToSynch))
+            // console.log("will send this:", JSON.stringify(dataToSynch))
             await verifyGroupsAndDepartments();
             const array = yabaToArray(dataToSynch[0] as any)
             const work = array.map(group => updateGroup(group.display_name, group.profiles));
-            console.log("reqes: " + JSON.stringify(array))
+            // console.log("reqes: " + JSON.stringify(array))
             const reses =
                 await Promise.all(work);
-            console.log("reses:")
-            console.log(JSON.stringify(reses))
-            console.log("finished cloud function")
+            // console.log("reses:")
+            // console.log(JSON.stringify(reses))
+            // console.log("finished cloud function")
             if (!(reses.some(res => !!res))) return "no change"
             return "success"
         } catch (e) {
