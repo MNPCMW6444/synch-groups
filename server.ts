@@ -240,13 +240,13 @@ connection.once("open", function () {
             return "fail"
         }
     }
-    cloudFunction(false).then();
+    /*cloudFunction(false).then();
     setTimeout(() => {
         setInterval(() => cloudFunction(false), 1000 * 60 * 5)
     }, 1000 * 60 * 3)
     setTimeout(() => {
         setInterval(() => cloudFunction(true), 1000 * 60 * 30)
-    }, 1000 * 60 * 10)
+    }, 1000 * 60 * 10)*/
     app.put('/server/trigger', async (_, res) => {
             const result = await cloudFunction(false);
             res.status(200).json({result})
