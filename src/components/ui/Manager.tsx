@@ -49,9 +49,9 @@ const Manager = ({synch, back}: any) => {
 
     const [melech, setMelech] = useState<boolean>(true);
 
-/*
-    const [sending, setSending] = useState(false);
-*/
+    /*
+        const [sending, setSending] = useState(false);
+    */
     const [saving, setSaving] = useState(false);
 
     useEffect(() => {
@@ -318,7 +318,7 @@ const Manager = ({synch, back}: any) => {
                 </Grid>
             </Grid>
             <Grid item container justifyContent="center" columnSpacing={4}>
-                <Grid item>
+                {/* <Grid item>
                     <Button variant="contained" sx={{fontSize: "120%"}} onClick={() => setPiritManning(prev => {
                         const newState = JSON.parse(JSON.stringify(prev));
                         newState[0] = JSON.parse(JSON.stringify(parsedPiritManning));
@@ -326,14 +326,14 @@ const Manager = ({synch, back}: any) => {
                     })}>
                         טען ודרוס איושים נוכחיים מ- synch
                     </Button>
-                </Grid>
+                </Grid>*/}
                 <Grid item>
                     <Button variant="contained" sx={{fontSize: "120%"}} onClick={() => setPiritManning(prev => {
                         const newState = JSON.parse(JSON.stringify(prev));
                         for (let i = 0; i < savedPiritManning.length; i++) if (savedPiritManning[i]) newState[i] = JSON.parse(JSON.stringify(savedPiritManning[i]));
                         return newState;
                     })}>
-                        טען ודרוס איושים נוכחיים משרת תכנון
+                        טען ודרוס איושים השמורים כעת מהשרת
                     </Button>
                 </Grid>
                 <Grid item>
@@ -352,22 +352,23 @@ const Manager = ({synch, back}: any) => {
                     </Typography>
                 </Grid>
                 <Grid item>
-                    <ManningSelector disabled value={"איוש לא שמור"} path={[""]}
-                                     users={[{label: "איוש לא שמור", id: "איוש לא שמור"}]} setManning={() => {
-                    }} color={{plan: "a", synch: "b", state: "c"}}/>
+                    <ManningSelector disabled value={"איוש לא שמור (בעריכה)"} path={[""]}
+                                     users={[{label: "איוש לא שמור (בעריכה)", id: "איוש לא שמור (בעריכה)"}]}
+                                     setManning={() => {
+                                     }} color={{plan: "a", synch: "b", state: "c"}}/>
                 </Grid>
                 <Grid item>
-                    <ManningSelector disabled value={"איוש שמור לתכנון בלבד"} path={[""]}
-                                     users={[{label: "איוש שמור לתכנון בלבד", id: "איוש שמור לתכנון בלבד"}]}
+                    <ManningSelector disabled value={"איוש שמור בהצלחה"} path={[""]}
+                                     users={[{label: "איוש שמור בהצלחה", id: "איוש שמור בהצלחה"}]}
                                      setManning={() => {
                                      }} color={{plan: "c", synch: "b", state: "c"}}/>
                 </Grid>
-                <Grid item>
+                {/*  <Grid item>
                     <ManningSelector disabled value={"איוש שמור לsynch בלבד"} path={[""]}
                                      users={[{label: "איוש שמור לsynch בלבד", id: "איוש שמור לsynch בלבד"}]}
                                      setManning={() => {
                                      }} color={{plan: "a", synch: "c", state: "c"}}/>
-                </Grid>
+                </Grid>*/}
             </Grid>
             <Grid item>
                 {melech ? melechView() : (piritManning[index] && renderMannings(piritManning[index], parsedPiritManning, savedPiritManning[index]))}
