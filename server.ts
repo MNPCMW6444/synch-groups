@@ -182,14 +182,25 @@ connection.once("open", function () {
                 // if (!res) throw new Error("failed to create groups")
             }
             const updateGroup = async (name: string, people: string[]) => {
+                console.log("update group: ", name)
+                console.log("people: ", people)
                 const id = await createDepartment(name)
+                console.log("id: ", id)
                 const fPeople = [...people.filter(person => person !== ""), "usre11w1x_770"]
+                console.log("fPeople: ", fPeople)
                 if (id) {
+                    console.log("id is true: ", id)
                     try {
-                        fPeople.length > 0 ? await axiosInstance.put("/groups/" + id + "/members", fPeople.map((person) => ({
-                            id: person,
-                            manager: false
-                        }))) : await axiosInstance.put("/groups/" + id + "/members", (await axiosInstance.get("/groups/" + id + "/members")).data.ids)
+                        if (fPeople.length > 0) {
+                            console.log("fPeople is true: ", fPeople)
+                            await axiosInstance.put("/groups/" + id + "/members", fPeople.map((person) => ({
+                                id: person,
+                                manager: false
+                            })))
+                        } else {
+                            console.log("fPeople is false: ", fPeople)
+                            await axiosInstance.put("/groups/" + id + "/members", (await axiosInstance.get("/groups/" + id + "/members")).data.ids)
+                        }
                         return true;
                     } catch (e) {
                         console.log("error: ", e);
@@ -208,9 +219,9 @@ connection.once("open", function () {
             await verifyGroupsAndDepartments();
             const array = yabaToArray(dataToSynch[0] as any)
             const work = array.map(group => updateGroup(group.display_name, group.profiles));
+            console.log("reqes: " + JSON.stringify(array))
             const reses =
                 await Promise.all(work);
-            console.log("reqes: " + JSON.stringify(array))
             console.log("reses:")
             console.log(JSON.stringify(reses))
             console.log("finished cloud function")
