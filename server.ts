@@ -119,28 +119,29 @@ connection.once("open", function () {
             }
             const YABA_CLIENT_FIELD = "nelson"
             const YABA_ORGANIZATION_ID = "orgizx50x"
-            const createGroup = async (name: string, department: string/* = "dept5qa8tl_770", userIDs: string*/) => {
-                const getGroups = async () => {
-                    try {
-                        const response = await axiosInstance.get("/groups/clientField/" + YABA_CLIENT_FIELD);
-                        const groups = response.data;
-                        const groupsWithProfilesPromises = groups.map(async (group: any) => {
-                            const membersResponse = await axiosInstance.get("/groups/" + group.id + "/members");
-                            if (membersResponse.data.ids.length === 1) {
-                                return {...group, profiles: membersResponse.data.ids};
-                            } else {
-                                return null;
-                            }
-                        });
-                        const resolvedGroupsWithProfiles = await Promise.all(groupsWithProfilesPromises);
-                        return resolvedGroupsWithProfiles.filter(group => group !== null);
-                    } catch (e) {
-                        console.error("Error fetching groups:", (e as any)?.response?.status || console.log((e as any)?.status));
-                        return [];
-                    }
-                };
 
-                const exists = (await getGroups()).find(group => group.display_name === name)
+            const getGroups = async () => {
+                try {
+                    const response = await axiosInstance.get("/groups/clientField/" + YABA_CLIENT_FIELD);
+                    const groups = response.data;
+                    const groupsWithProfilesPromises = groups.map(async (group: any) => {
+                        const membersResponse = await axiosInstance.get("/groups/" + group.id + "/members");
+                        if (membersResponse.data.ids.length === 1) {
+                            return {...group, profiles: membersResponse.data.ids};
+                        } else {
+                            return null;
+                        }
+                    });
+                    const resolvedGroupsWithProfiles = await Promise.all(groupsWithProfilesPromises);
+                    return resolvedGroupsWithProfiles.filter(group => group !== null);
+                } catch (e) {
+                    console.error("Error fetching groups:", (e as any)?.response?.status || console.log((e as any)?.status));
+                    return null;
+                }
+            };
+
+            const createGroup = async (name: string, department: string/* = "dept5qa8tl_770", userIDs: string*/, existing: any) => {
+                const exists = (existing)?.find((group: any) => group.display_name === name)
                 console.log("exists: ", JSON.stringify(exists))
                 if (exists)
                     return exists.id
@@ -148,6 +149,8 @@ connection.once("open", function () {
                 //  if (userIDs) {
                 try {
                     console.log("creating group: ", name)
+                    console.log("PROBLEM lie BECAUSE WE NEED THE ID!!!!!: ");
+                    // console.log(JSON.stringify(await getGroups()));
                     const data: GroupCreationRequest = {
                         organization_id: YABA_ORGANIZATION_ID,
                         display_name: name,
@@ -162,7 +165,7 @@ connection.once("open", function () {
                     return r.data.id
                 } catch (e) {
                     // console.log((e as any)?.response?.status || console.log((e as any)?.status));;
-                    console.log("PROBLEM BECAUSE WE NEED THE ID!!!!!: ");
+                    console.log("PROBLEM catch BECAUSE WE NEED THE ID!!!!!: ");
                     console.log(e);
                     return true
                     // return false
@@ -170,7 +173,7 @@ connection.once("open", function () {
                 // }
 //        return false
             }
-            const verifyGroupsAndDepartments = async () => {
+            const verifyGroupsAndDepartments = async (existing: any) => {
                 const rooms = Object.keys(EMPTY_YABA);
                 const depratmentPromises = rooms.map(room => createDepartment(room))
                 const depReses = await Promise.all(depratmentPromises)
@@ -178,7 +181,7 @@ connection.once("open", function () {
                 if (depReses.some(res => !res)) throw new Error("failed to create departments")
                 const promises = rooms.map((room, i) => {
                     const groups = yabaToArray((EMPTY_YABA as any)[room])
-                    const groupsPromises = groups.map(({display_name}) => createGroup(display_name, (depReses as string[])[i]))
+                    const groupsPromises = groups.map(({display_name}) => createGroup(display_name, (depReses as string[])[i], existing))
                     return Promise.all(groupsPromises)
                 })
                 const reses = await Promise.all(promises)
@@ -186,13 +189,13 @@ connection.once("open", function () {
                 reses.some(res => res.some(ress => !ress))
                 // if (!res) throw new Error("failed to create groups")
             }
-            const updateGroup = async (name: string, people: string[]) => {
+            const updateGroup = async (name: string, people: string[], existing: any) => {
                 console.log("update group: ", name)
                 console.log("people: ", people)
                 const depID = await createDepartment(name)
                 console.log("depID: ", depID)
                 if (depID) {
-                    const grpID = await createGroup(name, depID)
+                    const grpID = await createGroup(name, depID, existing)
                     console.log("grpID: ", grpID)
                     const fPeople = [...people.filter(person => person !== ""), "usre11w1x_770"]
                     console.log("fPeople: ", fPeople)
@@ -220,14 +223,17 @@ connection.once("open", function () {
                 return false
             }
 
+            const existing = await getGroups();
+            if (existing === null) return "failed to get groups"
+
             const data = (await Data.find())[0]
             console.log("data before remove " + ((daysSince() * 8 + getPirit(0).startHour) - data.firstPirit) + " pirits: " + JSON.stringify(JSON.parse((data)?.data)))
             console.log("n = " + (daysSince() * 8 + getPirit(0).startHour) + " - " + data.firstPirit)
             const dataToSynch = (removeFirstNElements(JSON.parse((data)?.data), (daysSince() * 8 + (getPirit(0).startHour) - data.firstPirit) / 3));
             console.log("will send this:", JSON.stringify(dataToSynch))
-            long && await verifyGroupsAndDepartments();
+            long && await verifyGroupsAndDepartments(existing);
             const array = yabaToArray(dataToSynch[0] as any)
-            const work = array.map(group => updateGroup(group.display_name, group.profiles));
+            const work = array.map(group => updateGroup(group.display_name, group.profiles, existing));
             console.log("reqes: " + JSON.stringify(array))
             const reses =
                 await Promise.all(work);
