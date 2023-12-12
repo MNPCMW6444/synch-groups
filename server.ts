@@ -90,7 +90,7 @@ connection.once("open", function () {
         }
     );
 
-    const cloudFunction = async () => {
+    const cloudFunction = async (long: boolean) => {
         console.log("started cloud function")
         try {
             const axiosInstance = axios.create({
@@ -139,12 +139,15 @@ connection.once("open", function () {
                         return [];
                     }
                 };
+
                 const exists = (await getGroups()).find(group => group.display_name === name)
+                console.log("exists: ", JSON.stringify(exists))
                 if (exists)
                     return true
                 //const data = axiosInstance.get("/groups")
                 //  if (userIDs) {
                 try {
+                    console.log("creating group: ", name)
                     const data: GroupCreationRequest = {
                         organization_id: YABA_ORGANIZATION_ID,
                         display_name: name,
@@ -170,6 +173,7 @@ connection.once("open", function () {
                 const rooms = Object.keys(EMPTY_YABA);
                 const depratmentPromises = rooms.map(room => createDepartment(room))
                 const depReses = await Promise.all(depratmentPromises)
+                console.log("finished creating departments");
                 if (depReses.some(res => !res)) throw new Error("failed to create departments")
                 const promises = rooms.map((room, i) => {
                     const groups = yabaToArray((EMPTY_YABA as any)[room])
@@ -219,7 +223,7 @@ connection.once("open", function () {
             console.log("n = " + (daysSince() * 8 + getPirit(0).startHour) + " - " + data.firstPirit)
             const dataToSynch = (removeFirstNElements(JSON.parse((data)?.data), (daysSince() * 8 + (getPirit(0).startHour) - data.firstPirit) / 3));
             console.log("will send this:", JSON.stringify(dataToSynch))
-            await verifyGroupsAndDepartments();
+            long && await verifyGroupsAndDepartments();
             const array = yabaToArray(dataToSynch[0] as any)
             const work = array.map(group => updateGroup(group.display_name, group.profiles));
             console.log("reqes: " + JSON.stringify(array))
@@ -235,10 +239,15 @@ connection.once("open", function () {
             return "fail"
         }
     }
-    cloudFunction().then();
-    setInterval(cloudFunction, 1000 * 60 * 3)
+    cloudFunction(false).then();
+    setTimeout(() => {
+        setInterval(() => cloudFunction(false), 1000 * 60 * 5)
+    }, 1000 * 60 * 3)
+    setTimeout(() => {
+        setInterval(() => cloudFunction(true), 1000 * 60 * 30)
+    }, 1000 * 60 * 10)
     app.put('/server/trigger', async (_, res) => {
-            const result = await cloudFunction();
+            const result = await cloudFunction(false);
             res.status(200).json({result})
         }
     );
