@@ -194,10 +194,11 @@ connection.once("open", function () {
                     try {
                         if (fPeople.length > 0) {
                             console.log("fPeople is true: ", fPeople)
-                            await axiosInstance.put("/groups/" + id + "/members", fPeople.map((person) => ({
+                            const res = await axiosInstance.put("/groups/" + id + "/members", fPeople.map((person) => ({
                                 id: person,
                                 manager: false
                             })))
+                            console.log(res?.status || console.log(res.data))
                         } else {
                             console.log("fPeople is false: ", fPeople)
                             await axiosInstance.put("/groups/" + id + "/members", (await axiosInstance.get("/groups/" + id + "/members")).data.ids)
@@ -205,6 +206,7 @@ connection.once("open", function () {
                         return true;
                     } catch (e) {
                         console.log("error: ", (e as any)?.response?.status || console.log((e as any)?.status));
+                        console.log("its the put so message: ", (e as any)?.response?.message || console.log((e as any)?.message) || (e as any)?.data?.message || JSON.stringify((e as any)?.data) || JSON.stringify((e)) || JSON.stringify((e as any)?.message));
                         return false
                     }
                 }
@@ -213,8 +215,8 @@ connection.once("open", function () {
             }
 
             const data = (await Data.find())[0]
-            // console.log("data before remove " + ((daysSince() * 8 + getPirit(0).startHour) - data.firstPirit) + " pirits: " + JSON.stringify(JSON.parse((data)?.data)))
-            // console.log("n = " + (daysSince() * 8 + getPirit(0).startHour) + " - " + data.firstPirit)
+            console.log("data before remove " + ((daysSince() * 8 + getPirit(0).startHour) - data.firstPirit) + " pirits: " + JSON.stringify(JSON.parse((data)?.data)))
+            console.log("n = " + (daysSince() * 8 + getPirit(0).startHour) + " - " + data.firstPirit)
             const dataToSynch = (removeFirstNElements(JSON.parse((data)?.data), (daysSince() * 8 + (getPirit(0).startHour) - data.firstPirit) / 3));
             console.log("will send this:", JSON.stringify(dataToSynch))
             await verifyGroupsAndDepartments();
