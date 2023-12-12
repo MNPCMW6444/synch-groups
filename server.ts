@@ -143,7 +143,7 @@ connection.once("open", function () {
                 const exists = (await getGroups()).find(group => group.display_name === name)
                 console.log("exists: ", JSON.stringify(exists))
                 if (exists)
-                    return true
+                    return exists.id
                 //const data = axiosInstance.get("/groups")
                 //  if (userIDs) {
                 try {
@@ -211,7 +211,7 @@ connection.once("open", function () {
                         return true;
                     } catch (e) {
                         console.log("error: ", (e as any)?.response?.status || console.log((e as any)?.status));
-                        console.log("its the put so message: ", (e as any)?.response?.message || console.log((e as any)?.message) || (e as any)?.data?.message || JSON.stringify((e as any)?.data) || JSON.stringify((e as any)?.message) || JSON.stringify((e)));
+                        console.log("its the put so message: ", (e as any)?.response?.message || console.log((e as any)?.message) || (e as any)?.data?.message || JSON.stringify((e as any)?.data) /*|| JSON.stringify((e as any)?.message)*/ || JSON.stringify((e)));
                         return false
                     }
                 }
