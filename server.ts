@@ -113,7 +113,8 @@ connection.once("open", function () {
                         parent_department_id: "depte5fwcj_770"
                     })).data.id as string
                 } catch (e) {
-                    console.log(e);
+                    console.log((e as any)?.response?.status || console.log((e as any)?.status));
+                    ;
                     return false
                 }
             }
@@ -135,7 +136,7 @@ connection.once("open", function () {
                         const resolvedGroupsWithProfiles = await Promise.all(groupsWithProfilesPromises);
                         return resolvedGroupsWithProfiles.filter(group => group !== null);
                     } catch (e) {
-                        console.error("Error fetching groups:", e);
+                        console.error("Error fetching groups:", (e as any)?.response?.status || console.log((e as any)?.status));
                         return [];
                     }
                 };
@@ -158,8 +159,8 @@ connection.once("open", function () {
                     await axiosInstance.post("/groups", data)
                     return true
                 } catch (e) {
-                    // console.log(e);
-                    console.log("maybe exists: ", (e as any).response?.data);
+                    // console.log((e as any)?.response?.status || console.log((e as any)?.status));;
+                    console.log("maybe exists: ", (e as any)?.response?.status || console.log((e as any)?.status));
                     return true
                     // return false
                 }
@@ -203,7 +204,7 @@ connection.once("open", function () {
                         }
                         return true;
                     } catch (e) {
-                        console.log("error: ", e);
+                        console.log("error: ", (e as any)?.response?.status || console.log((e as any)?.status));
                         return false
                     }
                 }
@@ -228,7 +229,7 @@ connection.once("open", function () {
             if (!(reses.some(res => !!res))) return "no change"
             return "success"
         } catch (e) {
-            console.log("cloud function failed: ", e)
+            console.log("cloud function failed: ",(e as any)?.response?.status || console.log((e as any)?.status))
             return "fail"
         }
     }
