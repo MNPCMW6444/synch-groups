@@ -162,7 +162,7 @@ connection.once("open", function () {
                     return r.data.id
                 } catch (e) {
                     // console.log((e as any)?.response?.status || console.log((e as any)?.status));;
-                    console.log("PROBLEM BECAUSE WE NEED THE ID!!!!!: ", (e as any)?.response?.message || console.log((e as any)?.message));
+                    console.log("PROBLEM BECAUSE WE NEED THE ID!!!!!: ", JSON.stringify(e));
                     return true
                     // return false
                 }
