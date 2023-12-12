@@ -171,7 +171,7 @@ export default ({x}: { x: string }) => {
     }*/
 
 
-    const cleanAll = async () => {
+   /* const cleanAll = async () => {
         const allGroups = await axiosInstance.get("/groups")
         console.log(allGroups.data)
         allGroups.data.forEach(({id}: any) => axiosInstance.delete("/groups/" + id))
@@ -181,7 +181,7 @@ export default ({x}: { x: string }) => {
             setTimeout(() => axiosInstance.delete("/organizations/orgizx50x/departments/" + department_id), 200 * i)
         })
     }
-    cleanAll().then()
+    cleanAll().then()*/
 
 
     const queryUsers = () => {
