@@ -154,8 +154,9 @@ connection.once("open", function () {
                     return Promise.all(groupsPromises)
                 })
                 const reses = await Promise.all(promises)
-                const res = reses.some(res => res.some(ress => !ress))
-                if (!res) throw new Error("failed to create groups")
+                /* const res = */
+                reses.some(res => res.some(ress => !ress))
+                // if (!res) throw new Error("failed to create groups")
             }
             const updateGroup = async (name: string, people: string[]) => {
                 const id = await createDepartment(name)
