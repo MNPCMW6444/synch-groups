@@ -114,7 +114,6 @@ connection.once("open", function () {
                     })).data.id as string
                 } catch (e) {
                     console.log((e as any)?.response?.status || console.log((e as any)?.status));
-                    ;
                     return false
                 }
             }
@@ -185,23 +184,24 @@ connection.once("open", function () {
             const updateGroup = async (name: string, people: string[]) => {
                 console.log("update group: ", name)
                 console.log("people: ", people)
-                const id = await createDepartment(name)
-                console.log("id: ", id)
-                const fPeople = [...people.filter(person => person !== ""), "usre11w1x_770"]
-                console.log("fPeople: ", fPeople)
-                if (id) {
-                    console.log("id is true: ", id)
+                const depID = await createDepartment(name)
+                if (depID) {
+                    const grpID = await createGroup(name, depID)
+                    console.log("id: ", grpID)
+                    const fPeople = [...people.filter(person => person !== ""), "usre11w1x_770"]
+                    console.log("fPeople: ", fPeople)
+                    console.log("grpID is true: ", grpID)
                     try {
                         if (fPeople.length > 0) {
                             console.log("fPeople is true: ", fPeople)
-                            const res = await axiosInstance.put("/groups/" + id + "/members", fPeople.map((person) => ({
+                            const res = await axiosInstance.put("/groups/" + grpID + "/members", fPeople.map((person) => ({
                                 id: person,
                                 manager: false
                             })))
                             console.log(res?.status || console.log(res.data))
                         } else {
                             console.log("fPeople is false: ", fPeople)
-                            await axiosInstance.put("/groups/" + id + "/members", (await axiosInstance.get("/groups/" + id + "/members")).data.ids)
+                            await axiosInstance.put("/groups/" + grpID + "/members", (await axiosInstance.get("/groups/" + grpID + "/members")).data.ids)
                         }
                         return true;
                     } catch (e) {
@@ -210,7 +210,7 @@ connection.once("open", function () {
                         return false
                     }
                 }
-                console.log("id is false: ", id)
+                console.log("id is false: ", depID)
                 return false
             }
 
