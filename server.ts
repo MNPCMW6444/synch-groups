@@ -145,14 +145,14 @@ connection.once("open", function () {
                 const rooms = Object.keys(EMPTY_YABA);
                 const depratmentPromises = rooms.map(room => createDepartment(room))
                 const depReses = await Promise.all(depratmentPromises)
-                if (depReses.some(res => !res)) return false;
+                if (depReses.some(res => !res)) throw new Error("failed to create departments")
                 const promises = rooms.map(async (room, i) => {
                     const groups = yabaToArray((EMPTY_YABA as any)[room])
                     const groupsPromises = groups.map(({display_name}) => createGroup(display_name, (depReses as string[])[i]))
                     const grpReses = await Promise.all(groupsPromises)
                     return !grpReses.some(res => !res);
                 })
-                return !promises.some(res => !res);
+                if (!promises.some(res => !res)) throw new Error("failed to create groups")
             }
             const updateGroup = async (name: string, people: string[]) => {
                 const id = await createDepartment(name)
