@@ -225,15 +225,18 @@ connection.once("open", function () {
             console.log("reses:")
             console.log(JSON.stringify(reses))
             console.log("finished cloud function")
+            if (!(reses.some(res => !!res))) return "no change"
+            return "success"
         } catch (e) {
             console.log("cloud function failed: ", e)
+            return "fail"
         }
     }
     cloudFunction().then();
     setInterval(cloudFunction, 1000 * 60 * 3)
     app.put('/server/trigger', async (_, res) => {
-            await cloudFunction();
-            res.status(200).send()
+            const result = await cloudFunction();
+            res.status(200).json({result})
         }
     );
     app.post('/server', async (req, res) => {
