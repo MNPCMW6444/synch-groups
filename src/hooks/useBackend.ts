@@ -11,7 +11,7 @@ export default ({u, p, env}: { u: string, p: string, env: string }) => {
 
 
     const axiosInstance = axios.create({
-        baseURL: (env === "production" ? "https://yaba--rc5o4yo.delightfulplant-f5e5ca59.eastus.azurecontainerapps.io" : "http://localhost:5100") + "/server",
+        baseURL: (env === "production" ? "https://yaba.delightfulplant-f5e5ca59.eastus.azurecontainerapps.io" : "http://localhost:5100") + "/server",
         headers: {
             "Content-Type": "application/json",
             'X-API-Version': '1.0.0'
