@@ -150,7 +150,7 @@ connection.once("open", function () {
                 try {
                     console.log("creating group: ", name)
                     console.log("PROBLEM lie BECAUSE WE NEED THE ID!!!!!: ");
-                    // console.log(JSON.stringify(await getGroups()));
+                     console.log(JSON.stringify(await getGroups()));
                     const data: GroupCreationRequest = {
                         organization_id: YABA_ORGANIZATION_ID,
                         display_name: name,
@@ -201,17 +201,19 @@ connection.once("open", function () {
                     console.log("fPeople: ", fPeople)
                     console.log("grpID is true: ", grpID)
                     try {
-                        if (fPeople.length > 0) {
-                            console.log("fPeople is true: ", fPeople)
-                            const res = await axiosInstance.put("/groups/" + grpID + "/members", fPeople.map((person) => ({
-                                id: person,
-                                manager: false
-                            })))
-                            console.log(res?.status || console.log(res.data))
-                        } else {
-                            console.log("fPeople is false: ", fPeople)
-                            await axiosInstance.put("/groups/" + grpID + "/members", (await axiosInstance.get("/groups/" + grpID + "/members")).data.ids)
-                        }
+                        /*
+                                                if (fPeople.length > 0) {
+                        */
+                        console.log("fPeople is true: ", fPeople)
+                        const res = await axiosInstance.put("/groups/" + grpID + "/members", fPeople.map((person) => ({
+                            id: person,
+                            manager: false
+                        })))
+                        console.log(res?.status || console.log(res.data))
+                        /* } else {
+                             console.log("fPeople is false: ", fPeople)
+                             await axiosInstance.put("/groups/" + grpID + "/members", (await axiosInstance.get("/groups/" + grpID + "/members")).data.ids)
+                         }*/
                         return true;
                     } catch (e) {
                         console.log("error: ", (e as any)?.response?.status || console.log((e as any)?.status));
