@@ -59,7 +59,7 @@ connection = mongoose.createConnection(
 );
 connection.on("error", console.error.bind(console, "mongo connection error:"));
 connection.once("open", function () {
-     console.log("Mongo DB connected successfully");
+    console.log("Mongo DB connected successfully");
 
 
     const dataModel = new mongoose.Schema(
@@ -91,7 +91,7 @@ connection.once("open", function () {
     );
 
     const cloudFunction = async (long: boolean) => {
-         console.log("started cloud function")
+        console.log("started cloud function")
         try {
             const axiosInstance = axios.create({
                 baseURL: "https://api.synchapp.io",
@@ -122,7 +122,7 @@ connection.once("open", function () {
 
             const getGroups = async () => {
                 try {
-                    const response = await axiosInstance.get("/groups/clientField/" + YABA_CLIENT_FIELD);
+                    const response = await axiosInstance.get("/groups"/*/clientField/" + YABA_CLIENT_FIELD*/);
                     const groups = response.data;
                     const groupsWithProfilesPromises = groups.map(async (group: any) => {
                         const membersResponse = await axiosInstance.get("/groups/" + group.id + "/members");
@@ -143,15 +143,16 @@ connection.once("open", function () {
             const createGroup = async (name: string, department: string/* = "dept5qa8tl_770", userIDs: string*/, existing: any) => {
                 const exists = (existing)?.find((group: any) => group.display_name === name)
                 // console.log("exists: ", JSON.stringify(exists))
-                 console.log("group exists: "+exists.id)
-                if (exists)
+                if (exists) {
+                    //console.log("group exists: " + exists.id)
                     return exists.id
+                }
                 //const data = axiosInstance.get("/groups")
                 //  if (userIDs) {
                 try {
-                     console.log("creating group: ", name)
-                     console.log("PROBLEM lie BECAUSE WE NEED THE ID!!!!!: ");
-                     console.log(JSON.stringify(await getGroups()));
+                    console.log("creating group: ", name)
+                  //  console.log("PROBLEM lie BECAUSE WE NEED THE ID!!!!!: ");
+                    // console.log(JSON.stringify(await getGroups()));
                     const data: GroupCreationRequest = {
                         organization_id: YABA_ORGANIZATION_ID,
                         display_name: name,
@@ -165,9 +166,9 @@ connection.once("open", function () {
                     const r = await axiosInstance.post("/groups", data)
                     return r.data.id
                 } catch (e) {
-                     console.log((e as any)?.response?.status || console.log((e as any)?.status));
-                     console.log("PROBLEM catch BECAUSE WE NEED THE ID!!!!!: ");
-                     console.log(e);
+                    console.log((e as any)?.response?.data?.message || (e as any)?.response?.data?.status);
+                //    console.log("PROBLEM catch BECAUSE WE NEED THE ID!!!!!: ");
+                  //  console.log(e);
                     return true
                     // return false
                 }
@@ -199,7 +200,7 @@ connection.once("open", function () {
                     const grpID = await createGroup(name, depID, existing)
                     // console.log("grpID: ", grpID)
                     const fPeople = [...people.filter(person => person !== ""), "usre11w1x_770"]
-                    // console.log("fPeople: ", fPeople)
+                    // console.log("fPeople:M catch BECAUSE WE NEED TH ", fPeople)
                     // console.log("grpID is true: ", grpID)
                     try {
                         /*
@@ -242,11 +243,12 @@ connection.once("open", function () {
                 await Promise.all(work);
             // console.log("reses:")
             // console.log(JSON.stringify(reses))
-             console.log("finished cloud function")
+            console.log("finished cloud function")
             if (!(reses.some(res => !!res))) return "no change"
             return "success"
         } catch (e) {
-            // console.log("cloud function failed: ", (e as any)?.response?.status ||// console.log((e as any)?.status))
+            console.log("finished cloud function")
+            console.log("cloud function failed: ", (e as any)?.response?.status || ((e as any)?.status || e))
             return "fail"
         }
     }
@@ -264,7 +266,7 @@ connection.once("open", function () {
     );
     app.post('/server', async (req, res) => {
         try {
-            // console.log(await connection.db.collection('datas').deleteMany({}));
+            console.log(await connection.db.collection('datas').deleteMany({}));
             const data = new Data({...req.body});
             await data.save()
             return res.json({suc: true})
