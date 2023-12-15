@@ -59,7 +59,7 @@ const Manager = ({synch, back}: any) => {
     }, [groups]);
 
     useEffect(() => {
-        data?.groups?.data && setSavedPiritManning(removeFirstNElements(JSON.parse(data?.groups?.data), (daysSince() * 8 + getPirit(0).startHour) - data.groups.firstPirit));
+        data?.groups?.data && setSavedPiritManning(removeFirstNElements(JSON.parse(data?.groups?.data), ((daysSince() * 8 + getPirit(0).startHour) - data.groups.firstPirit) / 3));
     }, [data?.groups]);
 
     useEffect(() => {
