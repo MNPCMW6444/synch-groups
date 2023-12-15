@@ -126,11 +126,11 @@ connection.once("open", function () {
                     const groups = response.data;
                     const groupsWithProfilesPromises = groups.map(async (group: any) => {
                         const membersResponse = await axiosInstance.get("/groups/" + group.id + "/members");
-                      //  if (membersResponse.data.ids.length === 1) {
-                            return {...group, profiles: membersResponse.data.ids};
-                      //  } else {
-                      //      return null;
-                       // }
+                        //  if (membersResponse.data.ids.length === 1) {
+                        return {...group, profiles: membersResponse.data.ids};
+                        //  } else {
+                        //      return null;
+                        // }
                     });
                     const resolvedGroupsWithProfiles = await Promise.all(groupsWithProfilesPromises);
                     return resolvedGroupsWithProfiles.filter(group => group !== null);
@@ -144,14 +144,14 @@ connection.once("open", function () {
                 const exists = (existing)?.find((group: any) => group.display_name === name)
                 // console.log("exists: ", JSON.stringify(exists))
                 if (exists) {
-                    //console.log("group exists: " + exists.id)
+                    console.log("group exists: " + exists.id)
                     return exists.id
                 }
                 //const data = axiosInstance.get("/groups")
                 //  if (userIDs) {
                 try {
                     console.log("creating group: ", name)
-                  //  console.log("PROBLEM lie BECAUSE WE NEED THE ID!!!!!: ");
+                    console.log("PROBLEM lie BECAUSE WE NEED THE ID!!!!!: ");
                     // console.log(JSON.stringify(await getGroups()));
                     const data: GroupCreationRequest = {
                         organization_id: YABA_ORGANIZATION_ID,
@@ -167,8 +167,8 @@ connection.once("open", function () {
                     return r.data.id
                 } catch (e) {
                     console.log((e as any)?.response?.data?.message || (e as any)?.response?.data?.status);
-                //    console.log("PROBLEM catch BECAUSE WE NEED THE ID!!!!!: ");
-                  //  console.log(e);
+                    //    console.log("PROBLEM catch BECAUSE WE NEED THE ID!!!!!: ");
+                    //  console.log(e);
                     return true
                     // return false
                 }
@@ -193,7 +193,7 @@ connection.once("open", function () {
             }
             const updateGroup = async (name: string, people: string[], existing: any) => {
                 // console.log("update group: ", name)
-                // console.log("people: ", people)
+                console.log("people: ", people)
                 const depID = await createDepartment(name)
                 // console.log("depID: ", depID)
                 if (depID) {
@@ -207,12 +207,12 @@ connection.once("open", function () {
                                                 if (fPeople.length > 0) {
                         */
                         // console.log("fPeople is true: ", fPeople)
-                       // const res =
+                        const res =
                             await axiosInstance.put("/groups/" + grpID + "/members", fPeople.map((person) => ({
-                            id: person,
-                            manager: false
-                        })))
-                        // console.log(res?.status || (res.data))
+                                id: person,
+                                manager: false
+                            })))
+                        console.log(res?.status || (res.data))
                         /* } else {
                             // console.log("fPeople is false: ", fPeople)
                              await axiosInstance.put("/groups/" + grpID + "/members", (await axiosInstance.get("/groups/" + grpID + "/members")).data.ids)
@@ -220,7 +220,7 @@ connection.once("open", function () {
                         return true;
                     } catch (e) {
                         // console.log("error: ", (e as any)?.response?.status ||// console.log((e as any)?.status));
-                        // console.log("its the put so message: ", (e as any)?.response?.message ||// console.log((e as any)?.message) || (e as any)?.data?.message || JSON.stringify((e as any)?.data) /*|| JSON.stringify((e as any)?.message)*/ || JSON.stringify((e)));
+                         console.log("its the put so message: ", (e as any)?.response?.message || ((e as any)?.message) || (e as any)?.data?.message || JSON.stringify((e as any)?.data) /*|| JSON.stringify((e as any)?.message)*/ || JSON.stringify((e)));
                         return false
                     }
                 }
@@ -230,8 +230,6 @@ connection.once("open", function () {
 
             const existing = await getGroups();
             if (existing === null) return "failed to get groups"
-
-            console.log("existing: ", JSON.stringify(existing))
 
             const data = (await Data.find())[0]
             // console.log("data before remove " + ((daysSince() * 8 + getPirit(0).startHour) - data.firstPirit) + " pirits: " + JSON.stringify(JSON.parse((data)?.data)))
