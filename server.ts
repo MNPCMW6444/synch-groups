@@ -241,7 +241,7 @@ connection.once("open", function () {
             const data = (await Data.find())[0]
             // console.log("data before remove " + ((daysSince() * 8 + getPirit(0).startHour) - data.firstPirit) + " pirits: " + JSON.stringify(JSON.parse((data)?.data)))
             // console.log("n = " + (daysSince() * 8 + getPirit(0).startHour) + " - " + data.firstPirit)
-            const dataToSynch = (removeFirstNElements(JSON.parse((data)?.data), (daysSince() * 8 + (getPirit(0).startHour) - data.firstPirit) / 3));
+            const dataToSynch = (removeFirstNElements(JSON.parse((data)?.data), (daysSince() * 8 + (getPirit(0).startHour) - data.firstPirit) / 9));
             // console.log("will send this:", JSON.stringify(dataToSynch))
             long && await verifyGroupsAndDepartments(existing);
             const array = yabaToArray(dataToSynch[0] as any)
