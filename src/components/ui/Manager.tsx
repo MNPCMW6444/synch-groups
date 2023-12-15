@@ -197,7 +197,7 @@ const Manager = ({synch, back}: any) => {
                                 height: "100%",
                                 width: "100%",
                             }}
-                        > <Typography sx={{paddingRight: "5%"}}>{path.join(" - ")}</Typography></Box> :
+                        > <Typography sx={{paddingRight: "5%"}}>{path[path.length - 1]/*.join(" - ")*/}</Typography></Box> :
                         <ManningSelector
                             path={currentPath}
                             value={mannings}
