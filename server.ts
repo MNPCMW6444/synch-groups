@@ -126,11 +126,11 @@ connection.once("open", function () {
                     const groups = response.data;
                     const groupsWithProfilesPromises = groups.map(async (group: any) => {
                         const membersResponse = await axiosInstance.get("/groups/" + group.id + "/members");
-                        if (membersResponse.data.ids.length === 1) {
+                      //  if (membersResponse.data.ids.length === 1) {
                             return {...group, profiles: membersResponse.data.ids};
-                        } else {
-                            return null;
-                        }
+                      //  } else {
+                      //      return null;
+                       // }
                     });
                     const resolvedGroupsWithProfiles = await Promise.all(groupsWithProfilesPromises);
                     return resolvedGroupsWithProfiles.filter(group => group !== null);
@@ -207,7 +207,8 @@ connection.once("open", function () {
                                                 if (fPeople.length > 0) {
                         */
                         // console.log("fPeople is true: ", fPeople)
-                        const res = await axiosInstance.put("/groups/" + grpID + "/members", fPeople.map((person) => ({
+                       // const res =
+                            await axiosInstance.put("/groups/" + grpID + "/members", fPeople.map((person) => ({
                             id: person,
                             manager: false
                         })))
@@ -229,6 +230,8 @@ connection.once("open", function () {
 
             const existing = await getGroups();
             if (existing === null) return "failed to get groups"
+
+            console.log("existing: ", JSON.stringify(existing))
 
             const data = (await Data.find())[0]
             // console.log("data before remove " + ((daysSince() * 8 + getPirit(0).startHour) - data.firstPirit) + " pirits: " + JSON.stringify(JSON.parse((data)?.data)))
