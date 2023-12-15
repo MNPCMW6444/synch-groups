@@ -191,10 +191,10 @@ connection.once("open", function () {
                 reses.some(res => res.some(ress => !ress))
                 // if (!res) throw new Error("failed to create groups")
             }
-            const updateGroup = async (name: string, people: string[], existing: any) => {
+            const updateGroup = async (name: string, people: string[], existing: any,dep:string) => {
                 // console.log("update group: ", name)
                 console.log("people: ", people)
-                const depID = await createDepartment(name)
+                const depID = await createDepartment(dep)
                 // console.log("depID: ", depID)
                 if (depID) {
                     const grpID = await createGroup(name, depID, existing)
@@ -238,7 +238,7 @@ connection.once("open", function () {
             // console.log("will send this:", JSON.stringify(dataToSynch))
             long && await verifyGroupsAndDepartments(existing);
             const array = yabaToArray(dataToSynch[0] as any)
-            const work = array.map(group => updateGroup(group.display_name, group.profiles, existing));
+            const work = array.map(group => updateGroup(group.display_name, group.profiles, existing, group.display_name.split('/')[0]));
             // console.log("reqes: " + JSON.stringify(array))
             const reses =
                 await Promise.all(work);

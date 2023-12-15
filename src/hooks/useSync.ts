@@ -181,8 +181,8 @@ export default ({x}: { x: string }) => {
             setTimeout(() => axiosInstance.delete("/organizations/orgizx50x/departments/" + department_id), 200 * i)
         })
     }
-    cleanAll().then()*/
-
+    cleanAll().then()
+*/
 
     const queryUsers = () => {
         getUsers().then(res => {
