@@ -12,6 +12,19 @@ import {GroupCreationRequest} from "./src";
 require('dotenv').config();
 
 
+const smaransMap =
+    {
+        'מכלול 25/מסק״ר 2': 'מסק"ר 2',
+        'מכלול 25/פיצול אוצר': 'פיצול אוצר',
+        'מכלול 25/צוות למסער/אוצר מתפרצות': 'אוצר מתפרצות',
+        'מכלול 25/צוות למסער/מסער 2': 'מסער 2',
+        'מכלול 25/צוות למסער/מ״ע תמרון': 'מ"ע תמרון',
+        'מכלול 25/צוות למסער/פיצול שוהות': 'פיצול שוהות',
+        'מכלול 25/צוות למסער/מסער 1': 'מסער 1',
+        'מכלול 25/צוות למסער': 'צוות למסער',
+    }
+
+
 const app = express();
 
 app.use(cors({
@@ -145,7 +158,8 @@ connection.once("open", function () {
                     return null;
                 }
             };
-            const createGroup = async (name: string, department: string/* = "dept5qa8tl_770", userIDs: string*/, existing: any) => {
+            const createGroup = async (namex: string, department: string/* = "dept5qa8tl_770", userIDs: string*/, existing: any) => {
+                const name: string = smaransMap[namex as keyof typeof smaransMap] || namex
                 const exists = (existing)?.find((group: any) => group.display_name === name)
                 // console.log("exists: ", JSON.stringify(exists))
                 if (exists) {
