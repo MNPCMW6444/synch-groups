@@ -4,7 +4,7 @@ import basicAuth from 'basic-auth';
 import mongoose from "mongoose";
 import {ConnectOptions} from "mongoose";
 import cors from "cors";
-import {EMPTY_YABA, yabaToArray} from "./src/util/yabaAndGroups";
+import {/*EMPTY_YABA,*/ yabaToArray} from "./src/util/yabaAndGroups";
 import {daysSince, getPirit, removeFirstNElements} from "./src/components/ui/Manager";
 import axios from "axios";
 import {GroupCreationRequest} from "./src";
@@ -49,7 +49,7 @@ app.get('/config', (req, res) => {
 let connection: any = null;
 
 
-//console.log("Trying to connect mongodb...");
+console.log("Trying to connect mongodb...");
 connection = mongoose.createConnection(
     process.env.MONGO_URI + "",
     {
@@ -59,7 +59,7 @@ connection = mongoose.createConnection(
 );
 connection.on("error", console.error.bind(console, "mongo connection error:"));
 connection.once("open", function () {
-    //console.log("Mongo DB connected successfully");
+    console.log("Mongo DB connected successfully");
 
 
     const dataModel = new mongoose.Schema(
@@ -91,7 +91,7 @@ connection.once("open", function () {
     );
 
     const cloudFunction = async (long: boolean) => {
-        //console.log("started cloud function")
+        console.log("started cloud function")
         try {
             const axiosInstance = axios.create({
                 baseURL: "https://api.synchapp.io",
@@ -109,7 +109,7 @@ connection.once("open", function () {
                     const exists: { department_name: string, department_id: string } = data.find(({department_name}: {
                         department_name: string
                     }) => department_name === name)
-                    //console.log("exists: ", JSON.stringify(exists))
+                    console.log("exists: ", JSON.stringify(exists))
                     if (exists?.department_id)
                         return exists?.department_id
                     else {
@@ -120,7 +120,7 @@ connection.once("open", function () {
                         return x.data.id
                     }
                 } catch (e) {
-                    // //console.log((e as any)?.response?.status ||((e as any)?.status));
+                    // console.log((e as any)?.response?.status ||((e as any)?.status));
                     return false
                 }
             }
@@ -149,17 +149,17 @@ connection.once("open", function () {
 
             const createGroup = async (name: string, department: string/* = "dept5qa8tl_770", userIDs: string*/, existing: any) => {
                 const exists = (existing)?.find((group: any) => group.display_name === name)
-                // //console.log("exists: ", JSON.stringify(exists))
+                // console.log("exists: ", JSON.stringify(exists))
                 if (exists) {
-                    //console.log("group exists: " + exists.id)
+                    console.log("group exists: " + exists.id)
                     return exists.id
                 }
                 //const data = axiosInstance.get("/groups")
                 //  if (userIDs) {
                 try {
-                    //console.log("creating group: ", name)
-                    //console.log("PROBLEM lie BECAUSE WE NEED THE ID!!!!!: ");
-                    // //console.log(JSON.stringify(await getGroups()));
+                    console.log("creating group: ", name)
+                    console.log("PROBLEM lie BECAUSE WE NEED THE ID!!!!!: ");
+                    // console.log(JSON.stringify(await getGroups()));
                     const data: GroupCreationRequest = {
                         organization_id: YABA_ORGANIZATION_ID,
                         display_name: name,
@@ -173,20 +173,20 @@ connection.once("open", function () {
                     const r = await axiosInstance.post("/groups", data)
                     return r.data.id
                 } catch (e) {
-                    //console.log((e as any)?.response?.data?.message || (e as any)?.response?.data?.status);
-                    //    //console.log("PROBLEM catch BECAUSE WE NEED THE ID!!!!!: ");
-                    //  //console.log(e);
+                    console.log((e as any)?.response?.data?.message || (e as any)?.response?.data?.status);
+                    //    console.log("PROBLEM catch BECAUSE WE NEED THE ID!!!!!: ");
+                    //  console.log(e);
                     return true
                     // return false
                 }
                 // }
 //        return false
             }
-            const verifyGroupsAndDepartments = async (existing: any) => {
+            const verifyGroupsAndDepartments = async (/*existing: any*/) => {
               /*  const rooms = Object.keys(EMPTY_YABA);
                 const depratmentPromises = rooms.map(room => createDepartment(room))
                 const depReses = await Promise.all(depratmentPromises)
-                // //console.log("finished creating departments");
+                // console.log("finished creating departments");
                 if (depReses.some(res => !res)) throw new Error("failed to create departments")
                 const promises = rooms.map((room, i) => {
                     const groups = yabaToArray((EMPTY_YABA as any)[room])
@@ -199,39 +199,39 @@ connection.once("open", function () {
                 // if (!res) throw new Error("failed to create groups")*/
             }
             const updateGroup = async (name: string, people: string[], existing: any, dep: string) => {
-                // //console.log("update group: ", name)
-                //console.log("people: ", people)
+                // console.log("update group: ", name)
+                console.log("people: ", people)
                 const depID = await createDepartment(dep)
-                // //console.log("depID: ", depID)
+                // console.log("depID: ", depID)
                 if (depID) {
                     const grpID = await createGroup(name, depID, existing)
-                    // //console.log("grpID: ", grpID)
+                    // console.log("grpID: ", grpID)
                     const fPeople = [...people.filter(person => person !== ""), "usre11w1x_770"]
-                    // //console.log("fPeople:M catch BECAUSE WE NEED TH ", fPeople)
-                    // //console.log("grpID is true: ", grpID)
+                    // console.log("fPeople:M catch BECAUSE WE NEED TH ", fPeople)
+                    // console.log("grpID is true: ", grpID)
                     try {
                         /*
                                                 if (fPeople.length > 0) {
                         */
-                        // //console.log("fPeople is true: ", fPeople)
+                        // console.log("fPeople is true: ", fPeople)
                         const res =
                             await axiosInstance.put("/groups/" + grpID + "/members", fPeople.map((person) => ({
                                 id: person,
                                 manager: false
                             })))
-                        //console.log(res?.status || (res.data))
+                        console.log(res?.status || (res.data))
                         /* } else {
-                            // //console.log("fPeople is false: ", fPeople)
+                            // console.log("fPeople is false: ", fPeople)
                              await axiosInstance.put("/groups/" + grpID + "/members", (await axiosInstance.get("/groups/" + grpID + "/members")).data.ids)
                          }*/
                         return true;
                     } catch (e) {
-                        // //console.log("error: ", (e as any)?.response?.status ||// //console.log((e as any)?.status));
-                        //console.log("its the put so message: ", (e as any)?.response?.message || ((e as any)?.message) || (e as any)?.data?.message || JSON.stringify((e as any)?.data) /*|| JSON.stringify((e as any)?.message)*/ || JSON.stringify((e)));
+                        // console.log("error: ", (e as any)?.response?.status ||// console.log((e as any)?.status));
+                        console.log("its the put so message: ", (e as any)?.response?.message || ((e as any)?.message) || (e as any)?.data?.message || JSON.stringify((e as any)?.data) /*|| JSON.stringify((e as any)?.message)*/ || JSON.stringify((e)));
                         return false
                     }
                 }
-                // //console.log("id is false: ", depID)
+                // console.log("id is false: ", depID)
                 return false
             }
 
@@ -239,24 +239,24 @@ connection.once("open", function () {
             if (existing === null) return "failed to get groups"
 
             const data = (await Data.find())[0]
-            // //console.log("data before remove " + ((daysSince() * 8 + getPirit(0).startHour) - data.firstPirit) + " pirits: " + JSON.stringify(JSON.parse((data)?.data)))
-            // //console.log("n = " + (daysSince() * 8 + getPirit(0).startHour) + " - " + data.firstPirit)
+            // console.log("data before remove " + ((daysSince() * 8 + getPirit(0).startHour) - data.firstPirit) + " pirits: " + JSON.stringify(JSON.parse((data)?.data)))
+            // console.log("n = " + (daysSince() * 8 + getPirit(0).startHour) + " - " + data.firstPirit)
             const dataToSynch = (removeFirstNElements(JSON.parse((data)?.data), (daysSince() * 8 + (getPirit(0).startHour) - data.firstPirit) / 3));
-            // //console.log("will send this:", JSON.stringify(dataToSynch))
+            // console.log("will send this:", JSON.stringify(dataToSynch))
             long && await verifyGroupsAndDepartments(existing);
             const array = yabaToArray(dataToSynch[0] as any)
             const work = array.map(group => updateGroup(group.display_name, group.profiles, existing, group.display_name.split('/')[0]));
-            // //console.log("reqes: " + JSON.stringify(array))
+            // console.log("reqes: " + JSON.stringify(array))
             const reses =
                 await Promise.all(work);
-            // //console.log("reses:")
-            // //console.log(JSON.stringify(reses))
-            //console.log("finished cloud function")
+            // console.log("reses:")
+            // console.log(JSON.stringify(reses))
+            console.log("finished cloud function")
             if (!(reses.some(res => !!res))) return "no change"
             return "success"
         } catch (e) {
-            //console.log("finished cloud function")
-            //console.log("cloud function failed: ", (e as any)?.response?.status || ((e as any)?.status || e))
+            console.log("finished cloud function")
+            console.log("cloud function failed: ", (e as any)?.response?.status || ((e as any)?.status || e))
             return "fail"
         }
     }
@@ -274,7 +274,7 @@ connection.once("open", function () {
     );
     app.post('/server', async (req, res) => {
         try {
-            //console.log(await connection.db.collection('datas').deleteMany({}));
+            console.log(await connection.db.collection('datas').deleteMany({}));
             const data = new Data({...req.body});
             await data.save()
             return res.json({suc: true})
@@ -295,5 +295,5 @@ app.get('*', (_, res) => {
 const port = 5100;
 app.listen(port, "0.0.0.0");
 
-//console.log('App is listening on port ' + port);
+console.log('App is listening on port ' + port);
 
