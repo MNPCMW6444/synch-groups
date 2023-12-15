@@ -1,4 +1,4 @@
-import {Box, Button, Card, CardContent, CircularProgress, Grid, Switch, Typography} from "@mui/material";
+import {Box, Button, Card, CardContent, CircularProgress, Grid, /*Switch,*/ Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import {Yaba} from "../../index";
 import {ArrowBack, ArrowForward} from "@mui/icons-material";
@@ -47,7 +47,7 @@ const Manager = ({synch, back}: any) => {
     const [piritManning, setPiritManning] = useState<Yaba[]>(emptyYabas(16));
     const [index, setIndex] = useState<number>(0);
 
-    const [melech, setMelech] = useState<boolean>(true);
+    const melech = true  // const [melech, setMelech] = useState<boolean>(true);
 
     /*
         const [sending, setSending] = useState(false);
@@ -297,15 +297,15 @@ const Manager = ({synch, back}: any) => {
         );
     };*/
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    /*const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setMelech(event.target.checked);
-    };
+    };*/
 
 
     return (
         <Grid container direction="column" justifyContent="center"
               alignItems="center" rowSpacing={6} wrap="nowrap">
-            <Grid item container justifyContent="center" alignItems="center" columnSpacing={4}>
+            {/* <Grid item container justifyContent="center" alignItems="center" columnSpacing={4}>
                 <Grid item>
                     <Typography>תצוגת מל״כ: </Typography>
                 </Grid>
@@ -316,7 +316,7 @@ const Manager = ({synch, back}: any) => {
                         inputProps={{'aria-label': 'controlled'}}
                     />
                 </Grid>
-            </Grid>
+            </Grid>*/}
             <Grid item container justifyContent="center" columnSpacing={4}>
                 {/* <Grid item>
                     <Button variant="contained" sx={{fontSize: "120%"}} onClick={() => setPiritManning(prev => {
