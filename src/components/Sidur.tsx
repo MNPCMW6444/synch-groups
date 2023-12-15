@@ -9,7 +9,7 @@ import {daysSince, getPirit, removeFirstNElements} from "./ui/Manager.tsx";
 
 const Sidur = ({x}: any) => {
 
-    const {users, groups: nowPirit} = useSync(x);
+    const {users} = useSync(x);
     const {data} = useBackend(x);
     const [selectedUser, setSelectedUser] = useState<string>("");
 
@@ -17,7 +17,7 @@ const Sidur = ({x}: any) => {
 
 
     useEffect(() => {
-        (data?.groups as any)?.data && setSavedPiritManning(removeFirstNElements(JSON.parse((data?.groups as any)?.data), (daysSince() * 8 + getPirit(0).startHour) - (data?.groups as any).firstPirit));
+        (data?.groups as any)?.data && setSavedPiritManning(removeFirstNElements(JSON.parse((data?.groups as any)?.data), ((daysSince() * 8 + getPirit(0).startHour) - (data?.groups as any).firstPirit) / 3));
     }, [data?.groups]);
 
     const longest = (arr: string[]) => arr.reduce((a, b) => a.length > b.length ? a : b, "")
@@ -34,16 +34,17 @@ const Sidur = ({x}: any) => {
             </Grid>
             {selectedUser && <>
                 <Grid item>
-                    <Typography> ע״פ
+                    {savedPiritManning[0] && <Typography> ע״פ
                         Synch ברגע
-                        זה: {((longest(nowPirit.filter(({profiles}) => profiles.some((id: string) => id === selectedUser))?.map(({display_name}) => display_name))) || "ללא עמדה")}</Typography>
+                        זה: {((longest((yabaToArray(savedPiritManning[0])).filter(({profiles}) => profiles.some((id: string) => id === selectedUser))?.map(({display_name}) => display_name))) || "ללא עמדה")}</Typography>}
                 </Grid>
                 <Grid item>
                     <Typography> ע״פ תכנון בעמדות הבאות
                         הן: </Typography>
                 </Grid>
-                {savedPiritManning.map((pirit, i) => <Grid item>
-                        <Typography>{getPirit((data?.groups as any).firstPirit + i).r}: {((longest(yabaToArray(pirit).filter(({profiles}) => profiles.some((id: string) => id === selectedUser))?.map(({display_name}) => display_name))) || "ללא עמדה")}</Typography>
+                {savedPiritManning.map((_, i) => <Grid item>
+                        {(i + 1) !== savedPiritManning.length &&
+                            <Typography>{getPirit((data?.groups as any).firstPirit + i + 1).r}: {((longest(yabaToArray(savedPiritManning[i + 1]).filter(({profiles}) => profiles.some((id: string) => id === selectedUser))?.map(({display_name}) => display_name))) || "ללא עמדה")}</Typography>}
                     </Grid>
                 )}
 

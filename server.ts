@@ -126,7 +126,6 @@ connection.once("open", function () {
             }
             const YABA_CLIENT_FIELD = "nelson"
             const YABA_ORGANIZATION_ID = "orgizx50x"
-
             const getGroups = async () => {
                 try {
                     const response = await axiosInstance.get("/groups"/*/clientField/" + YABA_CLIENT_FIELD*/);
@@ -146,7 +145,6 @@ connection.once("open", function () {
                     return null;
                 }
             };
-
             const createGroup = async (name: string, department: string/* = "dept5qa8tl_770", userIDs: string*/, existing: any) => {
                 const exists = (existing)?.find((group: any) => group.display_name === name)
                 // console.log("exists: ", JSON.stringify(exists))
@@ -183,20 +181,20 @@ connection.once("open", function () {
 //        return false
             }
             const verifyGroupsAndDepartments = async (/*existing: any*/) => {
-              /*  const rooms = Object.keys(EMPTY_YABA);
-                const depratmentPromises = rooms.map(room => createDepartment(room))
-                const depReses = await Promise.all(depratmentPromises)
-                // console.log("finished creating departments");
-                if (depReses.some(res => !res)) throw new Error("failed to create departments")
-                const promises = rooms.map((room, i) => {
-                    const groups = yabaToArray((EMPTY_YABA as any)[room])
-                    const groupsPromises = groups.map(({display_name}) => createGroup(display_name, (depReses as string[])[i], existing))
-                    return Promise.all(groupsPromises)
-                })
-                const reses = await Promise.all(promises)
-                /!* const res = *!/
-                reses.some(res => res.some(ress => !ress))
-                // if (!res) throw new Error("failed to create groups")*/
+                /*  const rooms = Object.keys(EMPTY_YABA);
+                  const depratmentPromises = rooms.map(room => createDepartment(room))
+                  const depReses = await Promise.all(depratmentPromises)
+                  // console.log("finished creating departments");
+                  if (depReses.some(res => !res)) throw new Error("failed to create departments")
+                  const promises = rooms.map((room, i) => {
+                      const groups = yabaToArray((EMPTY_YABA as any)[room])
+                      const groupsPromises = groups.map(({display_name}) => createGroup(display_name, (depReses as string[])[i], existing))
+                      return Promise.all(groupsPromises)
+                  })
+                  const reses = await Promise.all(promises)
+                  /!* const res = *!/
+                  reses.some(res => res.some(ress => !ress))
+                  // if (!res) throw new Error("failed to create groups")*/
             }
             const updateGroup = async (name: string, people: string[], existing: any, dep: string) => {
                 // console.log("update group: ", name)
@@ -240,10 +238,11 @@ connection.once("open", function () {
 
             const data = (await Data.find())[0]
             // console.log("data before remove " + ((daysSince() * 8 + getPirit(0).startHour) - data.firstPirit) + " pirits: " + JSON.stringify(JSON.parse((data)?.data)))
-            // console.log("n = " + (daysSince() * 8 + getPirit(0).startHour) + " - " + data.firstPirit)
-            const dataToSynch = (removeFirstNElements(JSON.parse((data)?.data), (daysSince() * 8 + (getPirit(0).startHour) - data.firstPirit) / 9));
+            const wanaN = ((daysSince() * 8 + getPirit(0).startHour) - (data)?.firstPirit) / 3
+            console.log("n = " + wanaN)
+            const dataToSynch = removeFirstNElements(JSON.parse((data)?.data), wanaN);
             // console.log("will send this:", JSON.stringify(dataToSynch))
-            long && await verifyGroupsAndDepartments(existing);
+            long && await verifyGroupsAndDepartments();
             const array = yabaToArray(dataToSynch[0] as any)
             const work = array.map(group => updateGroup(group.display_name, group.profiles, existing, group.display_name.split('/')[0]));
             // console.log("reqes: " + JSON.stringify(array))
