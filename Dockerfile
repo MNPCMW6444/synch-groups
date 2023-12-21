@@ -1,4 +1,5 @@
 FROM node:lts as BUILDER
+ENV TZ=Asia/Jerusalem
 WORKDIR /app
 COPY package.json /app/package.json
 COPY tsconfig.json /app/tsconfig.json
@@ -14,6 +15,7 @@ RUN rm -rf node_modules package-lock.json
 RUN npm i --omit=dev
 
 FROM node:lts-slim
+ENV TZ=Asia/Jerusalem
 WORKDIR /app
 COPY --from=builder /app/node_modules /app/node_modules
 COPY --from=builder /app/dist /app/dist
