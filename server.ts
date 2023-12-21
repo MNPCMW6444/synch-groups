@@ -227,12 +227,13 @@ connection.once("open", function () {
                                                 if (fPeople.length > 0) {
                         */
                         // console.log("fPeople is true: ", fPeople)
+                        const xxx=fPeople.map((person) => ({
+                            id: person,
+                            manager: false
+                        }))
                         const res =
-                            await axiosInstance.put("/groups/" + grpID + "/members", fPeople.map((person) => ({
-                                id: person,
-                                manager: false
-                            })))
-                        console.log(res?.status || (res.data))
+                            await axiosInstance.put("/groups/" + grpID + "/members", xxx)
+                        console.log(res?.status || (res.data) , "updated group: ", JSON.stringify(xxx))
                         /* } else {
                             // console.log("fPeople is false: ", fPeople)
                              await axiosInstance.put("/groups/" + grpID + "/members", (await axiosInstance.get("/groups/" + grpID + "/members")).data.ids)
