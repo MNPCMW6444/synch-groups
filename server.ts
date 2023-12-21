@@ -253,6 +253,7 @@ connection.once("open", function () {
             if (existing === null) return "failed to get groups"
 
             const data = (await Data.find())[0]
+            console.log("data: " + JSON.stringify(data))
             // console.log("data before remove " + ((daysSince() * 8 + getPirit(0).startHour) - data.firstPirit) + " pirits: " + JSON.stringify(JSON.parse((data)?.data)))
             const wanaN = ((daysSince() * 8 + getPirit(0).startHour) - (data)?.firstPirit) / 3
             console.log("n = " + wanaN)
@@ -278,7 +279,7 @@ connection.once("open", function () {
     }
     cloudFunction(false).then();
     setTimeout(() => {
-        setInterval(() => cloudFunction(false), 1000 * 90)
+        setInterval(() => cloudFunction(false).then(), 1000 * 90)
     }, 1000 * 60)
 /*    setTimeout(() => {
         setInterval(() => cloudFunction(true), 1000 * 60 * 30)
