@@ -260,6 +260,7 @@ connection.once("open", function () {
             // console.log("will send this:", JSON.stringify(dataToSynch))
             long && await verifyGroupsAndDepartments();
             const array = yabaToArray(dataToSynch[0] as any)
+            console.log("xxxxxxxxx", JSON.stringify(array))
             const work = array.map(group => updateGroup(group.display_name, group.profiles, existing, group.display_name.split('/')[0]));
             // console.log("reqes: " + JSON.stringify(array))
             const reses =
