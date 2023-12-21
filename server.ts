@@ -74,6 +74,8 @@ connection = mongoose.createConnection(
 connection.on("error", console.error.bind(console, "mongo connection error:"));
 connection.once("open", function () {
     console.log("Mongo DB connected successfully");
+    console.log(Date.now());
+    console.log(new Date(Date.now()).getHours());
 
 
     const dataModel = new mongoose.Schema(
