@@ -44,7 +44,7 @@ const Manager = ({synch, back}: any) => {
 
     const [parsedPiritManning, setParsedPiritManning] = useState<Yaba>(JSON.parse(JSON.stringify(EMPTY_YABA)));
     const [savedPiritManning, setSavedPiritManning] = useState<Yaba[]>([JSON.parse(JSON.stringify(EMPTY_YABA))]);
-    const [piritManning, setPiritManning] = useState<Yaba[]>(emptyYabas(16));
+    const [piritManning, setPiritManning] = useState<Yaba[]>(emptyYabas(8));
     const [index, setIndex] = useState<number>(0);
 
     const melech = true  // const [melech, setMelech] = useState<boolean>(true);
