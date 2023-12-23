@@ -1,21 +1,19 @@
-import {Group, Yaba} from "../index";
+import {Group} from "../index";
 
 export const EMPTY_YABA = {
-    "מכלול 25": {
-        "צוות למסער": {
-            "מסער 1": {"אחורי": "", "קדמי": "", "מפעיל": "",},
-            "מסער 2": {"אחורי": "", "קדמי": "", "מפעיל": "",},
-            "פיצול בת״ק": {"אחורי": "", "קדמי": "", "מפעיל": "",},
-            "פיצול שוהות": {"קדמי": "", "מפעיל": "",},
-            "אוצר 2": {"בקר": ""},
-            "אוצר 3": {"בקר": ""},
-            "מ״ע תמרון": {"בקר": ""}
-        },
+    "צוות למסער": {
+        "מסער 1": {"אחורי": "", "קדמי": "", "מפעיל": "",},
+        "מסער 2": {"אחורי": "", "קדמי": "", "מפעיל": "",},
+        "פיצול בת״ק": {"אחורי": "", "קדמי": "", "מפעיל": "",},
+        "פיצול שוהות": {"קדמי": "", "מפעיל": "",},
+        "אוצר 2": {"בקר": ""},
+        "אוצר 3": {"בקר": ""},
+        "מ״ע תמרון": {"בקר": ""},
         "מסק״ר 2": {"אחורי": "", "קדמי": "", "מפעיל": ""},
     }
 }
 
-export const yabaToArray = (yaba: Yaba): Group[] => {
+export const yabaToArray = (yaba: typeof EMPTY_YABA): Group[] => {
     const arr: Group[] = [];
 
     // Helper function to collect all profiles in a branch
@@ -50,7 +48,7 @@ export const yabaToArray = (yaba: Yaba): Group[] => {
     return arr;
 }
 
-export const arrayToYaba = (arr: Group[]): Yaba => {
+export const arrayToYaba = (arr: Group[]): typeof EMPTY_YABA => {
     const yaba = JSON.parse(JSON.stringify(EMPTY_YABA)); // Clone the EMPTY_YABA object
 
     arr.forEach(group => {

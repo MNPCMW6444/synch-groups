@@ -14,14 +14,14 @@ require('dotenv').config();
 
 const smaransMap =
     {
-        'מכלול 25/מסק״ר 2': 'מסק"ר 2',
-        'מכלול 25/צוות למסער/אוצר 2': 'אוצר 2',
-        'מכלול 25/צוות למסער/אוצר 3': 'אוצר 3',
-        'מכלול 25/צוות למסער/מסער 2': 'מסער 2',
-        'מכלול 25/צוות למסער/מ״ע תמרון': 'מ"ע תמרון',
-        'מכלול 25/צוות למסער/פיצול שוהות': 'פיצול שוהות',
-        'מכלול 25/צוות למסער/מסער 1': 'מסער 1',
-        'מכלול 25/צוות למסער': 'צוות למסער',
+        'צוות למסער/מסק״ר 2': 'מסק"ר 2',
+        'צוות למסער/אוצר 2': 'אוצר 2',
+        'צוות למסער/אוצר 3': 'אוצר 3',
+        'צוות למסער/מסער 2': 'מסער 2',
+        'צוות למסער/מ״ע תמרון': 'מ"ע תמרון',
+        'צוות למסער/פיצול שוהות': 'פיצול שוהות',
+        'צוות למסער/מסער 1': 'מסער 1',
+        'צוות למסער': 'צוות למסער',
         'מכלול 25/צוות למסער/פיצול בת״ק': 'פיצול בת״ק',
     }
 
@@ -229,13 +229,13 @@ connection.once("open", function () {
                                                 if (fPeople.length > 0) {
                         */
                         // console.log("fPeople is true: ", fPeople)
-                        const xxx=fPeople.map((person) => ({
+                        const xxx = fPeople.map((person) => ({
                             id: person,
                             manager: false
                         }))
                         const res =
                             await axiosInstance.put("/groups/" + grpID + "/members", xxx)
-                        console.log(res?.status || (res.data) , "updated group: ", JSON.stringify(xxx))
+                        console.log(res?.status || (res.data), "updated group: ", JSON.stringify(xxx))
                         /* } else {
                             // console.log("fPeople is false: ", fPeople)
                              await axiosInstance.put("/groups/" + grpID + "/members", (await axiosInstance.get("/groups/" + grpID + "/members")).data.ids)
@@ -283,9 +283,9 @@ connection.once("open", function () {
     setTimeout(() => {
         setInterval(() => cloudFunction(false).then(), 1000 * 90)
     }, 1000 * 60)
-/*    setTimeout(() => {
-        setInterval(() => cloudFunction(true), 1000 * 60 * 30)
-    }, 1000 * 60 * 10)*/
+    /*    setTimeout(() => {
+            setInterval(() => cloudFunction(true), 1000 * 60 * 30)
+        }, 1000 * 60 * 10)*/
     app.put('/server/trigger', async (_, res) => {
             const result = await cloudFunction(false);
             res.status(200).json({result})

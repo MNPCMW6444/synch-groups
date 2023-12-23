@@ -1,6 +1,5 @@
 import {Box, Button, Card, CardContent, CircularProgress, Grid, /*Switch,*/ Typography} from "@mui/material";
 import {useEffect, useState} from "react";
-import {Yaba} from "../../index";
 import {ArrowBack, ArrowForward} from "@mui/icons-material";
 import ManningSelector from "./manager/ManningSelector.tsx";
 import {arrayToYaba, EMPTY_YABA, /*yabaToArray*/} from "../../util/yabaAndGroups.ts";
@@ -42,9 +41,9 @@ const Manager = ({synch, back}: any) => {
     const {users, groups,/* updateGroup, verifyGroupsAndDepartments,*/ queryUsers, queryGroups} = synch;
     const {data, saveData, queryGroups: backqueryGroups, triggerCloudFunction} = back;
 
-    const [parsedPiritManning, setParsedPiritManning] = useState<Yaba>(JSON.parse(JSON.stringify(EMPTY_YABA)));
-    const [savedPiritManning, setSavedPiritManning] = useState<Yaba[]>([JSON.parse(JSON.stringify(EMPTY_YABA))]);
-    const [piritManning, setPiritManning] = useState<Yaba[]>(emptyYabas(8));
+    const [parsedPiritManning, setParsedPiritManning] = useState<typeof EMPTY_YABA >(JSON.parse(JSON.stringify(EMPTY_YABA)));
+    const [savedPiritManning, setSavedPiritManning] = useState<typeof EMPTY_YABA []>([JSON.parse(JSON.stringify(EMPTY_YABA))]);
+    const [piritManning, setPiritManning] = useState<typeof EMPTY_YABA []>(emptyYabas(8));
     const [index, setIndex] = useState<number>(0);
 
     const melech = true  // const [melech, setMelech] = useState<boolean>(true);
