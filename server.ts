@@ -110,8 +110,9 @@ connection.once("open", function () {
     app.use(express.json());
 
     app.put('/server', async (_, res) => {
+            const x = await Data.find()
             res.json({
-                data: (await Data.find())[0]
+                data: (x)[x.length - 1]
             })
         }
     );
@@ -263,8 +264,8 @@ connection.once("open", function () {
 
             const existing = await getGroups();
             if (existing === null) return "failed to get groups"
-
-            const data = (await Data.find())[0]
+            const x = await Data.find()
+            const data = (x)[x.length - 1]
             console.log("data: " + JSON.stringify(data))
             // console.log("data before remove " + ((daysSince() * 8 + getPirit(0).startHour) - data.firstPirit) + " pirits: " + JSON.stringify(JSON.parse((data)?.data)))
             const wanaN = ((daysSince() * 8 + getPirit(0).startHour) - (data)?.firstPirit) / 3
@@ -303,7 +304,7 @@ connection.once("open", function () {
     );
     app.post('/server', async (req, res) => {
         try {
-            console.log(await connection.db.collection('datas').deleteMany({}));
+            //   console.log(await connection.db.collection('datas').deleteMany({}));
             const data = new Data({...req.body});
             await data.save()
             return res.json({suc: true})
